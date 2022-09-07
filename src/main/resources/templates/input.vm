@@ -1,0 +1,46 @@
+<html>
+	<head>
+	    <title>Jira Adapter Configuration</title>
+	    <meta name="decorator" content="atl.admin"/>
+	</head>
+	<body>
+		<div class="description">Put error</div>
+		<form class="aui" action="${baseurl}/secure/action/ConfigurationWebworkAction.jspa"
+		method="post" id="customFieldsIdsForm" name="customFieldsIdsForm">
+			<div class="field-group">
+			<label for"customFieldsIds">Custom Field's IDs</label>
+				<textarea class="textarea medium-long-field"
+				name="customFieldsIds" id="customFieldsIds">$currentSettings</textarea>
+				<div class="description">Put comma separated customfields keys here</div>
+			</div>
+		    <div class="buttons-container">
+			    <div class="buttons">
+			    <input class="button" type="submit" value="Save customfields keys"/>
+				</div>
+			</div>
+		</form>
+
+		<script>
+			function validateForm() {
+			    let x = document.forms["customFieldConfiguration"]["customFields_ids"].value;
+			    var value = x;
+			    if (x == "") {
+			        alert("поле пустое");
+			        postCustomFieldID(value);
+			        return false;
+			    } else {
+			        postCustomFieldID(value);
+			        return false;
+			    }
+			}
+			function postCustomFieldID(value) {
+			    let xhr = new XMLHttpRequest();
+			    xhr.open("POST", "/jira/rest/cfoptchange/1.0/settings/");
+			    xhr.setRequestHeader("Accept", "application/json");
+			    xhr.setRequestHeader("Content-Type", "application/json");
+			    xhr.onload = () => console.log(xhr.responseText);
+			    xhr.send("{\"settingsString\" : "+ "\"" + value +"\"" +"}");
+			}
+		</script>
+	</body>
+</html>

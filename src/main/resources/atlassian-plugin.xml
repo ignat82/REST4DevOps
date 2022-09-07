@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<atlassian-plugin key="${atlassian.plugin.key}"
+                  name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+    <param name="configure.url">/secure/ConfigurationWebworkAction.jspa</param>
+  </plugin-info>
+
+  <resource type="i18n" name="i18n" location="${project.artifactId}"/>
+
+  <web-resource key="${atlassian.plugin.key}.resources"
+                name="JiraAdapter Web Resource">
+    <description key="${atlassian.plugin.key}.resources.description">
+      AUI plugin and png thumbnails</description>
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="images/" location="/images"/>
+    <context>ru.homecredit.jiraadapter</context>
+  </web-resource>
+
+  <rest name="JiraAdapter REST"
+        key="${atlassian.plugin.key}.rest" path="/cfoptchange" version="1.0">
+    <description key="${atlassian.plugin.key}.rest.description">
+      Rest Endpoint to manage field options</description>
+  </rest>
+
+  <webwork1 name="JiraAdapter Webwork"
+            i18n-name-key="${atlassian.plugin.key}.webwork.name"
+            key="${atlassian.plugin.key}.webwork"
+            class="java.lang.Object"
+            roles-required="admin">
+    <description key="${atlassian.plugin.key}.webwork.description">
+      JiraAdapter REST Plugin Configuration Webwork Module description</description>
+    <actions>
+      <action name="ru.homecredit.jiraadapter.webwork.ConfigurationWebworkAction"
+              alias="ConfigurationWebworkAction">
+        <view name="configuration-page">/templates/configuration-page.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+
+  <web-section name="JiraAdapter WebSection"
+               key="${atlassian.plugin.key}.web-section"
+               i18n-name-key="${atlassian.plugin.key}.web-section.name"
+               location="admin_plugins_menu" weight="1000">
+    <description key="${atlassian.plugin.key}.web-section.description">
+      JiraAdapter websection description</description>
+    <label key="${atlassian.plugin.key}.web-section.label">Jira-Adapter</label>
+  </web-section>
+
+  <web-item name="${atlassian.plugin.key}.web-item.name"
+            key="${atlassian.plugin.key}.web-item"
+            i18n-name-key="${atlassian.plugin.key}.web-item.name"
+            section="admin_plugins_menu/${atlassian.plugin.key}.web-section"
+            weight="1000">
+    <label key="${atlassian.plugin.key}.web-item.label">Configure</label>
+    <description key="${atlassian.plugin.key}.web-item.description">configuration</description>
+    <link linkId="${atlassian.plugin.key}.web-item.link">
+      /secure/ConfigurationWebworkAction.jspa</link>
+  </web-item>
+</atlassian-plugin>
+
