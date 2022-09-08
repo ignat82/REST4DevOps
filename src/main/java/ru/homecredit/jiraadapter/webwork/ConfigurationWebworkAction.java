@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Getter
@@ -18,6 +20,7 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
     private String currentSettings;
     private String customFieldsIds;
+
     @Inject
     /**
      * constructor to acquire JiraSettingsService bean and receive current settings from jira
@@ -26,6 +29,7 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
         log.info("starting ConfigurationWebworkAction instance construction");
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
         currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
+        customFieldsIds = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
         log.info("current settings are " + currentSettings);
     }
 
@@ -35,19 +39,25 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
      * or just returns the template, if no POST request was preformed
      */
     public String doExecute() {
-        log.info("ConfigurationWebworkAction.execute() running");
-        if (customFieldsIds != null) {
-            log.info("saving settings - {}", customFieldsIds);
-            jiraAdapterSettingsService.saveSettings(customFieldsIds);
-            currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
-        }
+        log.info("ConfigurationWebworkAction.execute() method running");
+        log.info("trying to save settings - {}", customFieldsIds);
+        jiraAdapterSettingsService.saveSettings(customFieldsIds);
+        currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
         return "configuration-page";
     }
 
+    @Override
     public void doValidation() {
-        if (customFieldsIds == null) {
-           errorMap.put("input format error", "put comma separated customfields keys, like - "+
-                                "\"customfield_00001, customfield_00002\"");
+        log.info("doValidation() method running");
+        if (!(customFieldsIds.equals(currentSettings)) && !Pattern.matches(
+                "(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+", customFieldsIds)) {
+            log.info("constructing errorMessage");
+            errorMap = new HashMap();
+            errorMap.put("error", "is not the sequence of comma separated custom fields " +
+                    "keys like \"customfield_10000, customfield_10100\"");
+        } else {
+            log.info("input ok");
         }
     }
+
 }

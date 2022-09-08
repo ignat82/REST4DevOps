@@ -4,13 +4,13 @@
 	    <meta name="decorator" content="atl.admin"/>
 	</head>
 	<body>
-		<div class="description">Put error</div>
+		<div class="description" style="color:red">"$customFieldsIds" $errors.get("error")</div>
 		<form class="aui" action="${baseurl}/secure/action/ConfigurationWebworkAction.jspa"
 		method="post" id="customFieldsIdsForm" name="customFieldsIdsForm">
 			<div class="field-group">
 			<label for"customFieldsIds">Custom Field's IDs</label>
 				<textarea class="textarea medium-long-field"
-				name="customFieldsIds" id="customFieldsIds">$currentSettings</textarea>
+				name="customFieldsIds" id="customFieldsIds">$customFieldsIds</textarea>
 				<div class="description">Put comma separated customfields keys here</div>
 			</div>
 		    <div class="buttons-container">
