@@ -6,7 +6,7 @@ The function of this plugin is to provide REST service for:
  - disabling the option
  - enabling disabled option
  the list of customfields, which dictionaries are exposed by plugin REST service is
- stored in plugin setting. settings are available trough separate endpoint
+ stored in plugin setting. settings are available at plugin configuration page
 
 REST API endpoints:
 
