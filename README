@@ -1,14 +1,11 @@
-An Atlassian Jira plugin created with Atlassian SDK.
-
-Full SDK documentation is available at:
-https://developer.atlassian.com/display/DOCS/Introduction+to+the+Atlassian+Plugin+SDK
-
 ***************************************************************************************
 
 The function of this plugin is to provide REST service for:
- - acquiring the list op options for jira select list customfields in given context
+ - acquiring the list of options (dictionary) for jira select list customfields in given context
  - adding new option to field options list
- - the list of customfields, which are exposed to addin of new options is
+ - disabling the option
+ - enabling disabled option
+ the list of customfields, which dictionaries are exposed by plugin REST service is
  stored in plugin setting. settings are available trough separate endpoint
 
 REST API endpoints:
@@ -21,19 +18,9 @@ for POST fieldOptionsRequest to append new option to options of customfild in gi
 http://{host}/jira/rest/cfoptchange/1.0/options?fieldKey={key}
         &projectKey={key}&issueTypeId={id}&newOption{value}
 
-for POST fieldOptionsRequest to acquire current settings (list of fields permitted to managing
-options in):
-http://{host}/jira/rest/cfoptchange/1.0/settings
-
-for POST fieldOptionsRequest rewrite current settings (list of fields permitted to managing
-options in):
-http://{host}/jira/rest/cfoptchange/1.0/settings/?settingsString={string of comma
-separated jira customfield keys without whitespaces}
-
-
 inherited from skeleton plugin tests in
     src\test\java\ut\HCBplugins\rest\CfOptChangeTest.java
-are commented
+are commented out
 
 
 
