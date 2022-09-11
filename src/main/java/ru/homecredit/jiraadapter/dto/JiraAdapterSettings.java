@@ -39,7 +39,7 @@ public final class JiraAdapterSettings {
      * @return String for output of current field keys to configuration page textarea
      */
     public String getCommaSeparatedFields() {
-        log.info("starting getCommaSeparatedFields method");
+        // log.info("starting getCommaSeparatedFields method");
         StringBuilder stringBuilder = new StringBuilder();
         try {
             for (String editableField : editableFields) {

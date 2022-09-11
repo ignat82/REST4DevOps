@@ -18,7 +18,7 @@ for POST fieldOptionsRequest to append new option to options of customfild in gi
 http://{host}/jira/rest/cfoptchange/1.0/options?fieldKey={key}
         &projectKey={key}&issueTypeId={id}&newOption{value}
 
-inherited from skeleton plugin tests in
+test classes, inherited from skeleton plugin in
     src\test\java\ut\HCBplugins\rest\CfOptChangeTest.java
 are commented out
 

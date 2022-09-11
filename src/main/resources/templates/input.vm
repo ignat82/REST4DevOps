@@ -10,7 +10,7 @@
 			<div class="field-group">
 			<label for"customFieldsIds">Custom Field's IDs</label>
 				<textarea class="textarea medium-long-field"
-				name="customFieldsIds" id="customFieldsIds">$customFieldsIds</textarea>
+				name="customFieldsIds" id="customFieldsIds">$currentSettings</textarea>
 				<div class="description">Put comma separated customfields keys here</div>
 			</div>
 		    <div class="buttons-container">

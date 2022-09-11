@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class ConfigurationWebworkAction extends JiraWebActionSupport {
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
     private String currentSettings;
-    private String customFieldsIds;
+    private String customFieldsIds = null;
 
     @Inject
     /**
@@ -28,8 +28,8 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     public ConfigurationWebworkAction(JiraAdapterSettingsService jiraAdapterSettingsService) {
         log.info("starting ConfigurationWebworkAction instance construction");
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
+        log.info("setting current settings");
         currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
-        customFieldsIds = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
         log.info("current settings are " + currentSettings);
     }
 
@@ -40,16 +40,21 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
      */
     public String doExecute() {
         log.info("ConfigurationWebworkAction.execute() method running");
-        log.info("trying to save settings - {}", customFieldsIds);
-        jiraAdapterSettingsService.saveSettings(customFieldsIds);
-        currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
+        if (customFieldsIds != null && !currentSettings.equals(customFieldsIds)) {
+            log.info("trying to save settings - {}", customFieldsIds);
+            jiraAdapterSettingsService.saveSettings(customFieldsIds);
+            currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
+        } else {
+            log.info("settings in form seems to be up to date");
+        }
         return "configuration-page";
     }
 
     @Override
     public void doValidation() {
         log.info("doValidation() method running");
-        if (!(customFieldsIds.equals(currentSettings)) && !Pattern.matches(
+        log.info("customFieldsIds are {}", customFieldsIds);
+        if (customFieldsIds != null && !Pattern.matches(
                 "(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+", customFieldsIds)) {
             log.info("constructing errorMessage");
             errorMap = new HashMap();
