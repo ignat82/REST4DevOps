@@ -6,7 +6,8 @@
 	<body>
 		<div class="description" style="color:red">"$customFieldsIds" $errors.get("error")</div>
 		<form class="aui" action="${baseurl}/secure/action/ConfigurationWebworkAction.jspa"
-		method="post" id="customFieldsIdsForm" name="customFieldsIdsForm">
+		method="post" id="customFieldsIdsForm" name="customFieldsIdsForm"
+		data-aui-validation-form pattern="(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+">
 			<div class="field-group">
 			<label for"customFieldsIds">Custom Field's IDs</label>
 				<textarea class="textarea medium-long-field"

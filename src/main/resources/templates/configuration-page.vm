@@ -8,13 +8,19 @@
 		method="post" id="customFieldsIdsForm" name="customFieldsIdsForm">
 			<div class="field-group">
 			<label for"customFieldsIds">Custom Field's IDs</label>
-				<textarea class="textarea medium-long-field"
-				name="customFieldsIds" id="customFieldsIds">$currentSettings</textarea>
+				<!-- <textarea class="textarea medium-long-field" -->
+				<input class="text" value=$currentSettings
+				name="customFieldsIds" id="customFieldsIds"
+				data-aui-validation-field pattern="(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+"
+                pattern-msg="{0} is not a valid input"
+                data-aui-validation-field-msg="{0} is not a valid input"
+                data-aui-validation-pattern-msg="{0} is not a valid input"
+				>$currentSettings</textarea>
 				<div class="description">Put comma separated customfields keys here</div>
 			</div>
 		    <div class="buttons-container">
 			    <div class="buttons">
-			    <input class="button" type="submit" value="Save customfields keys"/>
+			    <input class="button" type="submit" value="Save customfields keys">
 				</div>
 			</div>
 		</form>
