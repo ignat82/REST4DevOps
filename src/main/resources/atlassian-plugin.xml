@@ -40,7 +40,6 @@
       <action name="ru.homecredit.jiraadapter.webwork.ConfigurationWebworkAction"
               alias="ConfigurationWebworkAction">
         <view name="configuration-page">/templates/configuration-page.vm</view>
-        <view name="input">/templates/input.vm</view>
       </action>
     </actions>
   </webwork1>

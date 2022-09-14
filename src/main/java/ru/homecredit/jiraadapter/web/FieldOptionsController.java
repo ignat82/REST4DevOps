@@ -31,7 +31,7 @@ public class FieldOptionsController {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     /**
-     * constructor initialises logger and puts the received Jira beans to fields
+     * puts the received Jira beans to fields
      */
     @Inject
     public FieldOptionsController(FieldManager fieldManager,

@@ -54,12 +54,14 @@ public class FieldOptionsService {
         this.fieldManager = fieldManager;
         this.projectManager = projectManager;
         this.optionsManager = optionsManager;
-        this.jiraAdapterSettingsService = new JiraAdapterSettingsService(pluginSettingsFactory);
+        this.jiraAdapterSettingsService
+                = new JiraAdapterSettingsService(pluginSettingsFactory);
     }
 
     /**
-     * method that does the manipulation on field and option, received in POST request body,
-     * and packs the result and some Jira properties to FielOptions DTO
+     * method that does the manipulation on field and option, received in POST
+     * request body, and packs the result and some Jira properties to
+     * FieldOptions DTO
      * @param requestBody - string, received in request body by controller
      * @return FieldOptions DTO
      */

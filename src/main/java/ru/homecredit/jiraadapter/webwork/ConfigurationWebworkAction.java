@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -20,6 +19,7 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
     private String currentSettings;
     private String customFieldsIds = null;
+    private String errorMessage;
 
     @Inject
     /**
@@ -28,7 +28,6 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     public ConfigurationWebworkAction(JiraAdapterSettingsService jiraAdapterSettingsService) {
         log.info("starting ConfigurationWebworkAction instance construction");
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
-        log.info("setting current settings");
         currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
         log.info("current settings are " + currentSettings);
     }
@@ -40,29 +39,23 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
      */
     public String doExecute() {
         log.info("ConfigurationWebworkAction.execute() method running");
+        errorMessage = null;
         if (customFieldsIds != null && !currentSettings.equals(customFieldsIds)) {
             log.info("trying to save settings - {}", customFieldsIds);
-            jiraAdapterSettingsService.saveSettings(customFieldsIds);
-            currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
+            if(Pattern.matches(
+                    "(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+", customFieldsIds)) {
+                log.info("input ok");
+                jiraAdapterSettingsService.saveSettings(customFieldsIds);
+                currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
+            } else {
+                log.error("constructing errorMessage");
+                errorMessage = "is not the sequence of comma separated custom fields " +
+                        "keys like \"customfield_10000, customfield_10100\"";
+            }
         } else {
             log.info("settings in form seems to be up to date");
         }
         return "configuration-page";
-    }
-
-    @Override
-    public void doValidation() {
-        log.info("doValidation() method running");
-        log.info("customFieldsIds are {}", customFieldsIds);
-        if (customFieldsIds != null && !Pattern.matches(
-                "(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+", customFieldsIds)) {
-            log.info("constructing errorMessage");
-            errorMap = new HashMap();
-            errorMap.put("error", "is not the sequence of comma separated custom fields " +
-                    "keys like \"customfield_10000, customfield_10100\"");
-        } else {
-            log.info("input ok");
-        }
     }
 
 }
