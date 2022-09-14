@@ -26,20 +26,5 @@
 				</div>
 			</div>
 		</form>
-
-		<script>
-			function validateForm() {
-			    let x = document.forms["customFieldConfiguration"]["customFields_ids"].value;
-			    var value = x;
-			    if (x == "") {
-			        alert("поле пустое");
-			        postCustomFieldID(value);
-			        return false;
-			    } else {
-			        postCustomFieldID(value);
-			        return false;
-			    }
-			}
-		</script>
 	</body>
 </html>
