@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -20,15 +21,19 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     private String currentSettings;
     private String customFieldsIds = null;
     private String errorMessage;
+    private List<String> customFieldsKeysList;
+    private List<String> savedCustomFieldsKeysList;
 
     @Inject
     /**
      * constructor to acquire JiraSettingsService bean and receive current settings from jira
      */
     public ConfigurationWebworkAction(JiraAdapterSettingsService jiraAdapterSettingsService) {
-        log.info("starting ConfigurationWebworkAction instance construction");
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
         currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
+        savedCustomFieldsKeysList = jiraAdapterSettingsService.getSettings().getEditableFields();
+        customFieldsKeysList = jiraAdapterSettingsService.getAllSelectListFieldsKeys();
+        log.info("customfields of select list type are {}", customFieldsKeysList);
         log.info("current settings are " + currentSettings);
     }
 
@@ -38,24 +43,25 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
      * or just returns the template, if no POST request was preformed
      */
     public String doExecute() {
-        log.info("ConfigurationWebworkAction.execute() method running");
-        errorMessage = null;
         if (customFieldsIds != null && !currentSettings.equals(customFieldsIds)) {
-            log.info("trying to save settings - {}", customFieldsIds);
-            if(Pattern.matches(
-                    "(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+", customFieldsIds)) {
-                log.info("input ok");
-                jiraAdapterSettingsService.saveSettings(customFieldsIds);
-                currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
-            } else {
-                log.error("constructing errorMessage");
-                errorMessage = "is not the sequence of comma separated custom fields " +
-                        "keys like \"customfield_10000, customfield_10100\"";
-            }
+            saveCustomfieldIds();
         } else {
             log.info("settings in form seems to be up to date");
         }
         return "configuration-page";
     }
 
+    private void saveCustomfieldIds() {
+        log.info("trying to save settings - {}", customFieldsIds);
+        if(Pattern.matches("(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+"
+                , customFieldsIds)) {
+            log.info("input ok");
+            jiraAdapterSettingsService.saveSettings(customFieldsIds);
+            currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
+        } else {
+            log.error("constructing errorMessage");
+            errorMessage = "is not the sequence of comma separated custom fields " +
+                    "keys like \"customfield_10000, customfield_10100\"";
+        }
+    }
 }

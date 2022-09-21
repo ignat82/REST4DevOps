@@ -1,5 +1,6 @@
 package ru.homecredit.jiraadapter.dto;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @XmlRootElement(name = "response")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Slf4j
+@NoArgsConstructor
 /**
  * class to store plugin settings
  */
@@ -17,13 +19,6 @@ public final class JiraAdapterSettings {
     @XmlElementWrapper(name = "editableFields")
     @XmlElement(name = "field")
     private List<String> editableFields;
-
-    /**
-     * default constructor
-     */
-    public JiraAdapterSettings() {
-        log.info("starting JiraAdapterSettings instance construction");
-    }
 
     /**
      *

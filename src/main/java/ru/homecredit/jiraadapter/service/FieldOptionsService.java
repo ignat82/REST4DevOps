@@ -9,9 +9,9 @@ import com.atlassian.jira.issue.fields.FieldManager;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
-import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.Constants;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
@@ -31,32 +31,13 @@ import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.D
  * FieldOption transport object with information of the action preformed and some Jira parameters
  */
 @Slf4j
+@RequiredArgsConstructor
 public class FieldOptionsService {
     private final FieldManager fieldManager;
     private final ProjectManager projectManager;
     private final OptionsManager optionsManager;
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    /**
-     * constructor just receives and saves in fields the instances of Jira beans,
-     * received from controller
-     * @param fieldManager - customfield manager
-     * @param projectManager - project manager
-     * @param optionsManager - field options manager
-     * @param pluginSettingsFactory - factory to acquire plugin settings service
-     */
-    public FieldOptionsService(FieldManager fieldManager,
-                               ProjectManager projectManager,
-                               OptionsManager optionsManager,
-                               PluginSettingsFactory pluginSettingsFactory) {
-        log.info("starting FieldOptionsService constructor");
-        this.fieldManager = fieldManager;
-        this.projectManager = projectManager;
-        this.optionsManager = optionsManager;
-        this.jiraAdapterSettingsService
-                = new JiraAdapterSettingsService(pluginSettingsFactory);
-    }
 
     /**
      * method that does the manipulation on field and option, received in POST
@@ -66,7 +47,6 @@ public class FieldOptionsService {
      * @return FieldOptions DTO
      */
     public FieldOptions postOption(String requestBody) {
-        log.info("starting postOption method");
         FieldOptionsRequest fieldOptionsRequest = extractRequestParameters(requestBody);
         FieldOptions fieldOptions = initializeFieldOptions(fieldOptionsRequest);
         if (fieldOptions == null) {
@@ -87,7 +67,6 @@ public class FieldOptionsService {
                 return fieldOptions;
             }
             case ADD: {
-                log.trace("trying to add new Option");
                 String newOptionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
                 if (newOptionValue.equals(Constants.DEFAULT_RECEIVED)) {
                     log.error("shutting down postOption cuz newOption not provided");
@@ -123,7 +102,7 @@ public class FieldOptionsService {
                     fieldOptions.setResult(true);
                     log.trace("enabled option \"{}\"", optionValue);
                 } else {
-                    log.error("option {} seems not to exist. shutting down", optionValue);
+                    log.error("option \"{}\" seems not to exist. shutting down", optionValue);
                 }
                 return fieldOptions;
             }
@@ -137,8 +116,6 @@ public class FieldOptionsService {
      * @return - FieldOptions transport object
      */
     public FieldOptions initializeFieldOptions(FieldOptionsRequest fieldOptionsRequest) {
-        log.info("starting initializeFieldOptions" +
-                            "(FieldOptionsRequest fieldOptionsRequest) method");
         FieldOptions fieldOptions = new FieldOptions();
         fieldOptions.setFieldOptionsRequest(fieldOptionsRequest);
         FieldParameters fieldParameters = initializeFieldParameters(fieldOptionsRequest);
@@ -158,7 +135,6 @@ public class FieldOptionsService {
      * @return - FieldOptionsRequest DTO
      */
     private FieldOptionsRequest extractRequestParameters(String requestBody) {
-        log.info("starting extractRequestParameters(String requestBody) method");
         FieldOptionsRequest fieldOptionsRequest = null;
         try {
             fieldOptionsRequest = gson.fromJson(requestBody, FieldOptionsRequest.class);
@@ -180,7 +156,6 @@ public class FieldOptionsService {
      * @return - FieldParameters DTO with some Jira properties of manipulated customfield
      */
     private FieldParameters initializeFieldParameters(FieldOptionsRequest fieldOptionsRequest) {
-        log.info("starting initializeFieldParameters method");
         FieldParameters fieldParameters = new FieldParameters();
         try {
             ConfigurableField field = fieldManager.
@@ -213,7 +188,6 @@ public class FieldOptionsService {
      * @param fieldOptions - transport object
      */
     private void initializeOptions(FieldOptions fieldOptions) {
-        log.info("starting initializeOptions method");
         Options options = Objects.requireNonNull(optionsManager.
               getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
               "failed to acquire Options object");

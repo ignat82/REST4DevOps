@@ -1,8 +1,8 @@
 package ru.homecredit.jiraadapter.dto.response;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.FieldParameters;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
@@ -17,9 +17,9 @@ import java.util.Map;
  */
 @XmlRootElement(name = "response")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Slf4j
 @Getter
 @Setter
+@NoArgsConstructor
 public class FieldOptionsResponse {
 
     @XmlAttribute
@@ -47,16 +47,11 @@ public class FieldOptionsResponse {
     @XmlElement(name = "result")
     private String result;
 
-    public FieldOptionsResponse() {
-        log.info("starting FieldOptionsResponse instance construction");
-    }
-
     /**
      * constructor repacks some transport object fields to xml-marked response object
      * @param fieldOptions - DTO
      */
     public FieldOptionsResponse(FieldOptions fieldOptions) {
-        log.trace("packing response to XML...");
         FieldOptionsRequest fieldOptionsRequest = fieldOptions.getFieldOptionsRequest();
         fieldKey = fieldOptionsRequest.getFieldKey();
         projectKey = fieldOptionsRequest.getProjectKey();

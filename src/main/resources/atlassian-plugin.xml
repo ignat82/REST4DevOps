@@ -15,10 +15,15 @@
   <resource type="i18n" name="i18n" location="${project.artifactId}"/>
 
   <web-resource key="${atlassian.plugin.key}.resources"
-                name="JiraAdapter Web Resource">
+                name="jiraadapter-web-resource">
     <description key="${atlassian.plugin.key}.resources.description">
       AUI plugin and png thumbnails</description>
     <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <!-- dependency below are taken from example at
+https://community.atlassian.com/t5/Jira-discussions/Jira-Custom-Field-Select2-problems/td-p/1833237 -->
+    <dependency>com.atlassian.auiplugin:jquery</dependency>
+    <dependency>com.atlassian.auiplugin:jquery-ui-other</dependency>
+    <dependency>com.atlassian.auiplugin:aui-select2</dependency>
     <resource type="download" name="images/" location="/images"/>
     <context>ru.homecredit.jiraadapter</context>
   </web-resource>

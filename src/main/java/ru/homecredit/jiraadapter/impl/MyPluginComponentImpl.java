@@ -1,5 +1,6 @@
 package ru.homecredit.jiraadapter.impl;
 
+import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.customfields.manager.OptionsManager;
 import com.atlassian.jira.issue.fields.FieldManager;
 import com.atlassian.jira.project.ProjectManager;
@@ -26,6 +27,7 @@ public class MyPluginComponentImpl implements MyPluginComponent {
     private final FieldManager fieldManager;
     private final ProjectManager projectManager;
     private final OptionsManager optionsManger;
+    private final CustomFieldManager customFieldManager;
 
     @Inject
     /**
@@ -35,13 +37,15 @@ public class MyPluginComponentImpl implements MyPluginComponent {
                                  @ComponentImport PluginSettingsFactory pluginSettingsFactory,
                                  @ComponentImport FieldManager fieldManager,
                                  @ComponentImport ProjectManager projectManager,
-                                 @ComponentImport OptionsManager optionsManger) {
+                                 @ComponentImport OptionsManager optionsManger,
+                                 @ComponentImport CustomFieldManager customFieldManager) {
         log.trace("creating MyPluginComponentImpl instance");
         this.applicationProperties = applicationProperties;
         this.pluginSettingsFactory = pluginSettingsFactory;
         this.fieldManager = fieldManager;
         this.projectManager = projectManager;
         this.optionsManger = optionsManger;
+        this.customFieldManager = customFieldManager;
     }
 
     public String getName()

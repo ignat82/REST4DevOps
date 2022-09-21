@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import ru.homecredit.jiraadapter.dto.Constants;
 
@@ -12,7 +11,6 @@ import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 
 @Getter
 @Setter
-@Slf4j
 /**
  * DTO class for storing request parameters of FieldOptionsController
  */
@@ -23,20 +21,8 @@ public class FieldOptionsRequest {
     private final String newOption;
     private Action action;
 
-    @Getter
-    @AllArgsConstructor
-    /**
-     * nested enum class for storing action, to be preformed as the result of the request
-     */
-    public enum Action {
-        @SerializedName("add") ADD ("add"),
-        @SerializedName("enable") ENABLE ("enable"),
-        @SerializedName("disable") DISABLE ("disable"),
-        @SerializedName("not recognized") NOT_RECOGNIZED ("not recognized");
 
-        private final String code;
-        private static final Action[] ALL_VALUES = Action.values();
-    }
+
 
     /**
      * @param fieldKey - key of Jira customfield, which options are manipulated
@@ -106,5 +92,20 @@ public class FieldOptionsRequest {
                              append("; new option = ").append(newOption).
                              append("; action = ").append(action).append(".");
         return stringBuilder.toString();
+    }
+
+    /**
+     * nested enum class for storing action, to be preformed as the result of the request
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum Action {
+        @SerializedName("add") ADD ("add"),
+        @SerializedName("enable") ENABLE ("enable"),
+        @SerializedName("disable") DISABLE ("disable"),
+        @SerializedName("not recognized") NOT_RECOGNIZED ("not recognized");
+
+        private final String code;
+        private static final Action[] ALL_VALUES = Action.values();
     }
 }

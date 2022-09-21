@@ -33,25 +33,7 @@ public class JiraAdapterSettingsController {
         log.info("starting FieldOptionsController instance construction");
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
     }
-    /*
-    /**
-     * method to handle POST request trough invoking settingsService
-     * @param requestBody - json string with request parameters
-     * @return - jsonResponse
-     */
-    /*
-    @POST
-    @AnonymousAllowed
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postSettings(String requestBody) {
-        log.info("********** starting postSettings method ************");
-        return ((requestBody == null || requestBody.equals("")))
-                ? Response.ok(gson.toJson(
-                jiraAdapterSettingsService.getSettings())).build()
-                : Response.ok(gson.toJson(
-                        jiraAdapterSettingsService.saveSettings(requestBody))).build();
-    }
-    */
+
     @GET
     @AnonymousAllowed
     @Produces(MediaType.APPLICATION_JSON)

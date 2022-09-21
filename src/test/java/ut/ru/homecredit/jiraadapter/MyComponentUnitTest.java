@@ -12,7 +12,7 @@ public class MyComponentUnitTest
     public void testMyName()
     {
         MyPluginComponent component = new MyPluginComponentImpl(null, null,
-                null, null, null);
+                null, null, null, null);
         assertEquals("names do not match!", "myComponent",component.getName());
     }
 }

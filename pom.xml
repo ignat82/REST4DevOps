@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.homecredit</groupId>
     <artifactId>jiraadapter</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <organization>
         <name>Home Credit Bank</name>
         <url>http://www.homecredit.ru/</url>
@@ -196,7 +196,7 @@
                         </pluginArtifact>
                     </pluginArtifacts>
                     -->
-                    <jvmArgs>-Xmx2g</jvmArgs>
+                    <jvmArgs>-Xmx4g</jvmArgs>
                     <enableQuickReload>true</enableQuickReload>
                     <systemPropertyVariables><!-- missing in the generated pom.xml altogether, not sure why -->
                         <atlassian.dev.mode>false</atlassian.dev.mode><!-- default: true -->

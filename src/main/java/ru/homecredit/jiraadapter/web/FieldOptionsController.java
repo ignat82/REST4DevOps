@@ -1,5 +1,6 @@
 package ru.homecredit.jiraadapter.web;
 
+import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.customfields.manager.OptionsManager;
 import com.atlassian.jira.issue.fields.FieldManager;
 import com.atlassian.jira.project.ProjectManager;
@@ -12,12 +13,13 @@ import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 import ru.homecredit.jiraadapter.dto.response.FieldOptionsResponse;
 import ru.homecredit.jiraadapter.service.FieldOptionsService;
-import javax.ws.rs.core.Response;
+import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The core class for handling GET and POST requests to /options endpoint
@@ -37,13 +39,15 @@ public class FieldOptionsController {
     public FieldOptionsController(FieldManager fieldManager,
                                   ProjectManager projectManager,
                                   OptionsManager optionsManager,
-                                  PluginSettingsFactory pluginSettingsFactory) {
-        log.trace("starting FieldOptionsController instance construction");
-        log.warn(FieldOptionsController.class.getName());
+                                  PluginSettingsFactory pluginSettingsFactory,
+                                  CustomFieldManager customFieldManager) {
+        JiraAdapterSettingsService jiraAdapterSettingsService
+                = new JiraAdapterSettingsService(pluginSettingsFactory,
+                                                 customFieldManager);
         fieldOptionsService = new FieldOptionsService(fieldManager,
                                                       projectManager,
                                                       optionsManager,
-                                                      pluginSettingsFactory);
+                                                      jiraAdapterSettingsService);
     }
 
     /**

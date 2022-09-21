@@ -1,5 +1,8 @@
 package ru.homecredit.jiraadapter.service;
 
+import com.atlassian.jira.issue.CustomFieldManager;
+import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -7,6 +10,7 @@ import ru.homecredit.jiraadapter.dto.JiraAdapterSettings;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +21,8 @@ import java.util.List;
 @Slf4j
 @Named
 public class JiraAdapterSettingsService {
-    private final com.atlassian.sal.api.pluginsettings.PluginSettings pluginSettings;
+    private final PluginSettings pluginSettings;
+    private final CustomFieldManager customFieldManager;
 
     /**
      * constructor creates settingsObject
@@ -27,9 +32,21 @@ public class JiraAdapterSettingsService {
     /**
      * constructor with single parameter - PluginSettingsFactory Jira bean from application
      */
-    public JiraAdapterSettingsService(PluginSettingsFactory pluginSettingsFactory) {
-        log.info("started JiraAdapterSettingsService constructor");
+    public JiraAdapterSettingsService(PluginSettingsFactory pluginSettingsFactory,
+                                      CustomFieldManager customFieldManager) {
         pluginSettings = pluginSettingsFactory.createGlobalSettings();
+        this.customFieldManager = customFieldManager;
+    }
+
+    public List<String> getAllSelectListFieldsKeys() {
+        List<String> customfieldsKeys = new ArrayList<>();
+        log.info("there are {} customField objects",
+                 customFieldManager.getCustomFieldObjects().size());
+        for (CustomField customField : customFieldManager.getCustomFieldObjects()) {
+            customfieldsKeys.add(customField.getId());
+        }
+        log.info("customfieldKeys are {}", customfieldsKeys);
+        return customfieldsKeys;
     }
 
     /**
@@ -38,7 +55,6 @@ public class JiraAdapterSettingsService {
      */
     public JiraAdapterSettings getSettings() {
         JiraAdapterSettings jiraAdapterSettings = new JiraAdapterSettings();
-        log.info("started getSettings method");
         try {
             List<String> fieldKeys = (List<String>)
                 this.pluginSettings.get(JiraAdapterSettings.class.getName() + ".editableFields");
@@ -57,7 +73,6 @@ public class JiraAdapterSettingsService {
      * @return - JiraAdapterSettings object
      */
     public JiraAdapterSettings saveSettings(String customFieldsIds) {
-        log.info("started saveSettings method");
         try {
             String[] fieldsKeys = StringUtils.deleteWhitespace(customFieldsIds).split(",");
             for (String key : fieldsKeys) {
