@@ -1,7 +1,6 @@
 package ru.homecredit.jiraadapter.dto.response;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.FieldParameters;
@@ -13,13 +12,12 @@ import java.util.Map;
 /**
  * class to pack FieldOptions DTO to JSON response
  * XML markup is necessary for correct JSON serialization in
- * FieldOptionsController doGet and doPost methods
+ * FieldOptionsController getFieldOptions and doPost methods
  */
 @XmlRootElement(name = "response")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
-@NoArgsConstructor
 public class FieldOptionsResponse {
 
     @XmlAttribute
@@ -44,8 +42,10 @@ public class FieldOptionsResponse {
     @XmlElementWrapper(name = "isDisabled")
     @XmlElement(name = "disabled")
     private Map<String, Boolean> isDisabled;
-    @XmlElement(name = "result")
-    private String result;
+    @XmlElement(name = "success")
+    private String success;
+    @XmlElement(name = "errorMessage")
+    private String errorMessage;
 
     /**
      * constructor repacks some transport object fields to xml-marked response object
@@ -64,7 +64,7 @@ public class FieldOptionsResponse {
         fieldConfigName = fieldParameters.getFieldConfigName();
         isDisabled = fieldOptions.getIsDisabled();
         this.fieldOptions = fieldOptions.getFieldOptionsArr();
-        result = Boolean.toString(fieldOptions.isResult());
+        success = Boolean.toString(fieldOptions.isSuccess());
+        errorMessage = fieldOptions.getErrorMessage();
     }
-
 }

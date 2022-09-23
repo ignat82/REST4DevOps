@@ -1,8 +1,8 @@
 package ru.homecredit.jiraadapter.dto.request;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import ru.homecredit.jiraadapter.dto.Constants;
@@ -20,9 +20,6 @@ public class FieldOptionsRequest {
     private final String issueTypeId;
     private final String newOption;
     private Action action;
-
-
-
 
     /**
      * @param fieldKey - key of Jira customfield, which options are manipulated
@@ -46,7 +43,7 @@ public class FieldOptionsRequest {
     /**
      *  helper method to transfer the received string value of action to enum
      * @param actionCode - string value from request, defining the action to be preformed
-     * @return
+     * @return - Action enum
      */
     private Action actionFromCode(String actionCode) {
         for (Action action : Action.ALL_VALUES) {
@@ -89,8 +86,8 @@ public class FieldOptionsRequest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("fieldKey = ").append(fieldKey).append("; projectKey = ").
                 append(projectKey).append("; issueTypeId = ").append(issueTypeId).
-                             append("; new option = ").append(newOption).
-                             append("; action = ").append(action).append(".");
+                append("; new option = ").append(newOption).append("; action = ").
+                append(action).append(".");
         return stringBuilder.toString();
     }
 
@@ -98,14 +95,13 @@ public class FieldOptionsRequest {
      * nested enum class for storing action, to be preformed as the result of the request
      */
     @Getter
-    @AllArgsConstructor
+    @RequiredArgsConstructor
     public enum Action {
         @SerializedName("add") ADD ("add"),
         @SerializedName("enable") ENABLE ("enable"),
         @SerializedName("disable") DISABLE ("disable"),
         @SerializedName("not recognized") NOT_RECOGNIZED ("not recognized");
-
-        private final String code;
         private static final Action[] ALL_VALUES = Action.values();
+        private final String code;
     }
 }

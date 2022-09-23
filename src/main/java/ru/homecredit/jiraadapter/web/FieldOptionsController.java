@@ -10,10 +10,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
-import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 import ru.homecredit.jiraadapter.dto.response.FieldOptionsResponse;
 import ru.homecredit.jiraadapter.service.FieldOptionsService;
+import ru.homecredit.jiraadapter.service.FieldOptionsServiceImpl;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
+import ru.homecredit.jiraadapter.service.JiraAdapterSettingsServiceImpl;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,12 +43,12 @@ public class FieldOptionsController {
                                   PluginSettingsFactory pluginSettingsFactory,
                                   CustomFieldManager customFieldManager) {
         JiraAdapterSettingsService jiraAdapterSettingsService
-                = new JiraAdapterSettingsService(pluginSettingsFactory,
-                                                 customFieldManager);
-        fieldOptionsService = new FieldOptionsService(fieldManager,
-                                                      projectManager,
-                                                      optionsManager,
-                                                      jiraAdapterSettingsService);
+                = new JiraAdapterSettingsServiceImpl(pluginSettingsFactory,
+                                                     customFieldManager);
+        fieldOptionsService = new FieldOptionsServiceImpl(fieldManager,
+                                                          projectManager,
+                                                          optionsManager,
+                                                          jiraAdapterSettingsService);
     }
 
     /**
@@ -66,14 +67,12 @@ public class FieldOptionsController {
     @GET
     @AnonymousAllowed
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doGet(@QueryParam("fieldKey") String fieldKey,
-                                           @QueryParam("projectKey") String projectKey,
-                                           @QueryParam("issueTypeId") String issueTypeId) {
-        log.trace("************* starting doGet method... ************");
-        FieldOptions fieldOptions = fieldOptionsService.initializeFieldOptions(
-                new FieldOptionsRequest(fieldKey,
-                                        projectKey,
-                                        issueTypeId));
+    public Response getFieldOptions(@QueryParam("fieldKey") String fieldKey,
+                                    @QueryParam("projectKey") String projectKey,
+                                    @QueryParam("issueTypeId") String issueTypeId) {
+        log.trace("************* starting getFieldOptions method... ************");
+        FieldOptions fieldOptions
+                = fieldOptionsService.getOptions(fieldKey, projectKey, issueTypeId);
         String jsonResponse = gson.toJson(new FieldOptionsResponse(fieldOptions));
         log.info(jsonResponse);
         return Response.ok(jsonResponse).build();
@@ -92,8 +91,6 @@ public class FieldOptionsController {
     public Response doPost(String requestBody) {
         log.trace("************ starting doPost method... **************");
         FieldOptions fieldOptions = fieldOptionsService.postOption(requestBody);
-        return (fieldOptions == null)
-            ? javax.ws.rs.core.Response.ok("something goes wrong. Check log file").build()
-            : javax.ws.rs.core.Response.ok(gson.toJson(new FieldOptionsResponse(fieldOptions))).build();
+        return Response.ok(gson.toJson(new FieldOptionsResponse(fieldOptions))).build();
     }
 }
