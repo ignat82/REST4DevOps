@@ -21,7 +21,7 @@ public class FieldOptions {
     private FieldParameters fieldParameters;
     private String[] fieldOptionsArr;
     private Map<String, Boolean> isDisabled;
-    private boolean success = false;
+    private boolean success;
     private String errorMessage;
 
     public FieldOptions() {
