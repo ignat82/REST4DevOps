@@ -25,7 +25,7 @@ https://community.atlassian.com/t5/Jira-discussions/Jira-Custom-Field-Select2-pr
     <dependency>com.atlassian.auiplugin:jquery-ui-other</dependency>
     <dependency>com.atlassian.auiplugin:aui-select2</dependency>
     <resource type="download" name="images/" location="/images"/>
-    <context>ru.homecredit.jiraadapter</context>
+    <context>jiraadapter</context>
   </web-resource>
 
   <rest name="JiraAdapter REST"

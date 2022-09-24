@@ -4,10 +4,11 @@ import com.atlassian.jira.web.action.JiraWebActionSupport;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import ru.homecredit.jiraadapter.dto.JiraAdapterSettings;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -21,20 +22,26 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     private String currentSettings;
     private String customFieldsIds = null;
     private String errorMessage;
-    private List<String> customFieldsKeysList;
+    private List<String> allCustomFieldsKeysList;
     private List<String> savedCustomFieldsKeysList;
+    private List<String> customFieldsKeysListToSave = new ArrayList<>();
 
     @Inject
     /**
      * constructor to acquire JiraSettingsService bean and receive current settings from jira
      */
     public ConfigurationWebworkAction(JiraAdapterSettingsService jiraAdapterSettingsService) {
+        log.info("START ********************************");
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
-        currentSettings = jiraAdapterSettingsService.getSettings().getCommaSeparatedFields();
-        savedCustomFieldsKeysList = jiraAdapterSettingsService.getSettings().getEditableFields();
-        customFieldsKeysList = jiraAdapterSettingsService.getAllSelectListFieldsKeys();
-        log.info("customfields of select list type are {}", customFieldsKeysList);
-        log.info("current settings are " + currentSettings);
+        JiraAdapterSettings jiraAdapterSettings = jiraAdapterSettingsService.getSettings();
+        currentSettings = jiraAdapterSettings.getCommaSeparatedFields();
+        savedCustomFieldsKeysList = jiraAdapterSettings.getEditableFields();
+        allCustomFieldsKeysList = jiraAdapterSettingsService.getAllSelectListFieldsKeys();
+        log.info("allCustomFieldsKeysList is {}", allCustomFieldsKeysList);
+        log.info("currentSettings are " + currentSettings);
+        log.info("savedCustomFieldsKeysList are " + savedCustomFieldsKeysList);
+        log.info("customFieldsKeysListToSave is " + customFieldsKeysListToSave);
+        log.info("customFieldsIds " + customFieldsIds);
     }
 
     @Override
@@ -43,6 +50,9 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
      * or just returns the template, if no POST request was preformed
      */
     public String doExecute() {
+        log.info("doExecute()");
+        log.info("customFieldsKeysListToSave is " + customFieldsKeysListToSave);
+        log.info("customFieldsIds " + customFieldsIds);
         if (customFieldsIds != null && !currentSettings.equals(customFieldsIds)) {
             saveCustomfieldIds();
         } else {
@@ -52,6 +62,8 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     }
 
     private void saveCustomfieldIds() {
+        log.info("savedCustomFieldsKeysList are " + savedCustomFieldsKeysList);
+        log.info("customFieldsKeysListToSave is " + customFieldsKeysListToSave);
         log.info("trying to save settings - {}", customFieldsIds);
         if(Pattern.matches("(?:[ ]*[,]?[ ]*customfield_[0-9]{5}[ ]*[,]?[ ]*)+"
                 , customFieldsIds)) {
