@@ -7,6 +7,6 @@ import java.util.List;
 public interface JiraAdapterSettingsService {
     List<String> getAllSelectListFieldsKeys();
     JiraAdapterSettings getSettings();
-    void saveSettings(String customFieldsIds);
+    void saveCustomFieldsKeys(String[] customFieldsKeys);
 
 }

@@ -4,63 +4,39 @@
 	    <meta name="decorator" content="atl.admin"/>
 	</head>
 	<body>
-	$webResourceManager.requireResourcesForContext("jiraadapter")
-		<div class="description" style="color:red">
-			#if ($errorMessage)
-				$customFieldsIds $errorMessage
-			#end
-		</div>
-		<!--
-		<form class="aui"
-			action="${baseurl}/secure/action/ConfigurationWebworkAction.jspa"
-			method="post" id="customFieldsIdsForm" name="customFieldsIdsForm">
-			<div class="field-group">
-			<label for"customFieldsIds">Custom Field's IDs</label>
-				<!-- <textarea class="textarea medium-long-field" -->
-				<input class="text" value="$currentSettings"
-				name="customFieldsIds"
-				></textarea>
-				<div class="description">Put comma separated customfields keys here</div>
-			</div>
-		    <div class="buttons-container">
-			    <div class="buttons">
-			    <input class="button" type="submit" value="Save customfields keys">
-				</div>
-			</div>
-		</form>
-		-->
-		#disable_html_escaping()
-        #customControlHeader ($action $displayParameters $auiparams $customFieldsKeysListToSave)
+		$webResourceManager.requireResourcesForContext("jiraadapter")
+
         <script type="text/javascript">
 	        AJS.$(document).ready(function() {
-		        AJS.$("#customFieldsKeysListToSave").auiSelect2();
+		        AJS.$("#custom-fields-keys-select").auiSelect2();
 	        });
         </script>
+
 		<form class="aui select2-custom-field-picker" method="post"
-			action="${baseurl}/secure/action/ConfigurationWebworkAction.jspa"
-        	id="customFieldsKeysForm" name="customFieldsKeysForm">
+			action="${baseurl}/secure/action/ConfigurationWebworkAction!save.jspa"
+        	id="custom-fields-keys-form" name="custom-fields-keys-form-name">
 			<div class="field-group">
-				<label for"customFieldsKeysListToSave">Custom Field's keys</label>
-				<select  id="customFieldsKeysListToSave"
-						name="customFieldsKeysListToSave" class="multi-select"
-	                multiple="multiple">
+				<label for"customFieldsKeysToSave">Custom Field's keys</label>
+				<select name="customFieldsKeysToSave" id="custom-fields-keys-select"
+					class="multi-select" multiple="multiple">
 	                <option></option>
-	                #foreach($customFieldKey in $allCustomFieldsKeysList)
+	                #foreach($customFieldKey in $allCustomFieldsKeys)
 	                    <option value="$customFieldKey"
-	                        #if ($savedCustomFieldsKeysList && $savedCustomFieldsKeysList.contains($customFieldKey))
+	                        #if ($savedCustomFieldsKeys && $savedCustomFieldsKeys.contains($customFieldKey))
 	                           selected="selected"
 	                        #end
 	                    >$cfValueEncoder.encodeForHtml($customFieldKey)</option>
 	                #end
 	            </select>
             </div>
+
             <div class="buttons-container">
                 <div class="buttons">
-	                <input class="button" type="submit" value="Save customfields keys">
+	                <input class="button" type="submit" value="Save custom fields keys">
 	                <a class="cancel" href="#">Cancel</a>
                 </div>
             </div>
+
 		</form>
-		#customControlFooter ($action $displayParameters $auiparams $customFieldsKeysListToSave)
 	</body>
 </html>

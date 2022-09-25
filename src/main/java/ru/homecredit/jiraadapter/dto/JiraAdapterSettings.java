@@ -21,25 +21,4 @@ public final class JiraAdapterSettings {
     @XmlElementWrapper(name = "editableFields")
     @XmlElement(name = "field")
     private List<String> editableFields = new ArrayList<>();
-
-    /**
-     *
-     * @return String for output of current field keys to configuration page textarea
-     */
-    public String getCommaSeparatedFields() {
-        // log.info("starting getCommaSeparatedFields method");
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            for (String editableField : editableFields) {
-                stringBuilder.append(editableField).append(", ");
-            }
-            if (stringBuilder.length() != 0) {
-                stringBuilder.setLength(stringBuilder.length() - 2);
-            }
-        } catch (Exception e) {
-            log.error("settings seems to be empty. returning \"\"");
-            return "";
-        }
-        return stringBuilder.toString();
-    }
 }

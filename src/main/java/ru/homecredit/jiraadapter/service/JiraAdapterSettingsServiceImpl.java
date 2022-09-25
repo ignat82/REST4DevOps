@@ -5,7 +5,6 @@ import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import ru.homecredit.jiraadapter.dto.JiraAdapterSettings;
 
 import javax.inject.Inject;
@@ -55,8 +54,7 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
         JiraAdapterSettings jiraAdapterSettings = new JiraAdapterSettings();
         try {
             List<String> fieldKeys = (List<String>)
-                this.pluginSettings.get(JiraAdapterSettings.class.getName() +
-                                                ".editableFields");
+                this.pluginSettings.get(JiraAdapterSettings.class.getName() + ".editableFields");
             jiraAdapterSettings.setEditableFields(fieldKeys);
         } catch (Exception e) {
             log.error("failed to acquire plugin settings with error " + e);
@@ -65,22 +63,13 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
     }
 
     /**
-     * parses the string with comma separated field keys and packs them to JiraAdapterSettings
-     * object
      *
-     * @param customFieldsIds - string with comma separated field keys
+     * @param customFieldKeys - list of customfield keys to save in plugin settings
      */
-    public void saveSettings(String customFieldsIds) {
-        try {
-            String[] fieldsKeys = StringUtils.deleteWhitespace(customFieldsIds).split(",");
-            for (String key : fieldsKeys) {
-                log.trace("key is: {}", key);
-            }
-            pluginSettings.put(JiraAdapterSettings.class.getName() +
-                                       ".editableFields", Arrays.asList(fieldsKeys));
-        } catch (Exception exception){
-            log.error("caught {} when parsing customFieldsIds", exception.getMessage());
-        }
-        getSettings();
+    public void saveCustomFieldsKeys(String[] customFieldKeys) {
+        pluginSettings.put(JiraAdapterSettings.class.getName() + ".editableFields",
+                               (customFieldKeys == null)
+                                       ? new ArrayList<String> () :
+                                       Arrays.asList(customFieldKeys));
     }
 }
