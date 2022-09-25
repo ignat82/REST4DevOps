@@ -50,7 +50,6 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
 
     public void doSave() {
         log.info("doSave()");
-        log.info("allCustomFieldsKeys - {}", allCustomFieldsKeys);
         log.info("saving {}", Arrays.toString(customFieldsKeysToSave));
         jiraAdapterSettingsService.saveCustomFieldsKeys(customFieldsKeysToSave);
         log.info("returning from doSave()");
