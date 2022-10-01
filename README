@@ -1,12 +1,12 @@
 ***************************************************************************************
 
 The function of this plugin is to provide REST service for:
- - acquiring the list of options (dictionary) for jira select list customfields in given context
- - adding new option to field options list
- - disabling the option
- - enabling disabled option
+ - acquiring the list of options for jira select list customfields in given context
+ - adding new options to field options list
+ - disabling options
+ - enabling disabled options
  the list of customfields, which dictionaries are exposed by plugin REST service is
- stored in plugin setting. settings are available at plugin configuration page
+ stored in plugin setting. Settings are available at plugin configuration page
 
 REST API endpoints:
 

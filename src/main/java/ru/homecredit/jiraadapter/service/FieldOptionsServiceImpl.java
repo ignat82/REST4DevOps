@@ -24,11 +24,6 @@ import java.util.*;
 
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.DISABLE;
 
-/**
- * service class for manging customfield options trough Jira Java API by handling the
- * data, received from controller in form of request body string, and returning to controller the
- * FieldOption transport object with information of the action preformed and some Jira parameters
- */
 @Slf4j
 @RequiredArgsConstructor
 public class FieldOptionsServiceImpl implements FieldOptionsService {
@@ -49,13 +44,6 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         return fieldOptions;
     }
 
-    /**
-     * method that does the manipulation on field and option, received in POST
-     * request body, and packs the success and some Jira properties to
-     * FieldOptions DTO
-     * @param requestBody - string, received in request body by controller
-     * @return FieldOptions DTO
-     */
     public FieldOptions postOption(String requestBody) {
         FieldOptionsRequest fieldOptionsRequest = extractRequestParameters(requestBody);
         if (fieldOptionsRequest == null) {
@@ -134,15 +122,18 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
      * @return - FieldOptions transport object
      */
     private FieldOptions initializeFieldOptions(FieldOptionsRequest fieldOptionsRequest) {
-        FieldOptions fieldOptions = new FieldOptions();
-        fieldOptions.setFieldOptionsRequest(fieldOptionsRequest);
+        FieldOptions fieldOptions = new FieldOptions(fieldOptionsRequest);
         FieldParameters fieldParameters = initializeFieldParameters(fieldOptionsRequest);
         if (fieldParameters == null) {
             fieldOptions.setFieldParameters(new FieldParameters());
-            return fieldOptions;
+            fieldOptions.setErrorMessage("failed to acquire field parameters on some reason");
+        } else if (fieldParameters.isPermittedToEdit()) {
+            fieldOptions.setFieldParameters(fieldParameters);
+            initializeOptions(fieldOptions);
+        } else {
+            fieldOptions.setFieldParameters(new FieldParameters());
+            fieldOptions.setErrorMessage("access to field is not permitted by plugin settings");
         }
-        fieldOptions.setFieldParameters(fieldParameters);
-        initializeOptions(fieldOptions);
         return fieldOptions;
     }
 
@@ -193,8 +184,9 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             JiraAdapterSettings jiraAdapterSettings = jiraAdapterSettingsService.getSettings();
             List<String> editableFields = jiraAdapterSettings.getEditableFields();
             log.trace("editable fields are - {}", editableFields);
-            boolean permittedToEdit = jiraAdapterSettingsService.getSettings().getEditableFields().
-                    contains(fieldOptionsRequest.getFieldKey());
+            boolean permittedToEdit = editableFields != null &&
+                    editableFields.contains(fieldOptionsRequest.getFieldKey());
+            log.trace("field {} is permitted to edit - {}", field.getName(), permittedToEdit);
             fieldParameters.setPermittedToEdit(permittedToEdit);
         } catch (Exception e) {
             log.error("failed to initialize field parameters with error {}", e.toString());

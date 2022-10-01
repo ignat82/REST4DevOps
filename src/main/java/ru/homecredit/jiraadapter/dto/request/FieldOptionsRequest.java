@@ -9,11 +9,11 @@ import ru.homecredit.jiraadapter.dto.Constants;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 
-@Getter
-@Setter
 /**
  * DTO class for storing request parameters of FieldOptionsController
  */
+@Getter
+@Setter
 public class FieldOptionsRequest {
     private final String fieldKey;
     private final String projectKey;

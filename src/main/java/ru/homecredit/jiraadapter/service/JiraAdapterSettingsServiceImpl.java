@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static ru.homecredit.jiraadapter.dto.Constants.EDITABLE_FIELDS_SETTING_KEY;
+import static ru.homecredit.jiraadapter.dto.Constants.JIRA_ADAPTER_PLUGIN_SETTINGS_PREFIX;
+
 /**
  * service class to retrieve and rewrite plugin settings - the array of strings
  * with jira customfield keys
@@ -26,18 +29,16 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
     /**
      * constructor creates settingsObject
      * @param pluginSettingsFactory - injected by spring to invoking class
+     * @param customFieldManager - injected by spring to invoking class
      */
     @Inject
-    /**
-     * constructor with single parameter - PluginSettingsFactory Jira bean from application
-     */
     public JiraAdapterSettingsServiceImpl(PluginSettingsFactory pluginSettingsFactory,
                                           CustomFieldManager customFieldManager) {
         pluginSettings = pluginSettingsFactory.createGlobalSettings();
         this.customFieldManager = customFieldManager;
     }
 
-    public List<String> getAllSelectListFieldsKeys() {
+    public List<String> getAllCustomFieldsKeys() {
         List<String> customfieldsKeys = new ArrayList<>();
         for (CustomField customField : customFieldManager.getCustomFieldObjects()) {
             customfieldsKeys.add(customField.getId());
@@ -45,16 +46,13 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
         return customfieldsKeys;
     }
 
-    /**
-     * receives the current plugin settings from jira
-     * @return - object with current plugin settings
-     */
     public JiraAdapterSettings getSettings() {
         log.info("running getSettings()");
         JiraAdapterSettings jiraAdapterSettings = new JiraAdapterSettings();
         try {
             List<String> fieldKeys = (List<String>)
-                this.pluginSettings.get(JiraAdapterSettings.class.getName() + ".editableFields");
+                pluginSettings.get(JIRA_ADAPTER_PLUGIN_SETTINGS_PREFIX
+                                                + EDITABLE_FIELDS_SETTING_KEY);
             jiraAdapterSettings.setEditableFields(fieldKeys);
         } catch (Exception e) {
             log.error("failed to acquire plugin settings with error " + e);
@@ -62,14 +60,11 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
         return jiraAdapterSettings;
     }
 
-    /**
-     *
-     * @param customFieldKeys - list of customfield keys to save in plugin settings
-     */
-    public void saveCustomFieldsKeys(String[] customFieldKeys) {
-        pluginSettings.put(JiraAdapterSettings.class.getName() + ".editableFields",
-                               (customFieldKeys == null)
-                                       ? new ArrayList<String> () :
-                                       Arrays.asList(customFieldKeys));
+    public void saveCustomFieldsKeys(String[] customFieldsKeys) {
+        pluginSettings.put(JIRA_ADAPTER_PLUGIN_SETTINGS_PREFIX
+                                   + EDITABLE_FIELDS_SETTING_KEY,
+                               (customFieldsKeys == null)
+                                       ? new ArrayList<String> ()
+                                       : Arrays.asList(customFieldsKeys));
     }
 }

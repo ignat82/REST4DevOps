@@ -1,9 +1,8 @@
 package ru.homecredit.jiraadapter.dto;
 
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import java.util.Map;
@@ -16,8 +15,7 @@ import java.util.Map;
 @Setter
 @RequiredArgsConstructor
 public class FieldOptions {
-    @NonNull
-    private FieldOptionsRequest fieldOptionsRequest;
+    private final FieldOptionsRequest fieldOptionsRequest;
     private FieldParameters fieldParameters;
     private String[] fieldOptionsArr;
     private Map<String, Boolean> isDisabled;

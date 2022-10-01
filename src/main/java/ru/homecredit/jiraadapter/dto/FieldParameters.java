@@ -7,11 +7,11 @@ import lombok.Setter;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_ACQUIRED;
 
-@Setter
-@Getter
 /**
  * DTO class to store manipulated field Jira parameters
  */
+@Setter
+@Getter
 public class FieldParameters {
     private String fieldName = DEFAULT_ACQUIRED;
     private String projectName = DEFAULT_ACQUIRED;
