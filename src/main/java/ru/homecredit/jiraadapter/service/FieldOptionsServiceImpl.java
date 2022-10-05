@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.homecredit.jiraadapter.dto.Constants;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.FieldParameters;
 import ru.homecredit.jiraadapter.dto.JiraAdapterSettings;
@@ -22,7 +21,9 @@ import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import java.util.*;
 
-import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.DISABLE;
+import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
+import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action;
+import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,70 +49,66 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         FieldOptionsRequest fieldOptionsRequest = extractRequestParameters(requestBody);
         if (fieldOptionsRequest == null) {
             FieldOptions fieldOptions = new FieldOptions();
-            fieldOptions.setErrorMessage("failed to parse request parameters");
+            String errorMessage = "failed to parse request parameters";
+            fieldOptions.setErrorMessage(errorMessage);
+            log.error(errorMessage);
             return fieldOptions;
         }
         FieldOptions fieldOptions = initializeFieldOptions(fieldOptionsRequest);
-        log.info("context is valid - {}", fieldOptions.getFieldParameters().isValidContext());
         if (fieldOptions.getErrorMessage() != null) {
-            log.error("shutting down postOption cuz fieldOptions object wasn't constructed");
+            log.error("shutting down postOption() due to error");
             return fieldOptions;
         }
-        if (!fieldOptions.getFieldParameters().isValidContext()) {
-            fieldOptions.setErrorMessage("failed to initialize field parameters. invalid context?" +
-                                                 " field and project keys?");
+        Action action = fieldOptions.getFieldOptionsRequest().getAction();
+        if (action == NOT_RECOGNIZED) {
+            fieldOptions.setErrorMessage("action parameter not recognized");
             return fieldOptions;
         }
-        if (!fieldOptions.getFieldParameters().isPermittedToEdit()) {
-            fieldOptions.setErrorMessage("field is not permitted for edit by plugin settings");
+        if (Objects.equals(fieldOptions.getFieldOptionsRequest().getNewOption(), DEFAULT_RECEIVED)) {
+            fieldOptions.setErrorMessage("option not provided in request");
             return fieldOptions;
         }
-        switch (fieldOptions.getFieldOptionsRequest().getAction()) {
-            case NOT_RECOGNIZED: {
-                fieldOptions.setErrorMessage("action parameter not recognized");
-                return fieldOptions;
-            }
-            case ADD: {
-                String newOptionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
-                if (newOptionValue.equals(Constants.DEFAULT_RECEIVED)) {
-                    fieldOptions.setErrorMessage("newOption not provided");
-                    return fieldOptions;
-                }
-                log.trace("trying to add new option \"{}\"", newOptionValue);
-                if (Arrays.asList(fieldOptions.getFieldOptionsArr()).contains(newOptionValue)) {
-                    fieldOptions.setErrorMessage(
-                            "new option " + newOptionValue + " already exists");
-                    return fieldOptions;
-                }
-                int size = fieldOptions.getFieldOptionsArr().length;
-                optionsManager.createOption(fieldOptions.getFieldParameters().getFieldConfig(),
-                                            null,
-                                            (long) (size + 1),
-                                            newOptionValue);
-                fieldOptions.setSuccess(true);
-                log.trace("added option \"{}\" to Options", newOptionValue);
-                /* acquiring Options object and Options from it once again, cuz the
-                new one was appended */
-                initializeOptions(fieldOptions);
-                return fieldOptions;
-            }
-            case DISABLE: // will be set at ENABLE block if necessary
-            case ENABLE: {
-                String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
-                Options options = optionsManager.getOptions(
-                        fieldOptions.getFieldParameters().getFieldConfig()
-                );
-                if (options.getOptionForValue(optionValue, null) != null) {
-                    options.getOptionForValue(optionValue, null).setDisabled(
-                            fieldOptions.getFieldOptionsRequest().getAction() == DISABLE
-                    );
-                    fieldOptions.setSuccess(true);
-                    log.trace("enabled option \"{}\"", optionValue);
-                } else {
-                    log.error("option \"{}\" seems not to exist. shutting down", optionValue);
-                }
-                return fieldOptions;
-            }
+        return (action == ADD) ? addOption(fieldOptions)
+                               : setOptionState(fieldOptions);
+    }
+
+    private FieldOptions addOption(FieldOptions fieldOptions) {
+        String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
+        log.trace("trying to add new option \"{}\"", optionValue);
+        if (Arrays.asList(fieldOptions.getFieldOptionsArr()).contains(optionValue)) {
+            fieldOptions.setErrorMessage("new option " + optionValue + " already exists");
+            return fieldOptions;
+        }
+        int size = fieldOptions.getFieldOptionsArr().length;
+        optionsManager.createOption(fieldOptions.getFieldParameters().getFieldConfig(),
+                                    null,
+                                    (long) (size + 1),
+                                    optionValue);
+        fieldOptions.setSuccess(true);
+        log.trace("added option \"{}\" to Options", optionValue);
+        /* acquiring Options object and Options from it once again, cuz the
+        new one was appended */
+        initializeOptions(fieldOptions);
+        return fieldOptions;
+    }
+
+    private FieldOptions setOptionState(FieldOptions fieldOptions) {
+        String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
+        Option option =
+                optionsManager.getOptions(fieldOptions.getFieldParameters().
+                getFieldConfig()).getOptionForValue(optionValue, null);
+        if (option == null) {
+            String message = "option " + optionValue + " seems not to exist. shutting down";
+            fieldOptions.setErrorMessage(message);
+            log.error(message);
+        } else {
+            boolean isDisabled = (fieldOptions.getFieldOptionsRequest().getAction() == DISABLE);
+            option.setDisabled(isDisabled);
+            fieldOptions.setSuccess(true);
+            log.trace("set option \"{}\" isDisabled state to {}", optionValue, isDisabled);
+            /* acquiring Options object and Options from it once again, cuz the
+            option state changed */
+            initializeOptions(fieldOptions);
         }
         return fieldOptions;
     }
@@ -127,6 +124,9 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         if (fieldParameters == null) {
             fieldOptions.setFieldParameters(new FieldParameters());
             fieldOptions.setErrorMessage("failed to acquire field parameters on some reason");
+        } else if (!fieldParameters.isValidContext()) {
+            fieldOptions.setErrorMessage("failed to initialize field parameters. invalid context?" +
+                                                 " field and project keys?");
         } else if (fieldParameters.isPermittedToEdit()) {
             fieldOptions.setFieldParameters(fieldParameters);
             initializeOptions(fieldOptions);

@@ -59,9 +59,11 @@ public class FieldOptionsResponse {
         newOption = fieldOptionsRequest.getNewOption();
         action = fieldOptionsRequest.getAction().toString();
         FieldParameters fieldParameters = fieldOptions.getFieldParameters();
-        fieldName = fieldParameters.getFieldName();
-        projectName = fieldParameters.getProjectName();
-        fieldConfigName = fieldParameters.getFieldConfigName();
+        if (fieldParameters != null) {
+            fieldName = fieldParameters.getFieldName();
+            projectName = fieldParameters.getProjectName();
+            fieldConfigName = fieldParameters.getFieldConfigName();
+        }
         isDisabled = fieldOptions.getIsDisabled();
         this.fieldOptions = fieldOptions.getFieldOptionsArr();
         success = Boolean.toString(fieldOptions.isSuccess());

@@ -91,6 +91,9 @@ public class FieldOptionsController {
     public Response doPost(String requestBody) {
         log.trace("************ starting doPost method... **************");
         FieldOptions fieldOptions = fieldOptionsService.postOption(requestBody);
-        return Response.ok(gson.toJson(new FieldOptionsResponse(fieldOptions))).build();
+        log.info("fieldOptionsRequest was {}", fieldOptions.getFieldOptionsRequest());
+        return (fieldOptions.getFieldOptionsRequest() == null)
+                ? Response.ok("failed to parse request parameters. check the logs").build()
+                :Response.ok(gson.toJson(new FieldOptionsResponse(fieldOptions))).build();
     }
 }
