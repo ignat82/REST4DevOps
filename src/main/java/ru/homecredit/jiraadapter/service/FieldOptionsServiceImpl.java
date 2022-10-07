@@ -64,7 +64,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             fieldOptions.setErrorMessage("action parameter not recognized");
             return fieldOptions;
         }
-        if (Objects.equals(fieldOptions.getFieldOptionsRequest().getNewOption(), DEFAULT_RECEIVED)) {
+        if (DEFAULT_RECEIVED.equals(fieldOptions.getFieldOptionsRequest().getNewOption())) {
             fieldOptions.setErrorMessage("option not provided in request");
             return fieldOptions;
         }
