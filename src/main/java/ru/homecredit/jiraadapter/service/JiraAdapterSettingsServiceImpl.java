@@ -2,6 +2,7 @@ package ru.homecredit.jiraadapter.service;
 
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,8 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
      * @param customFieldManager - injected by spring to invoking class
      */
     @Inject
-    public JiraAdapterSettingsServiceImpl(PluginSettingsFactory pluginSettingsFactory,
-                                          CustomFieldManager customFieldManager) {
+    public JiraAdapterSettingsServiceImpl(@ComponentImport PluginSettingsFactory pluginSettingsFactory,
+                                          @ComponentImport CustomFieldManager customFieldManager) {
         pluginSettings = pluginSettingsFactory.createGlobalSettings();
         this.customFieldManager = customFieldManager;
     }

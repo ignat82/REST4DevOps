@@ -10,15 +10,17 @@ import com.atlassian.jira.issue.fields.FieldManager;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.FieldParameters;
 import ru.homecredit.jiraadapter.dto.JiraAdapterSettings;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
@@ -26,7 +28,7 @@ import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.*;
 
 @Slf4j
-@RequiredArgsConstructor
+@Named
 public class FieldOptionsServiceImpl implements FieldOptionsService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final FieldManager fieldManager;
@@ -34,6 +36,16 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     private final OptionsManager optionsManager;
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
 
+    @Inject
+    public FieldOptionsServiceImpl(@ComponentImport FieldManager fieldManager,
+                                   @ComponentImport ProjectManager projectManager,
+                                   @ComponentImport OptionsManager optionsManager,
+                                   JiraAdapterSettingsServiceImpl jiraAdapterSettingsService) {
+        this.fieldManager = fieldManager;
+        this.projectManager = projectManager;
+        this.optionsManager = optionsManager;
+        this.jiraAdapterSettingsService = jiraAdapterSettingsService;
+    }
     public FieldOptions getOptions(String fieldKey,
                                     String projectKey,
                                     String issueTypeId) {

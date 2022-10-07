@@ -1,11 +1,6 @@
 package ru.homecredit.jiraadapter.web;
 
-import com.atlassian.jira.issue.CustomFieldManager;
-import com.atlassian.jira.issue.customfields.manager.OptionsManager;
-import com.atlassian.jira.issue.fields.FieldManager;
-import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
-import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +8,6 @@ import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.response.FieldOptionsResponse;
 import ru.homecredit.jiraadapter.service.FieldOptionsService;
 import ru.homecredit.jiraadapter.service.FieldOptionsServiceImpl;
-import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
-import ru.homecredit.jiraadapter.service.JiraAdapterSettingsServiceImpl;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,7 +22,6 @@ import javax.ws.rs.core.Response;
 @Named
 @Slf4j
 public class FieldOptionsController {
-
     private final FieldOptionsService fieldOptionsService;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -37,18 +29,8 @@ public class FieldOptionsController {
      * puts the received Jira beans to fields
      */
     @Inject
-    public FieldOptionsController(FieldManager fieldManager,
-                                  ProjectManager projectManager,
-                                  OptionsManager optionsManager,
-                                  PluginSettingsFactory pluginSettingsFactory,
-                                  CustomFieldManager customFieldManager) {
-        JiraAdapterSettingsService jiraAdapterSettingsService
-                = new JiraAdapterSettingsServiceImpl(pluginSettingsFactory,
-                                                     customFieldManager);
-        fieldOptionsService = new FieldOptionsServiceImpl(fieldManager,
-                                                          projectManager,
-                                                          optionsManager,
-                                                          jiraAdapterSettingsService);
+    public FieldOptionsController(FieldOptionsServiceImpl fieldOptionsService) {
+        this.fieldOptionsService = fieldOptionsService;
     }
 
     /**
