@@ -22,6 +22,7 @@ import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action;
@@ -216,13 +217,13 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         Options options = Objects.requireNonNull(optionsManager.
               getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
               "failed to acquire Options object");
-        fieldOptions.setFieldOptionsArr(options.stream().map(op -> op.getValue()).toArray(String[]::new));
-        Map<String, Boolean> isDisabled = new HashMap<>();
-        for (Option option : options) {
-            isDisabled.put(option.getValue(), option.getDisabled());
-        }
-        fieldOptions.setIsDisabled(isDisabled);
-        log.trace("field options are {}", fieldOptions.getFieldOptionsArr());
+        fieldOptions.setFieldOptionsArr(options.stream().map(Option::getValue).toArray(String[]::new));
+        fieldOptions.setIsDisabled(options.stream().collect(
+                Collectors.toMap(Option::getValue, Option::getDisabled)));
+        fieldOptions.setOptionIds(options.stream().collect(
+                Collectors.toMap(Option::getOptionId, Option::getValue)));
+        log.trace("field options id's are {}", fieldOptions.getOptionIds().toString());
+        log.trace("field options are {}", Arrays.toString(fieldOptions.getFieldOptionsArr()));
     }
 
 }

@@ -42,6 +42,9 @@ public class FieldOptionsResponse {
     @XmlElementWrapper(name = "isDisabled")
     @XmlElement(name = "disabled")
     private Map<String, Boolean> isDisabled;
+    @XmlElementWrapper(name = "optionIds")
+    @XmlElement(name = "id")
+    private Map<Long, String> optionIds;
     @XmlElement(name = "success")
     private String success;
     @XmlElement(name = "errorMessage")
@@ -65,6 +68,7 @@ public class FieldOptionsResponse {
             fieldConfigName = fieldParameters.getFieldConfigName();
         }
         isDisabled = fieldOptions.getIsDisabled();
+        optionIds = fieldOptions.getOptionIds();
         this.fieldOptions = fieldOptions.getFieldOptionsArr();
         success = Boolean.toString(fieldOptions.isSuccess());
         errorMessage = fieldOptions.getErrorMessage();

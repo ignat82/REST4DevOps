@@ -11,16 +11,51 @@ The function of this plugin is to provide REST service for:
 REST API endpoints:
 
 for GET fieldOptionsRequest to acquire the options of customfild in given context:
-http://{host}/jira/rest/cfoptchange/1.0/options?fieldKey={key}
+http://{jira base URL}/rest/cfoptchange/1.0/options?fieldKey={key}
         &projectKey={key}&issueTypeId={id}
 
-for POST fieldOptionsRequest to append new option to options of customfild in given context:
-http://{host}/jira/rest/cfoptchange/1.0/options?fieldKey={key}
+for POST fieldOptionsRequest to append new option to options of customfield in given context:
+http://{jira base URL}/rest/cfoptchange/1.0/options?fieldKey={key}
         &projectKey={key}&issueTypeId={id}&newOption{value}
 
 test classes, inherited from skeleton plugin in
     src\test\java\ut\HCBplugins\rest\CfOptChangeTest.java
 are commented out
+
+response looks like:
+{
+    "fieldKey": "customfield_10008",
+    "projectKey": "TES",
+    "issueTypeId": "10000",
+    "newOption": "not provided",
+    "action": "NOT_RECOGNIZED",
+    "fieldName": "MultiSelectField",
+    "projectName": "tes",
+    "fieldConfigName": "Default Configuration for MultiSelectField",
+    "fieldOptions": [
+        "value1",
+        "value2",
+        "some disabled value",
+        "one more value"
+    ],
+    "isDisabled": {
+        "value2": false,
+        "value1": false,
+        "one more value": false,
+        "some disabled value": true
+    },
+    "optionIds": {
+        "10003": "value1",
+        "10004": "value2",
+        "10005": "some disabled value",
+        "10006": "one more value"
+    },
+    "success": "true"
+}
+
+if there are two or more options with similar values it may look ambiguous
+which one is disabled
+
 
 
 
