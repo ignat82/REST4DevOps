@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.*;
+import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 
 @Slf4j
 @Named
@@ -218,11 +219,8 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
               getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
               "failed to acquire Options object");
         fieldOptions.setFieldOptionsArr(options.stream().map(Option::getValue).toArray(String[]::new));
-        fieldOptions.setIsDisabled(options.stream().collect(
-                Collectors.toMap(Option::getValue, Option::getDisabled)));
-        fieldOptions.setOptionIds(options.stream().collect(
-                Collectors.toMap(Option::getOptionId, Option::getValue)));
-        log.trace("field options id's are {}", fieldOptions.getOptionIds().toString());
+        fieldOptions.setJiraOptions(options.stream().map(JiraOption::new).collect(Collectors.toList()));
+        log.trace("field options id's are {}", fieldOptions.getJiraOptions().toString());
         log.trace("field options are {}", Arrays.toString(fieldOptions.getFieldOptionsArr()));
     }
 

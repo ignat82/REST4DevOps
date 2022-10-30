@@ -7,7 +7,9 @@ import ru.homecredit.jiraadapter.dto.FieldParameters;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import javax.xml.bind.annotation.*;
-import java.util.Map;
+import java.util.List;
+
+import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 
 /**
  * class to pack FieldOptions DTO to JSON response
@@ -39,12 +41,9 @@ public class FieldOptionsResponse {
     @XmlElementWrapper(name = "fieldOptions")
     @XmlElement(name = "option")
     private String[] fieldOptions;
-    @XmlElementWrapper(name = "isDisabled")
-    @XmlElement(name = "disabled")
-    private Map<String, Boolean> isDisabled;
-    @XmlElementWrapper(name = "optionIds")
-    @XmlElement(name = "id")
-    private Map<Long, String> optionIds;
+    @XmlElementWrapper(name = "jiraOptions")
+    @XmlElement(name = "jiraOption")
+    private List<JiraOption> jiraOptions;
     @XmlElement(name = "success")
     private String success;
     @XmlElement(name = "errorMessage")
@@ -67,8 +66,7 @@ public class FieldOptionsResponse {
             projectName = fieldParameters.getProjectName();
             fieldConfigName = fieldParameters.getFieldConfigName();
         }
-        isDisabled = fieldOptions.getIsDisabled();
-        optionIds = fieldOptions.getOptionIds();
+        jiraOptions = fieldOptions.getJiraOptions();
         this.fieldOptions = fieldOptions.getFieldOptionsArr();
         success = Boolean.toString(fieldOptions.isSuccess());
         errorMessage = fieldOptions.getErrorMessage();

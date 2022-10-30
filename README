@@ -38,18 +38,28 @@ response looks like:
         "some disabled value",
         "one more value"
     ],
-    "isDisabled": {
-        "value2": false,
-        "value1": false,
-        "one more value": false,
-        "some disabled value": true
-    },
-    "optionIds": {
-        "10003": "value1",
-        "10004": "value2",
-        "10005": "some disabled value",
-        "10006": "one more value"
-    },
+    "jiraOptions": [
+        {
+            "optionId": 10003,
+            "optionValue": "value1",
+            "isDisabled": false
+        },
+        {
+            "optionId": 10004,
+            "optionValue": "value2",
+            "isDisabled": false
+        },
+        {
+            "optionId": 10005,
+            "optionValue": "some disabled value",
+            "isDisabled": true
+        },
+        {
+            "optionId": 10006,
+            "optionValue": "one more value",
+            "isDisabled": false
+        }
+    ],
     "success": "true"
 }
 
