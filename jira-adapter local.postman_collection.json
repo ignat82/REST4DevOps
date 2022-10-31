@@ -1,0 +1,237 @@
+{
+	"info": {
+		"_postman_id": "5d42c7cd-3d99-4185-b3ba-006d3d853f76",
+		"name": "jira-adapter local",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21338355"
+	},
+	"item": [
+		{
+			"name": "POST renameOption local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"fieldKey\":\"customfield_10008\", \"projectKey\":\"TES\", \"issueTypeId\":\"10000\", \"optionNewValue\":\"new new value3\", \"newOption\":\"new value3\", \"action\":\"rename\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"cfoptchange",
+						"1.0",
+						"options"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET getFieldOptions local",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"fieldKey\":\"customfield_1000\", \"projectKey\":\"TES\", \"issueTypeId\":\"10000\", \"newOption\":\"new8\", \"action\":\"add\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options?fieldKey=customfield_10100&projectKey=TES&issueTypeId=10000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"cfoptchange",
+						"1.0",
+						"options"
+					],
+					"query": [
+						{
+							"key": "fieldKey",
+							"value": "customfield_10100"
+						},
+						{
+							"key": "projectKey",
+							"value": "TES"
+						},
+						{
+							"key": "issueTypeId",
+							"value": "10000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST addOption local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"fieldKey\":\"customfield_10008\", \"projectKey\":\"TES\", \"issueTypeId\":\"10000\", \"newOption\":\"new value3\", \"action\":\"add\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"cfoptchange",
+						"1.0",
+						"options"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST disableOption local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"fieldKey\":\"customfield_10008\", \"projectKey\":\"TES\", \"issueTypeId\":\"10000\", \"newOption\":\"value2\", \"action\":\"disable\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"cfoptchange",
+						"1.0",
+						"options"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST enableOption local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"fieldKey\":\"customfield_10008\", \"projectKey\":\"TES\", \"issueTypeId\":\"10000\", \"newOption\":\"value2\", \"action\":\"enable\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"cfoptchange",
+						"1.0",
+						"options"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
