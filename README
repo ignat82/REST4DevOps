@@ -63,8 +63,6 @@ response looks like:
     "success": "true"
 }
 
-if there are two or more options with similar values it may look ambiguous
-which one is disabled
 
 
 
