@@ -49,8 +49,8 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
     }
     public FieldOptions getOptions(String fieldKey,
-                                    String projectKey,
-                                    String issueTypeId) {
+                                   String projectKey,
+                                   String issueTypeId) {
         FieldOptions fieldOptions
                 = initializeFieldOptions(new FieldOptionsRequest(fieldKey, projectKey, issueTypeId));
         if (fieldOptions.getErrorMessage() == null) {
@@ -78,14 +78,43 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             fieldOptions.setErrorMessage("action parameter not recognized");
             return fieldOptions;
         }
-        if (DEFAULT_RECEIVED.equals(fieldOptions.getFieldOptionsRequest().getNewOption())) {
+        if (fieldOptions.getFieldOptionsRequest().getNewOption().equals(DEFAULT_RECEIVED)) {
             fieldOptions.setErrorMessage("option not provided in request");
             return fieldOptions;
         }
-        return (action == ADD) ? addOption(fieldOptions)
-                               : setOptionState(fieldOptions);
+        if (action == ADD) {
+            return addOption(fieldOptions);
+        }
+        String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
+        Option option = optionsManager.getOptions(fieldOptions.getFieldParameters().
+                getFieldConfig()).getOptionForValue(optionValue, null);
+        if (option == null) {
+            String message = "option " + optionValue + " seems not to exist. shutting down";
+            fieldOptions.setErrorMessage(message);
+            log.error(message);
+            return fieldOptions;
+        }
+        return (action == RENAME) ? renameOption(fieldOptions, option)
+                : setOptionState(fieldOptions, option);
     }
 
+    private FieldOptions renameOption(FieldOptions fieldOptions, Option option) {
+        String oldOptionValue = option.getValue();
+        String newOptionValue = fieldOptions.getFieldOptionsRequest().getOptionNewValue();
+        if (newOptionValue.equals(DEFAULT_RECEIVED)) {
+            String message = "newOptionValue was not provided";
+            log.error(message);
+            fieldOptions.setErrorMessage(message);
+            return fieldOptions;
+        }
+        option.setValue(newOptionValue);
+        fieldOptions.setSuccess(true);
+        log.trace("renamed option from \"{}\"  to \"{}\"", oldOptionValue, newOptionValue);
+        /* acquiring Options object and Options from it once again, cuz the
+        option state changed */
+        initializeOptions(fieldOptions);
+        return fieldOptions;
+    }
     private FieldOptions addOption(FieldOptions fieldOptions) {
         String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
         log.trace("trying to add new option \"{}\"", optionValue);
@@ -106,24 +135,14 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         return fieldOptions;
     }
 
-    private FieldOptions setOptionState(FieldOptions fieldOptions) {
-        String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
-        Option option =
-                optionsManager.getOptions(fieldOptions.getFieldParameters().
-                getFieldConfig()).getOptionForValue(optionValue, null);
-        if (option == null) {
-            String message = "option " + optionValue + " seems not to exist. shutting down";
-            fieldOptions.setErrorMessage(message);
-            log.error(message);
-        } else {
-            boolean isDisabled = (fieldOptions.getFieldOptionsRequest().getAction() == DISABLE);
-            option.setDisabled(isDisabled);
-            fieldOptions.setSuccess(true);
-            log.trace("set option \"{}\" isDisabled state to {}", optionValue, isDisabled);
-            /* acquiring Options object and Options from it once again, cuz the
-            option state changed */
-            initializeOptions(fieldOptions);
-        }
+    private FieldOptions setOptionState(FieldOptions fieldOptions, Option option) {
+        boolean isDisabled = (fieldOptions.getFieldOptionsRequest().getAction() == DISABLE);
+        option.setDisabled(isDisabled);
+        fieldOptions.setSuccess(true);
+        log.trace("set option \"{}\" isDisabled state to {}", option.getValue(), isDisabled);
+        /* acquiring Options object and Options from it once again, cuz the
+        option state changed */
+        initializeOptions(fieldOptions);
         return fieldOptions;
     }
 

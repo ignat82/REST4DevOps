@@ -17,8 +17,8 @@ public interface FieldOptionsService {
      * @return FieldOptions DTO
      */
     FieldOptions getOptions(String fieldKey,
-                                   String projectKey,
-                                   String issueTypeId);
+                            String projectKey,
+                            String issueTypeId);
 
     /**
      * method that does the manipulation on field and option, received in POST

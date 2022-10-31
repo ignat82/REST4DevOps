@@ -5,6 +5,7 @@ The function of this plugin is to provide REST service for:
  - adding new options to field options list
  - disabling options
  - enabling disabled options
+ - renaming existing options
  the list of customfields, which dictionaries are exposed by plugin REST service is
  stored in plugin setting. Settings are available at plugin configuration page
 
@@ -22,13 +23,17 @@ test classes, inherited from skeleton plugin in
     src\test\java\ut\HCBplugins\rest\CfOptChangeTest.java
 are commented out
 
-response looks like:
+POSTMAN collection with all types of requests you can find in
+"jira-adapter local.postman_collection.json" file
+
+response may look like:
 {
     "fieldKey": "customfield_10008",
     "projectKey": "TES",
     "issueTypeId": "10000",
-    "newOption": "not provided",
-    "action": "NOT_RECOGNIZED",
+    "newOption": "new value3",
+    "optionNewValue": "new new value3",
+    "action": "RENAME",
     "fieldName": "MultiSelectField",
     "projectName": "tes",
     "fieldConfigName": "Default Configuration for MultiSelectField",
@@ -36,7 +41,8 @@ response looks like:
         "value1",
         "value2",
         "some disabled value",
-        "one more value"
+        "one more value",
+        "new new value3"
     ],
     "jiraOptions": [
         {
@@ -58,9 +64,15 @@ response looks like:
             "optionId": 10006,
             "optionValue": "one more value",
             "isDisabled": false
+        },
+        {
+            "optionId": 10100,
+            "optionValue": "new new value3",
+            "isDisabled": false
         }
     ],
-    "success": "true"
+    "success": "false",
+    "errorMessage": "option new value3 seems not to exist. shutting down"
 }
 
 

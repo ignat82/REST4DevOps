@@ -19,6 +19,7 @@ public class FieldOptionsRequest {
     private final String projectKey;
     private final String issueTypeId;
     private final String newOption;
+    private final String optionNewValue;
     private Action action;
 
     /**
@@ -26,17 +27,20 @@ public class FieldOptionsRequest {
      * @param projectKey - key of Jira project, necessary to define manipulated field context
      * @param issueTypeId - id of Jira issue type, necessary to define manipulated field context
      * @param newOption - option to be manipulated
+     * @param optionNewValue - new value for existing option to be set
      * @param actionCode - string code of action to be preformed on option of given customfield
      */
     public FieldOptionsRequest(String fieldKey,
                                String projectKey,
                                String issueTypeId,
                                String newOption,
+                               String optionNewValue,
                                String actionCode) {
         this.fieldKey = StringUtils.defaultIfEmpty(fieldKey, DEFAULT_RECEIVED);
-        this.projectKey = StringUtils.defaultIfEmpty(projectKey, DEFAULT_RECEIVED);;
-        this.issueTypeId = StringUtils.defaultIfEmpty(issueTypeId, DEFAULT_RECEIVED);;
-        this.newOption = StringUtils.defaultIfEmpty(newOption, DEFAULT_RECEIVED);;
+        this.projectKey = StringUtils.defaultIfEmpty(projectKey, DEFAULT_RECEIVED);
+        this.issueTypeId = StringUtils.defaultIfEmpty(issueTypeId, DEFAULT_RECEIVED);
+        this.newOption = StringUtils.defaultIfEmpty(newOption, DEFAULT_RECEIVED);
+        this.optionNewValue = StringUtils.defaultIfEmpty(optionNewValue, DEFAULT_RECEIVED);
         this.action = actionFromCode(actionCode);
     }
 
@@ -67,6 +71,7 @@ public class FieldOptionsRequest {
              projectKey,
              issueTypeId,
              Constants.DEFAULT_RECEIVED,
+             Constants.DEFAULT_RECEIVED,
              Constants.DEFAULT_RECEIVED);
     }
 
@@ -75,6 +80,7 @@ public class FieldOptionsRequest {
      */
     public FieldOptionsRequest() {
         this(Constants.DEFAULT_RECEIVED,
+             Constants.DEFAULT_RECEIVED,
              Constants.DEFAULT_RECEIVED,
              Constants.DEFAULT_RECEIVED,
              Constants.DEFAULT_RECEIVED,
@@ -100,6 +106,7 @@ public class FieldOptionsRequest {
         @SerializedName("add") ADD ("add"),
         @SerializedName("enable") ENABLE ("enable"),
         @SerializedName("disable") DISABLE ("disable"),
+        @SerializedName("rename") RENAME ("rename"),
         @SerializedName("not recognized") NOT_RECOGNIZED ("not recognized");
         private static final Action[] ALL_VALUES = Action.values();
         private final String code;

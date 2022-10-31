@@ -30,6 +30,8 @@ public class FieldOptionsResponse {
     private String issueTypeId;
     @XmlAttribute(name = "newOption")
     private String newOption;
+    @XmlAttribute(name = "optionNewValue")
+    private String optionNewValue;
     @XmlAttribute(name = "action")
     private String action;
     @XmlElement(name = "fieldName")
@@ -59,6 +61,7 @@ public class FieldOptionsResponse {
         projectKey = fieldOptionsRequest.getProjectKey();
         issueTypeId = fieldOptionsRequest.getIssueTypeId();
         newOption = fieldOptionsRequest.getNewOption();
+        optionNewValue = fieldOptionsRequest.getOptionNewValue();
         action = fieldOptionsRequest.getAction().toString();
         FieldParameters fieldParameters = fieldOptions.getFieldParameters();
         if (fieldParameters != null) {

@@ -1,6 +1,5 @@
 package ru.homecredit.jiraadapter.web;
 
-import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +46,6 @@ public class FieldOptionsController {
      * @return xml response in format, defined in FieldOptionToXML class
      */
     @GET
-    @AnonymousAllowed
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFieldOptions(@QueryParam("fieldKey") String fieldKey,
                                     @QueryParam("projectKey") String projectKey,
@@ -68,7 +66,6 @@ public class FieldOptionsController {
      * @return Response object
      */
     @POST
-    @AnonymousAllowed
     @Produces(MediaType.APPLICATION_JSON)
     public Response doPost(String requestBody) {
         log.trace("************ starting doPost method... **************");
