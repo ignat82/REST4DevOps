@@ -108,6 +108,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             return fieldOptions;
         }
         option.setValue(newOptionValue);
+        optionsManager.updateOptions(Collections.singletonList(option));
         fieldOptions.setSuccess(true);
         log.trace("renamed option from \"{}\"  to \"{}\"", oldOptionValue, newOptionValue);
         /* acquiring Options object and Options from it once again, cuz the
@@ -123,10 +124,12 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             return fieldOptions;
         }
         int size = fieldOptions.getFieldOptionsArr().length;
-        optionsManager.createOption(fieldOptions.getFieldParameters().getFieldConfig(),
+        Option createdOption =
+                optionsManager.createOption(fieldOptions.getFieldParameters().getFieldConfig(),
                                     null,
                                     (long) (size + 1),
                                     optionValue);
+        optionsManager.updateOptions(Collections.singletonList(createdOption));
         fieldOptions.setSuccess(true);
         log.trace("added option \"{}\" to Options", optionValue);
         /* acquiring Options object and Options from it once again, cuz the
@@ -138,6 +141,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     private FieldOptions setOptionState(FieldOptions fieldOptions, Option option) {
         boolean isDisabled = (fieldOptions.getFieldOptionsRequest().getAction() == DISABLE);
         option.setDisabled(isDisabled);
+        optionsManager.updateOptions(Collections.singletonList(option));
         fieldOptions.setSuccess(true);
         log.trace("set option \"{}\" isDisabled state to {}", option.getValue(), isDisabled);
         /* acquiring Options object and Options from it once again, cuz the
