@@ -1,9 +1,12 @@
 package ru.homecredit.jiraadapter.dto.request;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import ru.homecredit.jiraadapter.dto.Constants;
 
@@ -14,13 +17,31 @@ import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
  */
 @Getter
 @Setter
+@Slf4j
 public class FieldOptionsRequest {
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final String fieldKey;
     private final String projectKey;
     private final String issueTypeId;
     private final String newOption;
     private final String optionNewValue;
     private Action action;
+
+    public static FieldOptionsRequest initializeFromRequestBody(String requestBody) {
+        FieldOptionsRequest fieldOptionsRequest = null;
+        try {
+            fieldOptionsRequest = gson.fromJson(requestBody, FieldOptionsRequest.class);
+            if (fieldOptionsRequest.getAction() == null) {
+                log.warn("got null action. setting default");
+                fieldOptionsRequest.setAction(FieldOptionsRequest.Action.NOT_RECOGNIZED);
+            }
+            log.info("json deserialized \n{}", fieldOptionsRequest);
+        } catch (Exception e) {
+            log.error("could not parse fieldOptionsRequest body - {}", requestBody);
+            log.error("exception is - {}", e.getMessage());
+        }
+        return fieldOptionsRequest;
+    }
 
     /**
      * @param fieldKey - key of Jira customfield, which options are manipulated
@@ -42,20 +63,6 @@ public class FieldOptionsRequest {
         this.newOption = StringUtils.defaultIfEmpty(newOption, DEFAULT_RECEIVED);
         this.optionNewValue = StringUtils.defaultIfEmpty(optionNewValue, DEFAULT_RECEIVED);
         this.action = actionFromCode(actionCode);
-    }
-
-    /**
-     *  helper method to transfer the received string value of action to enum
-     * @param actionCode - string value from request, defining the action to be preformed
-     * @return - Action enum
-     */
-    private Action actionFromCode(String actionCode) {
-        for (Action action : Action.ALL_VALUES) {
-            if (action.getCode().equals(actionCode)) {
-                return action;
-            }
-        }
-        return Action.NOT_RECOGNIZED;
     }
 
     /**
@@ -95,6 +102,20 @@ public class FieldOptionsRequest {
                 append("; new option = ").append(newOption).append("; action = ").
                 append(action).append(".");
         return stringBuilder.toString();
+    }
+
+    /**
+     *  helper method to transfer the received string value of action to enum
+     * @param actionCode - string value from request, defining the action to be preformed
+     * @return - Action enum
+     */
+    private Action actionFromCode(String actionCode) {
+        for (Action action : Action.ALL_VALUES) {
+            if (action.getCode().equals(actionCode)) {
+                return action;
+            }
+        }
+        return Action.NOT_RECOGNIZED;
     }
 
     /**

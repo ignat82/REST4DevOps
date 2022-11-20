@@ -27,6 +27,19 @@ public class FieldOptions {
         this(new FieldOptionsRequest());
     }
 
+    public void setFieldParameters(FieldParameters fieldParameters) {
+        this.fieldParameters = new FieldParameters();
+        if (fieldParameters == null) {
+            errorMessage = "failed to initialize field parameters";
+        } else if (!fieldParameters.isValidContext()) {
+            errorMessage = "failed to initialize field parameters due invalid context provided";
+        } else if (!fieldParameters.isPermittedToEdit()) {
+            errorMessage = "access to field is not permitted by plugin settings";
+        } else {
+            this.fieldParameters = fieldParameters;
+        }
+    }
+
     @Getter
     @Setter
     public static class JiraOption {

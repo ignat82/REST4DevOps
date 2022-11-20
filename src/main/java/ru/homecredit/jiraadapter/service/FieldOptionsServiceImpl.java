@@ -11,8 +11,6 @@ import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.FieldParameters;
@@ -21,18 +19,20 @@ import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
+import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.*;
-import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 
 @Slf4j
 @Named
 public class FieldOptionsServiceImpl implements FieldOptionsService {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final FieldManager fieldManager;
     private final ProjectManager projectManager;
     private final OptionsManager optionsManager;
@@ -60,7 +60,8 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     }
 
     public FieldOptions postOption(String requestBody) {
-        FieldOptionsRequest fieldOptionsRequest = extractRequestParameters(requestBody);
+        FieldOptionsRequest fieldOptionsRequest =
+                FieldOptionsRequest.initializeFromRequestBody(requestBody);
         if (fieldOptionsRequest == null) {
             FieldOptions fieldOptions = new FieldOptions();
             String errorMessage = "failed to parse request parameters";
@@ -157,42 +158,11 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
      */
     private FieldOptions initializeFieldOptions(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = new FieldOptions(fieldOptionsRequest);
-        FieldParameters fieldParameters = initializeFieldParameters(fieldOptionsRequest);
-        if (fieldParameters == null) {
-            fieldOptions.setFieldParameters(new FieldParameters());
-            fieldOptions.setErrorMessage("failed to acquire field parameters on some reason");
-        } else if (!fieldParameters.isValidContext()) {
-            fieldOptions.setErrorMessage("failed to initialize field parameters. invalid context?" +
-                                                 " field and project keys?");
-        } else if (fieldParameters.isPermittedToEdit()) {
-            fieldOptions.setFieldParameters(fieldParameters);
+        fieldOptions.setFieldParameters(initializeFieldParameters(fieldOptionsRequest));
+        if (fieldOptions.getErrorMessage() == null) {
             initializeOptions(fieldOptions);
-        } else {
-            fieldOptions.setFieldParameters(new FieldParameters());
-            fieldOptions.setErrorMessage("access to field is not permitted by plugin settings");
         }
         return fieldOptions;
-    }
-
-    /**
-     * helper method to parse the request body and extract request parameters from it
-     * @param requestBody - String, received by controller from POST request
-     * @return - FieldOptionsRequest DTO
-     */
-    private FieldOptionsRequest extractRequestParameters(String requestBody) {
-        FieldOptionsRequest fieldOptionsRequest = null;
-        try {
-            fieldOptionsRequest = gson.fromJson(requestBody, FieldOptionsRequest.class);
-            if (fieldOptionsRequest.getAction() == null) {
-                log.warn("got null action. setting default");
-                fieldOptionsRequest.setAction(FieldOptionsRequest.Action.NOT_RECOGNIZED);
-            }
-            log.info("json deserialized \n{}", fieldOptionsRequest);
-        } catch (Exception e) {
-            log.error("could not parse fieldOptionsRequest body - {}", requestBody);
-            log.error("exception is - {}", e.getMessage());
-        }
-        return fieldOptionsRequest;
     }
 
     /**
@@ -237,6 +207,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
      * manipulated FieldOptions DTO
      * @param fieldOptions - transport object
      */
+    // side effect
     private void initializeOptions(FieldOptions fieldOptions) {
         Options options = Objects.requireNonNull(optionsManager.
               getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
