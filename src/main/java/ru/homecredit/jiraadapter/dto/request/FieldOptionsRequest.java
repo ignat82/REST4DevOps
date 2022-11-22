@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import ru.homecredit.jiraadapter.dto.Constants;
-
-import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 
 /**
  * DTO class for storing request parameters of FieldOptionsController
@@ -31,10 +28,6 @@ public class FieldOptionsRequest {
         FieldOptionsRequest fieldOptionsRequest = null;
         try {
             fieldOptionsRequest = gson.fromJson(requestBody, FieldOptionsRequest.class);
-            if (fieldOptionsRequest.getAction() == null) {
-                log.warn("got null action. setting default");
-                fieldOptionsRequest.setAction(FieldOptionsRequest.Action.NOT_RECOGNIZED);
-            }
             log.info("json deserialized \n{}", fieldOptionsRequest);
         } catch (Exception e) {
             log.error("could not parse fieldOptionsRequest body - {}", requestBody);
@@ -57,11 +50,11 @@ public class FieldOptionsRequest {
                                String newOption,
                                String optionNewValue,
                                String actionCode) {
-        this.fieldKey = StringUtils.defaultIfEmpty(fieldKey, DEFAULT_RECEIVED);
-        this.projectKey = StringUtils.defaultIfEmpty(projectKey, DEFAULT_RECEIVED);
-        this.issueTypeId = StringUtils.defaultIfEmpty(issueTypeId, DEFAULT_RECEIVED);
-        this.newOption = StringUtils.defaultIfEmpty(newOption, DEFAULT_RECEIVED);
-        this.optionNewValue = StringUtils.defaultIfEmpty(optionNewValue, DEFAULT_RECEIVED);
+        this.fieldKey = fieldKey;
+        this.projectKey = projectKey;
+        this.issueTypeId = issueTypeId;
+        this.newOption = newOption;
+        this.optionNewValue = optionNewValue;
         this.action = actionFromCode(actionCode);
     }
 

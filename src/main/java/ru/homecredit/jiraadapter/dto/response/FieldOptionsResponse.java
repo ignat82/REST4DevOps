@@ -2,13 +2,16 @@ package ru.homecredit.jiraadapter.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.FieldParameters;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
+import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_ACQUIRED;
 import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 
 /**
@@ -20,6 +23,7 @@ import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
+@Slf4j
 public class FieldOptionsResponse {
 
     @XmlAttribute
@@ -56,18 +60,23 @@ public class FieldOptionsResponse {
      * @param fieldOptions - DTO
      */
     public FieldOptionsResponse(FieldOptions fieldOptions) {
+        log.info("FieldOptionsResponse construction");
         FieldOptionsRequest fieldOptionsRequest = fieldOptions.getFieldOptionsRequest();
         fieldKey = fieldOptionsRequest.getFieldKey();
         projectKey = fieldOptionsRequest.getProjectKey();
         issueTypeId = fieldOptionsRequest.getIssueTypeId();
         newOption = fieldOptionsRequest.getNewOption();
         optionNewValue = fieldOptionsRequest.getOptionNewValue();
-        action = fieldOptionsRequest.getAction().toString();
+        action = Optional.ofNullable(fieldOptionsRequest.getAction())
+                         .orElse(FieldOptionsRequest.Action.NOT_RECOGNIZED).toString();
         FieldParameters fieldParameters = fieldOptions.getFieldParameters();
         if (fieldParameters != null) {
-            fieldName = fieldParameters.getFieldName();
-            projectName = fieldParameters.getProjectName();
-            fieldConfigName = fieldParameters.getFieldConfigName();
+            fieldName =
+                    Optional.ofNullable(fieldParameters.getFieldName()).orElse(DEFAULT_ACQUIRED);
+            projectName =
+                    Optional.ofNullable(fieldParameters.getProjectName()).orElse(DEFAULT_ACQUIRED);
+            fieldConfigName =
+                    Optional.ofNullable(fieldParameters.getFieldConfigName()).orElse(DEFAULT_ACQUIRED);
         }
         jiraOptions = fieldOptions.getJiraOptions();
         fieldOptionsList = fieldOptions.getFieldOptionsList();

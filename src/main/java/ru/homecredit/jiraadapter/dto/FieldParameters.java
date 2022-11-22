@@ -5,21 +5,17 @@ import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-
-import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_ACQUIRED;
-
 /**
  * DTO class to store manipulated field Jira parameters
  */
 @Setter
 @Getter
 public class FieldParameters {
-    private Optional<String> fieldName;
-    private String projectName = DEFAULT_ACQUIRED;
+    private String fieldName;
+    private  String projectName;
     @Expose(serialize = false, deserialize = false)
     private FieldConfig fieldConfig;
-    private String fieldConfigName = DEFAULT_ACQUIRED;
+    private String fieldConfigName;
     private boolean validContext;
     private boolean isPermittedToEdit;
 }

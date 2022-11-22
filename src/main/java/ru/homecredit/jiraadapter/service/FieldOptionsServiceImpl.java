@@ -19,10 +19,7 @@ import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
@@ -52,7 +49,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
                                    String projectKey,
                                    String issueTypeId) {
         FieldOptions fieldOptions
-                = initializeFieldOptions(new FieldOptionsRequest(fieldKey, projectKey, issueTypeId));
+                = initializeField(new FieldOptionsRequest(fieldKey, projectKey, issueTypeId));
         if (fieldOptions.getErrorMessage() == null) {
             fieldOptions.setSuccess(true);
         }
@@ -69,7 +66,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             log.error(errorMessage);
             return fieldOptions;
         }
-        FieldOptions fieldOptions = initializeFieldOptions(fieldOptionsRequest);
+        FieldOptions fieldOptions = initializeField(fieldOptionsRequest);
         if (fieldOptions.getErrorMessage() != null) {
             log.error("shutting down postOption() due to error");
             return fieldOptions;
@@ -156,7 +153,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
      * @param fieldOptionsRequest - DTO with request parameters
      * @return - FieldOptions transport object
      */
-    private FieldOptions initializeFieldOptions(FieldOptionsRequest fieldOptionsRequest) {
+    private FieldOptions initializeField(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = new FieldOptions(fieldOptionsRequest);
         fieldOptions.setFieldParameters(initializeFieldParameters(fieldOptionsRequest));
         if (fieldOptions.getErrorMessage() == null) {
@@ -172,33 +169,30 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
      */
     private FieldParameters initializeFieldParameters(FieldOptionsRequest fieldOptionsRequest) {
         FieldParameters fieldParameters = new FieldParameters();
-        try {
-            ConfigurableField field = fieldManager.
-                 getConfigurableField(fieldOptionsRequest.getFieldKey());
-            fieldParameters.setFieldName(field.getName());
-            Project project = projectManager.
-                  getProjectByCurrentKeyIgnoreCase(fieldOptionsRequest.getProjectKey());
-            fieldParameters.setProjectName(project.getName());
-            IssueContext issueContext =
-                    new IssueContextImpl(project.getId(), fieldOptionsRequest.getIssueTypeId());
-            log.trace("issue context is " + issueContext);
-            FieldConfig fieldConfig = field.getRelevantConfig(issueContext);
-            log.trace("field config is - " + fieldConfig);
-            fieldParameters.setFieldConfig(fieldConfig);
-            fieldParameters.setFieldConfigName(fieldConfig.getName());
-            fieldParameters.setValidContext(true);
-            log.trace("valid context " + fieldParameters.isValidContext());
-            JiraAdapterSettings jiraAdapterSettings = jiraAdapterSettingsService.getSettings();
-            List<String> editableFields = jiraAdapterSettings.getEditableFields();
-            log.trace("editable fields are - {}", editableFields);
-            boolean permittedToEdit = editableFields != null &&
-                    editableFields.contains(fieldOptionsRequest.getFieldKey());
-            log.trace("field {} is permitted to edit - {}", field.getName(), permittedToEdit);
-            fieldParameters.setPermittedToEdit(permittedToEdit);
-        } catch (Exception e) {
-            log.error("failed to initialize field parameters with error {}", e.toString());
+        ConfigurableField field =
+                fieldManager.getConfigurableField(fieldOptionsRequest.getFieldKey());
+        if (field == null) {
+            log.error("failed acquire field object");
             return null;
         }
+        fieldParameters.setFieldName(field.getName());
+        Project project = projectManager.
+              getProjectByCurrentKeyIgnoreCase(fieldOptionsRequest.getProjectKey());
+        fieldParameters.setProjectName(project.getName());
+        IssueContext issueContext =
+                new IssueContextImpl(project.getId(), fieldOptionsRequest.getIssueTypeId());
+        FieldConfig fieldConfig = field.getRelevantConfig(issueContext);
+        fieldParameters.setFieldConfig(fieldConfig);
+        fieldParameters.setFieldConfigName(fieldConfig.getName());
+        fieldParameters.setValidContext(true);
+        log.trace("valid context - " + fieldParameters.isValidContext());
+        JiraAdapterSettings jiraAdapterSettings = jiraAdapterSettingsService.getSettings();
+        List<String> editableFields = jiraAdapterSettings.getEditableFields();
+        log.trace("editable fields are - {}", editableFields);
+        boolean permittedToEdit = editableFields != null &&
+                editableFields.contains(fieldOptionsRequest.getFieldKey());
+        log.trace("field {} is permitted to edit - {}", field.getName(), permittedToEdit);
+        fieldParameters.setPermittedToEdit(permittedToEdit);
         return fieldParameters;
     }
 
