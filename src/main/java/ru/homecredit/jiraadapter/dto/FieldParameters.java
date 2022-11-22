@@ -5,6 +5,8 @@ import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
+
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_ACQUIRED;
 
 /**
@@ -13,7 +15,7 @@ import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_ACQUIRED;
 @Setter
 @Getter
 public class FieldParameters {
-    private String fieldName = DEFAULT_ACQUIRED;
+    private Optional<String> fieldName;
     private String projectName = DEFAULT_ACQUIRED;
     @Expose(serialize = false, deserialize = false)
     private FieldConfig fieldConfig;

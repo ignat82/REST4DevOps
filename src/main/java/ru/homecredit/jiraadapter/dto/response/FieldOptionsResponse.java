@@ -14,7 +14,7 @@ import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 /**
  * class to pack FieldOptions DTO to JSON response
  * XML markup is necessary for correct JSON serialization in
- * FieldOptionsController getFieldOptions and doPost methods
+ * FieldOptionsController getFieldOptionsList and doPost methods
  */
 @XmlRootElement(name = "response")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,9 +40,9 @@ public class FieldOptionsResponse {
     private String projectName;
     @XmlElement(name = "fieldConfigName")
     private String fieldConfigName;
-    @XmlElementWrapper(name = "fieldOptions")
+    @XmlElementWrapper(name = "fieldOptionsList")
     @XmlElement(name = "option")
-    private String[] fieldOptions;
+    private List<String> fieldOptionsList;
     @XmlElementWrapper(name = "jiraOptions")
     @XmlElement(name = "jiraOption")
     private List<JiraOption> jiraOptions;
@@ -70,7 +70,7 @@ public class FieldOptionsResponse {
             fieldConfigName = fieldParameters.getFieldConfigName();
         }
         jiraOptions = fieldOptions.getJiraOptions();
-        this.fieldOptions = fieldOptions.getFieldOptionsArr();
+        fieldOptionsList = fieldOptions.getFieldOptionsList();
         success = Boolean.toString(fieldOptions.isSuccess());
         errorMessage = fieldOptions.getErrorMessage();
     }

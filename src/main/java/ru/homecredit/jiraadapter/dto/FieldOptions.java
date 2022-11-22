@@ -18,7 +18,7 @@ import java.util.List;
 public class FieldOptions {
     private final FieldOptionsRequest fieldOptionsRequest;
     private FieldParameters fieldParameters;
-    private String[] fieldOptionsArr;
+    private List<String> fieldOptionsList;
     private List<JiraOption> jiraOptions;
     private boolean success;
     private String errorMessage;

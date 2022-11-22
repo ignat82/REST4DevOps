@@ -120,11 +120,11 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     private FieldOptions addOption(FieldOptions fieldOptions) {
         String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
         log.trace("trying to add new option \"{}\"", optionValue);
-        if (Arrays.asList(fieldOptions.getFieldOptionsArr()).contains(optionValue)) {
+        if (Arrays.asList(fieldOptions.getFieldOptionsList()).contains(optionValue)) {
             fieldOptions.setErrorMessage("new option " + optionValue + " already exists");
             return fieldOptions;
         }
-        int size = fieldOptions.getFieldOptionsArr().length;
+        int size = fieldOptions.getFieldOptionsList().size();
         Option createdOption =
                 optionsManager.createOption(fieldOptions.getFieldParameters().getFieldConfig(),
                                     null,
@@ -212,10 +212,10 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         Options options = Objects.requireNonNull(optionsManager.
               getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
               "failed to acquire Options object");
-        fieldOptions.setFieldOptionsArr(options.stream().map(Option::getValue).toArray(String[]::new));
+        fieldOptions.setFieldOptionsList(options.stream().map(Option::getValue).collect(Collectors.toList()));
         fieldOptions.setJiraOptions(options.stream().map(JiraOption::new).collect(Collectors.toList()));
         log.trace("field options id's are {}", fieldOptions.getJiraOptions().toString());
-        log.trace("field options are {}", Arrays.toString(fieldOptions.getFieldOptionsArr()));
+        log.trace("field options are {}", fieldOptions.getFieldOptionsList().toString());
     }
 
 }

@@ -50,7 +50,7 @@ public class FieldOptionsController {
     public Response getFieldOptions(@QueryParam("fieldKey") String fieldKey,
                                     @QueryParam("projectKey") String projectKey,
                                     @QueryParam("issueTypeId") String issueTypeId) {
-        log.trace("************* starting getFieldOptions method... ************");
+        log.trace("************* starting getFieldOptionsList method... ************");
         FieldOptions fieldOptions
                 = fieldOptionsService.getOptions(fieldKey, projectKey, issueTypeId);
         String jsonResponse = gson.toJson(new FieldOptionsResponse(fieldOptions));
