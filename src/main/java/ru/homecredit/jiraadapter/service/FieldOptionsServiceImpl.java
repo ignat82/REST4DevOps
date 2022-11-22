@@ -39,9 +39,8 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         return fieldOptions;
     }
 
-    public FieldOptions postOption(String requestBody) {
-        FieldOptionsRequest fieldOptionsRequest =
-                FieldOptionsRequest.initializeFromRequestBody(requestBody);
+    public FieldOptions postOption(FieldOptionsRequest fieldOptionsRequest) {
+        /*
         if (fieldOptionsRequest == null) {
             FieldOptions fieldOptions = new FieldOptions();
             String errorMessage = "failed to parse request parameters";
@@ -49,6 +48,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             log.error(errorMessage);
             return fieldOptions;
         }
+        */
         FieldOptions fieldOptions = fieldInitializationService.initializeField(fieldOptionsRequest);
         if (fieldOptions.getErrorMessage() != null) {
             log.error("shutting down postOption() due to error");
@@ -97,14 +97,15 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         fieldInitializationService.initializeOptions(fieldOptions);
         return fieldOptions;
     }
+
     private FieldOptions addOption(FieldOptions fieldOptions) {
         String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
         log.trace("trying to add new option \"{}\"", optionValue);
-        if (Arrays.asList(fieldOptions.getFieldOptionsList()).contains(optionValue)) {
+        if (fieldOptions.contains(optionValue)) {
             fieldOptions.setErrorMessage("new option " + optionValue + " already exists");
             return fieldOptions;
         }
-        int size = fieldOptions.getFieldOptionsList().size();
+        int size = fieldOptions.getJiraOptions().size();
         Option createdOption =
                 optionsManager.createOption(fieldOptions.getFieldParameters().getFieldConfig(),
                                     null,

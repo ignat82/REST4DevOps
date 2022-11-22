@@ -1,6 +1,7 @@
 package ru.homecredit.jiraadapter.service;
 
 import ru.homecredit.jiraadapter.dto.FieldOptions;
+import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 public interface FieldOptionsService {
 
@@ -27,5 +28,5 @@ public interface FieldOptionsService {
      * @param requestBody - string, received in request body by controller
      * @return FieldOptions DTO
      */
-    FieldOptions postOption(String requestBody);
+    FieldOptions postOption(FieldOptionsRequest fieldOptionsRequest);
 }

@@ -18,7 +18,6 @@ import java.util.List;
 public class FieldOptions {
     private final FieldOptionsRequest fieldOptionsRequest;
     private FieldParameters fieldParameters;
-    private List<String> fieldOptionsList;
     private List<JiraOption> jiraOptions;
     private boolean success;
     private String errorMessage;
@@ -38,6 +37,15 @@ public class FieldOptions {
         } else {
             this.fieldParameters = fieldParameters;
         }
+    }
+
+    public boolean contains(String optionValue) {
+        for (JiraOption jiraOption : jiraOptions) {
+            if (jiraOption.getOptionValue().equals(optionValue)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Getter

@@ -3,7 +3,6 @@ package ru.homecredit.jiraadapter.service;
 import com.atlassian.jira.issue.context.IssueContext;
 import com.atlassian.jira.issue.context.IssueContextImpl;
 import com.atlassian.jira.issue.customfields.manager.OptionsManager;
-import com.atlassian.jira.issue.customfields.option.Option;
 import com.atlassian.jira.issue.customfields.option.Options;
 import com.atlassian.jira.issue.fields.ConfigurableField;
 import com.atlassian.jira.issue.fields.FieldManager;
@@ -49,9 +48,12 @@ public class FieldInitializationService {
      */
     FieldOptions initializeField(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = new FieldOptions(fieldOptionsRequest);
-        fieldOptions.setFieldParameters(initializeFieldParameters(fieldOptionsRequest));
-        if (fieldOptions.getErrorMessage() == null) {
+        try {
+            fieldOptions.setFieldParameters(initializeFieldParameters(fieldOptionsRequest));
             initializeOptions(fieldOptions);
+        } catch (Exception e) {
+            fieldOptions.setErrorMessage("failed to acquire fieldParameters." +
+                                                 "check fieldKey, projectKey and issueTypeId");
         }
         return fieldOptions;
     }
@@ -65,10 +67,6 @@ public class FieldInitializationService {
         FieldParameters fieldParameters = new FieldParameters();
         ConfigurableField field =
                 fieldManager.getConfigurableField(fieldOptionsRequest.getFieldKey());
-        if (field == null) {
-            log.error("failed acquire field object");
-            return null;
-        }
         fieldParameters.setFieldName(field.getName());
         Project project = projectManager.
                 getProjectByCurrentKeyIgnoreCase(fieldOptionsRequest.getProjectKey());
@@ -98,11 +96,9 @@ public class FieldInitializationService {
     // side effect
     void initializeOptions(FieldOptions fieldOptions) {
         Options options = Objects.requireNonNull(optionsManager.
-                                                         getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
+                  getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
                                                  "failed to acquire Options object");
-        fieldOptions.setFieldOptionsList(options.stream().map(Option::getValue).collect(Collectors.toList()));
         fieldOptions.setJiraOptions(options.stream().map(FieldOptions.JiraOption::new).collect(Collectors.toList()));
         log.trace("field options id's are {}", fieldOptions.getJiraOptions().toString());
-        log.trace("field options are {}", fieldOptions.getFieldOptionsList().toString());
     }
 }

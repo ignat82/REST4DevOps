@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
+import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 import ru.homecredit.jiraadapter.dto.response.FieldOptionsResponse;
 import ru.homecredit.jiraadapter.service.FieldOptionsService;
 import ru.homecredit.jiraadapter.service.FieldOptionsServiceImpl;
@@ -67,9 +68,20 @@ public class FieldOptionsController {
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doPost(String requestBody) {
+    public Response doPost(@QueryParam("fieldKey") String fieldKey,
+                           @QueryParam("projectKey") String projectKey,
+                           @QueryParam("issueTypeId") String issueTypeId,
+                           @QueryParam("newOption") String newOption,
+                           @QueryParam("optionNewValue") String optionNewValue,
+                           @QueryParam("action") String action) {
         log.trace("************ starting doPost method... **************");
-        FieldOptions fieldOptions = fieldOptionsService.postOption(requestBody);
+        FieldOptionsRequest fieldOptionsRequest = new FieldOptionsRequest(fieldKey,
+                                                                          projectKey,
+                                                                          issueTypeId,
+                                                                          newOption,
+                                                                          optionNewValue,
+                                                                          action);
+        FieldOptions fieldOptions = fieldOptionsService.postOption(fieldOptionsRequest);
         log.info("fieldOptionsRequest was {}", fieldOptions.getFieldOptionsRequest());
         return (fieldOptions.getFieldOptionsRequest() == null)
                 ? Response.ok("failed to parse request parameters. check the logs").build()

@@ -7,7 +7,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import ru.homecredit.jiraadapter.dto.Constants;
+
+import java.util.Optional;
+
+import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 
 /**
  * DTO class for storing request parameters of FieldOptionsController
@@ -24,18 +27,6 @@ public class FieldOptionsRequest {
     private final String optionNewValue;
     private Action action;
 
-    public static FieldOptionsRequest initializeFromRequestBody(String requestBody) {
-        FieldOptionsRequest fieldOptionsRequest = null;
-        try {
-            fieldOptionsRequest = gson.fromJson(requestBody, FieldOptionsRequest.class);
-            log.info("json deserialized \n{}", fieldOptionsRequest);
-        } catch (Exception e) {
-            log.error("could not parse fieldOptionsRequest body - {}", requestBody);
-            log.error("exception is - {}", e.getMessage());
-        }
-        return fieldOptionsRequest;
-    }
-
     /**
      * @param fieldKey - key of Jira customfield, which options are manipulated
      * @param projectKey - key of Jira project, necessary to define manipulated field context
@@ -50,8 +41,8 @@ public class FieldOptionsRequest {
                                String newOption,
                                String optionNewValue,
                                String actionCode) {
-        this.fieldKey = fieldKey;
-        this.projectKey = projectKey;
+        this.fieldKey = Optional.ofNullable(fieldKey).orElse(DEFAULT_RECEIVED);
+        this.projectKey = Optional.ofNullable(projectKey).orElse(DEFAULT_RECEIVED);
         this.issueTypeId = issueTypeId;
         this.newOption = newOption;
         this.optionNewValue = optionNewValue;
@@ -70,21 +61,21 @@ public class FieldOptionsRequest {
         this(fieldKey,
              projectKey,
              issueTypeId,
-             Constants.DEFAULT_RECEIVED,
-             Constants.DEFAULT_RECEIVED,
-             Constants.DEFAULT_RECEIVED);
+             DEFAULT_RECEIVED,
+             DEFAULT_RECEIVED,
+             DEFAULT_RECEIVED);
     }
 
     /**
      * default constructor
      */
     public FieldOptionsRequest() {
-        this(Constants.DEFAULT_RECEIVED,
-             Constants.DEFAULT_RECEIVED,
-             Constants.DEFAULT_RECEIVED,
-             Constants.DEFAULT_RECEIVED,
-             Constants.DEFAULT_RECEIVED,
-             Constants.DEFAULT_RECEIVED);
+        this(DEFAULT_RECEIVED,
+             DEFAULT_RECEIVED,
+             DEFAULT_RECEIVED,
+             DEFAULT_RECEIVED,
+             DEFAULT_RECEIVED,
+             DEFAULT_RECEIVED);
     }
 
     @Override
