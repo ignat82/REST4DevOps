@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.actionFromCode;
 
@@ -13,7 +12,6 @@ import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.a
  */
 @Getter
 @Setter
-@Slf4j
 public class FieldOptionsRequest {
     //private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final String fieldKey;
