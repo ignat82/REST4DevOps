@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Collections;
 
-import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.*;
 
@@ -39,26 +38,17 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     }
 
     public FieldOptions postOption(FieldOptionsRequest fieldOptionsRequest) {
-        /*
-        if (fieldOptionsRequest == null) {
-            FieldOptions fieldOptions = new FieldOptions();
-            String errorMessage = "failed to parse request parameters";
-            fieldOptions.setErrorMessage(errorMessage);
-            log.error(errorMessage);
-            return fieldOptions;
-        }
-        */
         FieldOptions fieldOptions = fieldInitializationService.initializeField(fieldOptionsRequest);
         if (fieldOptions.getErrorMessage() != null) {
             log.error("shutting down postOption() due to error {}", fieldOptions.getErrorMessage());
             return fieldOptions;
         }
         Action action = fieldOptions.getFieldOptionsRequest().getAction();
-        if (action == NOT_RECOGNIZED) {
+        if (action == null) {
             fieldOptions.setErrorMessage("action parameter not recognized");
             return fieldOptions;
         }
-        if (fieldOptions.getFieldOptionsRequest().getNewOption().equals(DEFAULT_RECEIVED)) {
+        if (fieldOptions.getFieldOptionsRequest().getNewOption() == null) {
             fieldOptions.setErrorMessage("option not provided in request");
             return fieldOptions;
         }
@@ -69,7 +59,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         Option option = optionsManager.getOptions(fieldOptions.getFieldParameters().
                 getFieldConfig()).getOptionForValue(optionValue, null);
         if (option == null) {
-            String message = "option " + optionValue + " seems not to exist. shutting down";
+            String message = "option \"" + optionValue + "\" seems not to exist. shutting down";
             fieldOptions.setErrorMessage(message);
             log.error(message);
             return fieldOptions;
@@ -81,19 +71,23 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     private FieldOptions renameOption(FieldOptions fieldOptions, Option option) {
         String oldOptionValue = option.getValue();
         String newOptionValue = fieldOptions.getFieldOptionsRequest().getOptionNewValue();
-        if (newOptionValue.equals(DEFAULT_RECEIVED)) {
+        if (newOptionValue == null) {
             String message = "newOptionValue was not provided";
             log.error(message);
             fieldOptions.setErrorMessage(message);
-            return fieldOptions;
-        }
-        option.setValue(newOptionValue);
-        optionsManager.updateOptions(Collections.singletonList(option));
-        fieldOptions.setSuccess(true);
-        log.trace("renamed option from \"{}\"  to \"{}\"", oldOptionValue, newOptionValue);
+        } else if (oldOptionValue.equals(newOptionValue)) {
+            String message = "newOptionValue equals oldOptionValue";
+            log.error(message);
+            fieldOptions.setErrorMessage(message);
+        } else {
+            option.setValue(newOptionValue);
+            optionsManager.updateOptions(Collections.singletonList(option));
+            fieldOptions.setSuccess(true);
+            log.trace("renamed option from \"{}\"  to \"{}\"", oldOptionValue, newOptionValue);
         /* acquiring Options object and Options from it once again, cuz the
         option state changed */
-        fieldInitializationService.initializeOptions(fieldOptions);
+            fieldInitializationService.initializeOptions(fieldOptions);
+        }
         return fieldOptions;
     }
 
@@ -101,7 +95,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
         log.trace("trying to add new option \"{}\"", optionValue);
         if (fieldOptions.contains(optionValue)) {
-            fieldOptions.setErrorMessage("new option " + optionValue + " already exists");
+            fieldOptions.setErrorMessage("new option \"" + optionValue + "\" exists already");
             return fieldOptions;
         }
         int size = fieldOptions.getJiraOptions().size();
@@ -121,6 +115,10 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
 
     private FieldOptions setOptionState(FieldOptions fieldOptions, Option option) {
         boolean isDisabled = (fieldOptions.getFieldOptionsRequest().getAction() == DISABLE);
+        if (option.getDisabled() == isDisabled) {
+            fieldOptions.setErrorMessage("option disabled state is \"" + isDisabled + "\" already");
+            return fieldOptions;
+        }
         option.setDisabled(isDisabled);
         optionsManager.updateOptions(Collections.singletonList(option));
         fieldOptions.setSuccess(true);

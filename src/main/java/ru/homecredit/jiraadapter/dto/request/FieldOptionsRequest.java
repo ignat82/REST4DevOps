@@ -1,16 +1,11 @@
 package ru.homecredit.jiraadapter.dto.request;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Optional;
-
-import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.actionFromCode;
 
 /**
@@ -20,7 +15,7 @@ import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.a
 @Setter
 @Slf4j
 public class FieldOptionsRequest {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    //private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final String fieldKey;
     private final String projectKey;
     private final String issueTypeId;
@@ -42,8 +37,8 @@ public class FieldOptionsRequest {
                                String newOption,
                                String optionNewValue,
                                String actionCode) {
-        this.fieldKey = Optional.ofNullable(fieldKey).orElse(DEFAULT_RECEIVED);
-        this.projectKey = Optional.ofNullable(projectKey).orElse(DEFAULT_RECEIVED);
+        this.fieldKey = fieldKey;
+        this.projectKey = projectKey;
         this.issueTypeId = issueTypeId;
         this.newOption = newOption;
         this.optionNewValue = optionNewValue;
@@ -62,31 +57,26 @@ public class FieldOptionsRequest {
         this(fieldKey,
              projectKey,
              issueTypeId,
-             DEFAULT_RECEIVED,
-             DEFAULT_RECEIVED,
-             DEFAULT_RECEIVED);
+             null,
+             null,
+             null);
     }
 
     /**
      * default constructor
      */
     public FieldOptionsRequest() {
-        this(DEFAULT_RECEIVED,
-             DEFAULT_RECEIVED,
-             DEFAULT_RECEIVED,
-             DEFAULT_RECEIVED,
-             DEFAULT_RECEIVED,
-             DEFAULT_RECEIVED);
+        this(null,
+             null,
+             null);
     }
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("fieldKey = ").append(fieldKey).append("; projectKey = ").
-                append(projectKey).append("; issueTypeId = ").append(issueTypeId).
-                append("; new option = ").append(newOption).append("; action = ").
-                append(action).append(".");
-        return stringBuilder.toString();
+        return new StringBuilder().append("fieldKey = ").append(fieldKey)
+                .append("; projectKey = ").append(projectKey).append("; issueTypeId = ")
+                .append(issueTypeId).append("; new option = ").append(newOption)
+                .append("; action = ").append(action).append(".").toString();
     }
 
     /**
@@ -104,6 +94,9 @@ public class FieldOptionsRequest {
         private final String code;
 
         public static Action actionFromCode(String actionCode) {
+            if (actionCode == null) {
+                return null;
+            }
             for (Action action : Action.ALL_VALUES) {
                 if (action.getCode().equals(actionCode)) {
                     return action;

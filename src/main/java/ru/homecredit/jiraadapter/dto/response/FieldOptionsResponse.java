@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_ACQUIRED;
+import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
 import static ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
+import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.actionFromCode;
 
 /**
  * class to pack FieldOptions DTO to JSON response
@@ -59,12 +61,16 @@ public class FieldOptionsResponse {
     public FieldOptionsResponse(FieldOptions fieldOptions) {
         log.info("FieldOptionsResponse construction");
         FieldOptionsRequest fieldOptionsRequest = fieldOptions.getFieldOptionsRequest();
-        fieldKey = fieldOptionsRequest.getFieldKey();
-        projectKey = fieldOptionsRequest.getProjectKey();
-        issueTypeId = fieldOptionsRequest.getIssueTypeId();
-        newOption = fieldOptionsRequest.getNewOption();
-        optionNewValue = fieldOptionsRequest.getOptionNewValue();
-        action = fieldOptionsRequest.getAction().toString();
+        fieldKey = Optional.ofNullable(fieldOptionsRequest.getFieldKey()).orElse(DEFAULT_RECEIVED);
+        projectKey = Optional.ofNullable(fieldOptionsRequest.getProjectKey()).orElse(DEFAULT_RECEIVED);
+        issueTypeId = Optional.ofNullable(fieldOptionsRequest.getIssueTypeId()).orElse(DEFAULT_RECEIVED);
+        newOption = Optional.ofNullable(fieldOptionsRequest.getNewOption()).orElse(DEFAULT_RECEIVED);
+        optionNewValue = Optional.ofNullable(fieldOptionsRequest.getOptionNewValue()).orElse(DEFAULT_RECEIVED);
+        log.info("action is {}", fieldOptionsRequest.getAction());
+        //log.info("action string is {}", fieldOptionsRequest.getAction().toString());
+        action =
+                Optional.ofNullable(fieldOptionsRequest.getAction()).orElse(actionFromCode(DEFAULT_RECEIVED)).toString();
+        log.info("set action to {}", action);
         FieldParameters fieldParameters = fieldOptions.getFieldParameters();
         if (fieldParameters != null) {
             fieldName =
