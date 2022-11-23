@@ -9,7 +9,6 @@ import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static ru.homecredit.jiraadapter.dto.Constants.DEFAULT_RECEIVED;
@@ -51,7 +50,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         */
         FieldOptions fieldOptions = fieldInitializationService.initializeField(fieldOptionsRequest);
         if (fieldOptions.getErrorMessage() != null) {
-            log.error("shutting down postOption() due to error");
+            log.error("shutting down postOption() due to error {}", fieldOptions.getErrorMessage());
             return fieldOptions;
         }
         Action action = fieldOptions.getFieldOptionsRequest().getAction();

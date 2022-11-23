@@ -75,6 +75,13 @@ public class FieldOptionsController {
                            @QueryParam("optionNewValue") String optionNewValue,
                            @QueryParam("action") String action) {
         log.trace("************ starting doPost method... **************");
+        log.error("parameters received are {}, {}, {}, {}, {}, {}",
+                  fieldKey,
+                  projectKey,
+                  issueTypeId,
+                  newOption,
+                  optionNewValue,
+                  action);
         FieldOptionsRequest fieldOptionsRequest = new FieldOptionsRequest(fieldKey,
                                                                           projectKey,
                                                                           issueTypeId,

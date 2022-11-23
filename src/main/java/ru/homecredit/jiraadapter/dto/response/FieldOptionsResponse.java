@@ -64,8 +64,7 @@ public class FieldOptionsResponse {
         issueTypeId = fieldOptionsRequest.getIssueTypeId();
         newOption = fieldOptionsRequest.getNewOption();
         optionNewValue = fieldOptionsRequest.getOptionNewValue();
-        action = Optional.ofNullable(fieldOptionsRequest.getAction())
-                         .orElse(FieldOptionsRequest.Action.NOT_RECOGNIZED).toString();
+        action = fieldOptionsRequest.getAction().toString();
         FieldParameters fieldParameters = fieldOptions.getFieldParameters();
         if (fieldParameters != null) {
             fieldName =
