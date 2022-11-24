@@ -7,6 +7,7 @@ import lombok.Setter;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * DTO class to store Request parameters as well as response parameters and some
@@ -18,6 +19,7 @@ import java.util.List;
 public class FieldOptions {
     private final FieldOptionsRequest fieldOptionsRequest;
     private FieldParameters fieldParameters;
+    private JiraOption manipulatedOption;
     private List<JiraOption> jiraOptions;
     private boolean success;
     private String errorMessage;
@@ -39,13 +41,13 @@ public class FieldOptions {
         }
     }
 
-    public boolean contains(String optionValue) {
+    public Optional<JiraOption> getJiraOptionByValue(String optionValue) {
         for (JiraOption jiraOption : jiraOptions) {
             if (jiraOption.getOptionValue().equals(optionValue)) {
-                return true;
+                return Optional.of(jiraOption);
             }
         }
-        return false;
+        return Optional.empty();
     }
 
     @Getter

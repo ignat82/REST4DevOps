@@ -68,26 +68,11 @@ public class FieldOptionsController {
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doPost(@QueryParam("fieldKey") String fieldKey,
-                           @QueryParam("projectKey") String projectKey,
-                           @QueryParam("issueTypeId") String issueTypeId,
-                           @QueryParam("newOption") String newOption,
-                           @QueryParam("optionNewValue") String optionNewValue,
-                           @QueryParam("action") String action) {
+    public Response doPost(String requestBody) {
         log.trace("************ starting doPost method... **************");
-        log.error("parameters received are {}, {}, {}, {}, {}, {}",
-                  fieldKey,
-                  projectKey,
-                  issueTypeId,
-                  newOption,
-                  optionNewValue,
-                  action);
-        FieldOptionsRequest fieldOptionsRequest = new FieldOptionsRequest(fieldKey,
-                                                                          projectKey,
-                                                                          issueTypeId,
-                                                                          newOption,
-                                                                          optionNewValue,
-                                                                          action);
+        log.error("request body received is {}", requestBody);
+        FieldOptionsRequest fieldOptionsRequest =
+                FieldOptionsRequest.initializeFromPostRequestBody(requestBody);
         FieldOptions fieldOptions = fieldOptionsService.postOption(fieldOptionsRequest);
         log.info("fieldOptionsRequest was {}", fieldOptions.getFieldOptionsRequest());
         return (fieldOptions.getFieldOptionsRequest() == null)

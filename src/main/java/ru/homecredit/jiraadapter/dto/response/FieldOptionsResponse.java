@@ -46,6 +46,8 @@ public class FieldOptionsResponse {
     private String projectName;
     @XmlElement(name = "fieldConfigName")
     private String fieldConfigName;
+    @XmlElement(name = "manipulatedOption")
+    private JiraOption manipulatedOption;
     @XmlElementWrapper(name = "jiraOptions")
     @XmlElement(name = "jiraOption")
     private List<JiraOption> jiraOptions;
@@ -76,6 +78,7 @@ public class FieldOptionsResponse {
             fieldConfigName =
                     Optional.ofNullable(fieldParameters.getFieldConfigName()).orElse(DEFAULT_ACQUIRED);
         }
+        manipulatedOption = fieldOptions.getManipulatedOption();
         jiraOptions = fieldOptions.getJiraOptions();
         success = Boolean.toString(fieldOptions.isSuccess());
         errorMessage = fieldOptions.getErrorMessage();

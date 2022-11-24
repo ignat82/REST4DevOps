@@ -1,9 +1,12 @@
 package ru.homecredit.jiraadapter.dto.request;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.actionFromCode;
 
@@ -12,8 +15,9 @@ import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.a
  */
 @Getter
 @Setter
+@Slf4j
 public class FieldOptionsRequest {
-    //private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final String fieldKey;
     private final String projectKey;
     private final String issueTypeId;
@@ -67,6 +71,18 @@ public class FieldOptionsRequest {
         this(null,
              null,
              null);
+    }
+
+    public static FieldOptionsRequest initializeFromPostRequestBody(String requestBody) {
+        FieldOptionsRequest fieldOptionsRequest = null;
+        try {
+            fieldOptionsRequest = gson.fromJson(requestBody, FieldOptionsRequest.class);
+            log.info("requestBody deserialized as {}", fieldOptionsRequest);
+        } catch (Exception e) {
+            log.error("failed to parse request body \"{}\" with error \"{}\"",
+                      requestBody, e.getMessage());
+        }
+        return fieldOptionsRequest;
     }
 
     @Override

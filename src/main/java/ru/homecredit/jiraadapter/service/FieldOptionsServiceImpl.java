@@ -5,11 +5,13 @@ import com.atlassian.jira.issue.customfields.option.Option;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
+import ru.homecredit.jiraadapter.dto.FieldOptions.JiraOption;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Collections;
+import java.util.Optional;
 
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action;
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.*;
@@ -69,6 +71,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     }
 
     private FieldOptions renameOption(FieldOptions fieldOptions, Option option) {
+        fieldOptions.setManipulatedOption(new JiraOption(option));
         String oldOptionValue = option.getValue();
         String newOptionValue = fieldOptions.getFieldOptionsRequest().getOptionNewValue();
         if (newOptionValue == null) {
@@ -82,6 +85,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         } else {
             option.setValue(newOptionValue);
             optionsManager.updateOptions(Collections.singletonList(option));
+            fieldOptions.setManipulatedOption(new JiraOption(option));
             fieldOptions.setSuccess(true);
             log.trace("renamed option from \"{}\"  to \"{}\"", oldOptionValue, newOptionValue);
         /* acquiring Options object and Options from it once again, cuz the
@@ -94,8 +98,10 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     private FieldOptions addOption(FieldOptions fieldOptions) {
         String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
         log.trace("trying to add new option \"{}\"", optionValue);
-        if (fieldOptions.contains(optionValue)) {
+        Optional<JiraOption> existingOption = fieldOptions.getJiraOptionByValue(optionValue);
+        if (existingOption.isPresent()) {
             fieldOptions.setErrorMessage("new option \"" + optionValue + "\" exists already");
+            fieldOptions.setManipulatedOption(existingOption.get());
             return fieldOptions;
         }
         int size = fieldOptions.getJiraOptions().size();
@@ -105,6 +111,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
                                     (long) (size + 1),
                                     optionValue);
         optionsManager.updateOptions(Collections.singletonList(createdOption));
+        fieldOptions.setManipulatedOption(new JiraOption(createdOption));
         fieldOptions.setSuccess(true);
         log.trace("added option \"{}\" to Options", optionValue);
         /* acquiring Options object and Options from it once again, cuz the
@@ -114,6 +121,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     }
 
     private FieldOptions setOptionState(FieldOptions fieldOptions, Option option) {
+        fieldOptions.setManipulatedOption(new JiraOption(option));
         boolean isDisabled = (fieldOptions.getFieldOptionsRequest().getAction() == DISABLE);
         if (option.getDisabled() == isDisabled) {
             fieldOptions.setErrorMessage("option disabled state is \"" + isDisabled + "\" already");
@@ -121,6 +129,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         }
         option.setDisabled(isDisabled);
         optionsManager.updateOptions(Collections.singletonList(option));
+        fieldOptions.setManipulatedOption(new JiraOption(option));
         fieldOptions.setSuccess(true);
         log.trace("set option \"{}\" isDisabled state to {}", option.getValue(), isDisabled);
         /* acquiring Options object and Options from it once again, cuz the
