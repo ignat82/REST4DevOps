@@ -98,7 +98,8 @@ public class FieldInitializationService {
         Options options = Objects.requireNonNull(optionsManager.
                   getOptions(fieldOptions.getFieldParameters().getFieldConfig()),
                                                  "failed to acquire Options object");
-        fieldOptions.setJiraOptions(options.stream().map(FieldOptions.JiraOption::new).collect(Collectors.toList()));
+        fieldOptions.setJiraOptions(
+                options.stream().map(FieldOptions.JiraOption::new).collect(Collectors.toList()));
         log.trace("field options id's are {}", fieldOptions.getJiraOptions().toString());
     }
 }

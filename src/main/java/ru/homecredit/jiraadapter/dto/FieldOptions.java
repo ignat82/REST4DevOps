@@ -42,12 +42,8 @@ public class FieldOptions {
     }
 
     public Optional<JiraOption> getJiraOptionByValue(String optionValue) {
-        for (JiraOption jiraOption : jiraOptions) {
-            if (jiraOption.getOptionValue().equals(optionValue)) {
-                return Optional.of(jiraOption);
-            }
-        }
-        return Optional.empty();
+        return jiraOptions.stream().findAny()
+                          .filter(o -> o.getOptionValue().equals(optionValue));
     }
 
     @Getter

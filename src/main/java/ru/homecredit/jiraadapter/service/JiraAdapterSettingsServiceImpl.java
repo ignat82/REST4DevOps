@@ -13,6 +13,7 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.homecredit.jiraadapter.dto.Constants.EDITABLE_FIELDS_SETTING_KEY;
 import static ru.homecredit.jiraadapter.dto.Constants.JIRA_ADAPTER_PLUGIN_SETTINGS_PREFIX;
@@ -40,11 +41,8 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
     }
 
     public List<String> getAllCustomFieldsKeys() {
-        List<String> customfieldsKeys = new ArrayList<>();
-        for (CustomField customField : customFieldManager.getCustomFieldObjects()) {
-            customfieldsKeys.add(customField.getId());
-        }
-        return customfieldsKeys;
+        return customFieldManager.getCustomFieldObjects().stream()
+                         .map(CustomField::getId).collect(Collectors.toList());
     }
 
     public JiraAdapterSettings getSettings() {

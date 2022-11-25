@@ -73,18 +73,6 @@ public class FieldOptionsRequest {
              null);
     }
 
-    public static FieldOptionsRequest initializeFromPostRequestBody(String requestBody) {
-        FieldOptionsRequest fieldOptionsRequest = null;
-        try {
-            fieldOptionsRequest = gson.fromJson(requestBody, FieldOptionsRequest.class);
-            log.info("requestBody deserialized as {}", fieldOptionsRequest);
-        } catch (Exception e) {
-            log.error("failed to parse request body \"{}\" with error \"{}\"",
-                      requestBody, e.getMessage());
-        }
-        return fieldOptionsRequest;
-    }
-
     @Override
     public String toString() {
         return new StringBuilder().append("fieldKey = ").append(fieldKey)

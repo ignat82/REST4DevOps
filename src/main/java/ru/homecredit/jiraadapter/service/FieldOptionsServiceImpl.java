@@ -28,14 +28,9 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         this.optionsManager = optionsManager;
         this.fieldInitializationService = fieldInitializationService;
     }
-    public FieldOptions getOptions(String fieldKey,
-                                   String projectKey,
-                                   String issueTypeId) {
-        FieldOptions fieldOptions = fieldInitializationService
-                .initializeField(new FieldOptionsRequest(fieldKey, projectKey, issueTypeId));
-        if (fieldOptions.getErrorMessage() == null) {
-            fieldOptions.setSuccess(true);
-        }
+    public FieldOptions getOptions(FieldOptionsRequest fieldOptionsRequest) {
+        FieldOptions fieldOptions = fieldInitializationService.initializeField(fieldOptionsRequest);
+        fieldOptions.setSuccess(fieldOptions.getErrorMessage() == null);
         return fieldOptions;
     }
 
@@ -67,7 +62,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             return fieldOptions;
         }
         return (action == RENAME) ? renameOption(fieldOptions, option)
-                : setOptionState(fieldOptions, option);
+                                  : setOptionState(fieldOptions, option);
     }
 
     private FieldOptions renameOption(FieldOptions fieldOptions, Option option) {
