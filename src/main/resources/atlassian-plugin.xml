@@ -29,7 +29,7 @@ https://community.atlassian.com/t5/Jira-discussions/Jira-Custom-Field-Select2-pr
   </web-resource>
 
   <rest name="JiraAdapter REST"
-        key="${atlassian.plugin.key}.rest" path="/cfoptchange" version="1.0">
+        key="${atlassian.plugin.key}.rest" path="/options" version="1.0">
     <description key="${atlassian.plugin.key}.rest.description">
       Rest Endpoint to manage field options</description>
   </rest>

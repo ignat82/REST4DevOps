@@ -18,9 +18,9 @@ import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.a
 @Slf4j
 public class FieldOptionsRequest {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final String fieldKey;
-    private final String projectKey;
-    private final String issueTypeId;
+    private  String fieldKey;
+    private  String projectKey;
+    private  String issueTypeId;
     private final String newOption;
     private final String optionNewValue;
     private Action action;

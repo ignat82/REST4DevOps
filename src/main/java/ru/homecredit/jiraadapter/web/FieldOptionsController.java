@@ -8,7 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/options")
+@Path("/")
 @Named
 @Slf4j
 public class FieldOptionsController {
@@ -21,9 +21,10 @@ public class FieldOptionsController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFieldOptions(@QueryParam("fieldKey") String fieldKey,
-                                    @QueryParam("projectKey") String projectKey,
-                                    @QueryParam("issueTypeId") String issueTypeId) {
+    @Path("/get_options/{fieldKey}/{projectKey}/{issueTypeId}")
+    public Response getFieldOptions(@PathParam("fieldKey") String fieldKey,
+                                    @PathParam("projectKey") String projectKey,
+                                    @PathParam("issueTypeId") String issueTypeId) {
         log.trace("************* starting getFieldOptionsList method... ************");
         log.error("request parameters received are {}, {}, {}", fieldKey, projectKey, issueTypeId);
         return Response.ok(optionsServiceAdapter.getRequest(fieldKey, projectKey, issueTypeId)).build();
@@ -31,9 +32,16 @@ public class FieldOptionsController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doPost(String requestBody) {
+    @Path("post_options/{fieldKey}/{projectKey}/{issueTypeId}")
+    public Response doPost(@PathParam("fieldKey") String fieldKey,
+                           @PathParam("projectKey") String projectKey,
+                           @PathParam("issueTypeId") String issueTypeId,
+                           String requestBody) {
         log.trace("************ starting doPost method... **************");
         log.error("request body received is {}", requestBody);
-        return Response.ok(optionsServiceAdapter.postRequest(requestBody)).build();
+        return Response.ok(optionsServiceAdapter.postRequest(fieldKey,
+                                                             projectKey,
+                                                             issueTypeId,
+                                                             requestBody)).build();
     }
 }

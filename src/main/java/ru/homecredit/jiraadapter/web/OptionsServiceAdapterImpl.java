@@ -24,8 +24,14 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
         this.fieldOptionsService = fieldOptionsService;
     }
 
-    public String postRequest(String requestBody) {
-        Optional<FieldOptionsRequest> fieldOptionsRequest = initializeRequestFromString(requestBody);
+    public String postRequest(String fieldKey,
+                              String projectKey,
+                              String issueTypeId,
+                              String requestBody) {
+        Optional<FieldOptionsRequest> fieldOptionsRequest =
+                initializeRequestFromString(fieldKey,
+                                            projectKey,
+                                            issueTypeId,requestBody);
         log.info("initialized");
         if (fieldOptionsRequest.isPresent()) {
             FieldOptions fieldOptions = fieldOptionsService.postOption(fieldOptionsRequest.get());
@@ -44,14 +50,26 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
         return gson.toJson(new FieldOptionsResponse(fieldOptions));
     }
 
-    private Optional<FieldOptionsRequest> initializeRequestFromString(String requestBody) {
+    private Optional<FieldOptionsRequest> initializeRequestFromString(String fieldKey,
+                                                                      String projectKey,
+                                                                      String issueTypeId,
+                                                                      String requestBody) {
         Optional<FieldOptionsRequest> fieldOptionsRequest = Optional.empty();
         try {
             fieldOptionsRequest = Optional.ofNullable(gson.fromJson(requestBody,
                                                                     FieldOptionsRequest.class));
+            if (!fieldOptionsRequest.isPresent()) {
+               throw new IllegalArgumentException("failed to parse request body");
+            }
             log.info("requestBody deserialized as {}", fieldOptionsRequest);
+            FieldOptionsRequest fieldOptionsRequestConcrete =
+                    fieldOptionsRequest.get();
+            fieldOptionsRequestConcrete.setFieldKey(fieldKey);
+            fieldOptionsRequestConcrete.setProjectKey(projectKey);
+            fieldOptionsRequestConcrete.setIssueTypeId(issueTypeId);
+            return Optional.of(fieldOptionsRequestConcrete);
         } catch (Exception e) {
-            log.error("failed to parse request body \"{}\" with error \"{}\"",
+            log.error("failed to parse request parameters \"{}\" with error \"{}\"",
                       requestBody, e.getMessage());
         }
         return fieldOptionsRequest;
