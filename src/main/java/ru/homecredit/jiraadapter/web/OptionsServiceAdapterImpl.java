@@ -46,7 +46,6 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
                                                                           projectKey,
                                                                           issueTypeId);
         FieldOptions fieldOptions = fieldOptionsService.getOptions(fieldOptionsRequest);
-        log.info("got options {}", fieldOptions.toString());
         return gson.toJson(new FieldOptionsResponse(fieldOptions));
     }
 

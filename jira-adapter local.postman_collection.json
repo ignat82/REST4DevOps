@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "5d42c7cd-3d99-4185-b3ba-006d3d853f76",
 		"name": "jira-adapter local",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21338355"
 	},
 	"item": [
@@ -11,16 +11,24 @@
 			"request": {
 				"auth": {
 					"type": "basic",
-					"basic": {
-						"password": "admin",
-						"username": "admin"
-					}
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\"newOption\":\"значение новое\",\"optionNewValue\":\"rename\", \"action\":\"rename\"}",
 					"options": {
 						"raw": {
 							"language": "text"
@@ -28,7 +36,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options?fieldKey=customfield_10008&projectKey=TES&issueTypeId=10000&optionNewValue=value3&newOption=new value of value3&action=rename",
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -37,35 +45,12 @@
 					"path": [
 						"jira",
 						"rest",
-						"cfoptchange",
+						"options",
 						"1.0",
-						"options"
-					],
-					"query": [
-						{
-							"key": "fieldKey",
-							"value": "customfield_10008"
-						},
-						{
-							"key": "projectKey",
-							"value": "TES"
-						},
-						{
-							"key": "issueTypeId",
-							"value": "10000"
-						},
-						{
-							"key": "optionNewValue",
-							"value": "value3"
-						},
-						{
-							"key": "newOption",
-							"value": "new value of value3"
-						},
-						{
-							"key": "action",
-							"value": "rename"
-						}
+						"post_options",
+						"customfield_10001",
+						"TES",
+						"10000"
 					]
 				}
 			},
@@ -73,16 +58,35 @@
 		},
 		{
 			"name": "GET getFieldOptions local",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
 			"request": {
 				"auth": {
 					"type": "basic",
-					"basic": {
-						"password": "admin",
-						"username": "admin"
-					}
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
@@ -91,7 +95,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options?fieldKey=customfield_10008&projectKey=TES&issueTypeId=10000",
+					"raw": "http://localhost:2990/jira/rest/options/1.0/get_options/customfield_10001/TES/10000",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -100,23 +104,12 @@
 					"path": [
 						"jira",
 						"rest",
-						"cfoptchange",
+						"options",
 						"1.0",
-						"options"
-					],
-					"query": [
-						{
-							"key": "fieldKey",
-							"value": "customfield_10008"
-						},
-						{
-							"key": "projectKey",
-							"value": "TES"
-						},
-						{
-							"key": "issueTypeId",
-							"value": "10000"
-						}
+						"get_options",
+						"customfield_10001",
+						"TES",
+						"10000"
 					]
 				}
 			},
@@ -127,19 +120,27 @@
 			"request": {
 				"auth": {
 					"type": "basic",
-					"basic": {
-						"password": "admin",
-						"username": "admin"
-					}
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\"newOption\":\"значение новое\", \"action\":\"add\"}"
 				},
 				"url": {
-					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options?fieldKey=customfield_10008&projectKey=TES&issueTypeId=10000&newOption=new value3&action=add&",
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -148,35 +149,12 @@
 					"path": [
 						"jira",
 						"rest",
-						"cfoptchange",
+						"options",
 						"1.0",
-						"options"
-					],
-					"query": [
-						{
-							"key": "fieldKey",
-							"value": "customfield_10008"
-						},
-						{
-							"key": "projectKey",
-							"value": "TES"
-						},
-						{
-							"key": "issueTypeId",
-							"value": "10000"
-						},
-						{
-							"key": "newOption",
-							"value": "new value3"
-						},
-						{
-							"key": "action",
-							"value": "add"
-						},
-						{
-							"key": "",
-							"value": null
-						}
+						"post_options",
+						"customfield_10001",
+						"TES",
+						"10000"
 					]
 				}
 			},
@@ -187,19 +165,27 @@
 			"request": {
 				"auth": {
 					"type": "basic",
-					"basic": {
-						"password": "admin",
-						"username": "admin"
-					}
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\"newOption\":\"Liferay портал. \\\"Архив\\\"\", \"action\":\"disable\"}"
 				},
 				"url": {
-					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options?fieldKey=customfield_10008&projectKey=TES&issueTypeId=10000&newOption=value2&action=disable",
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -208,31 +194,12 @@
 					"path": [
 						"jira",
 						"rest",
-						"cfoptchange",
+						"options",
 						"1.0",
-						"options"
-					],
-					"query": [
-						{
-							"key": "fieldKey",
-							"value": "customfield_10008"
-						},
-						{
-							"key": "projectKey",
-							"value": "TES"
-						},
-						{
-							"key": "issueTypeId",
-							"value": "10000"
-						},
-						{
-							"key": "newOption",
-							"value": "value2"
-						},
-						{
-							"key": "action",
-							"value": "disable"
-						}
+						"post_options",
+						"customfield_10001",
+						"TES",
+						"10000"
 					]
 				}
 			},
@@ -243,19 +210,27 @@
 			"request": {
 				"auth": {
 					"type": "basic",
-					"basic": {
-						"password": "admin",
-						"username": "admin"
-					}
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\"newOption\":\"Liferay портал. \\\"Архив\\\"\", \"action\":\"disable\"}"
 				},
 				"url": {
-					"raw": "http://localhost:2990/jira/rest/cfoptchange/1.0/options?fieldKey=customfield_10008&projectKey=TES&issueTypeId=10000&newOption=value2&action=enable",
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -264,34 +239,17 @@
 					"path": [
 						"jira",
 						"rest",
-						"cfoptchange",
+						"options",
 						"1.0",
-						"options"
+						"post_options",
+						"customfield_10001",
+						"TES",
+						"10000"
 					],
 					"query": [
 						{
-							"key": "fieldKey",
-							"value": "customfield_10008"
-						},
-						{
-							"key": "projectKey",
-							"value": "TES"
-						},
-						{
-							"key": "issueTypeId",
-							"value": "10000"
-						},
-						{
-							"key": "newOption",
-							"value": "value2"
-						},
-						{
-							"key": "action",
-							"value": "enable"
-						},
-						{
 							"key": "",
-							"value": null,
+							"value": "",
 							"disabled": true
 						}
 					]

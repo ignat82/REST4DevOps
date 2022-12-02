@@ -13,12 +13,10 @@ The function of this plugin is to provide REST service for:
 REST API endpoints:
 
 for GET fieldOptionsRequest to acquire the options of customfild in given context:
-http://{jira base URL}/rest/cfoptchange/1.0/options?fieldKey={key}
-        &projectKey={key}&issueTypeId={id}
+http://{jira base URL}/rest/options/1.0/get_options/{field key}/{project key}/{issue type id}
 
 for POST fieldOptionsRequest to append new option to options of customfield in given context:
-http://{jira base URL}/rest/cfoptchange/1.0/options?fieldKey={key}
-        &projectKey={key}&issueTypeId={id}&newOption{value}
+http://{jira base URL}/rest/options/1.0/post_options/{field key}/{project key}/{issue type id}
 
 test classes, inherited from skeleton plugin are commented out
 
