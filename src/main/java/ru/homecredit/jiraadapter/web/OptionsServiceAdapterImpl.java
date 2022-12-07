@@ -54,7 +54,7 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
                                                                       String projectKey,
                                                                       String issueTypeId,
                                                                       String requestBody) {
-        Optional<FieldOptionsRequest> fieldOptionsRequest = Optional.empty();
+        Optional<FieldOptionsRequest> fieldOptionsRequest;
         try {
             fieldOptionsRequest = Optional.ofNullable(gson.fromJson(requestBody,
                                                                     FieldOptionsRequest.class));
@@ -62,8 +62,7 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
                throw new IllegalArgumentException("failed to parse request body");
             }
             log.info("requestBody deserialized as {}", fieldOptionsRequest);
-            FieldOptionsRequest fieldOptionsRequestConcrete =
-                    fieldOptionsRequest.get();
+            FieldOptionsRequest fieldOptionsRequestConcrete = fieldOptionsRequest.get();
             fieldOptionsRequestConcrete.setFieldKey(fieldKey);
             fieldOptionsRequestConcrete.setProjectKey(projectKey);
             fieldOptionsRequestConcrete.setIssueTypeId(issueTypeId);
@@ -71,6 +70,7 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
         } catch (Exception e) {
             log.error("failed to parse request parameters \"{}\" with error \"{}\"",
                       requestBody, e.getMessage());
+            fieldOptionsRequest = Optional.empty();
         }
         return fieldOptionsRequest;
     }

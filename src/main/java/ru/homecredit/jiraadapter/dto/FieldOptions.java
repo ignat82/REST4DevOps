@@ -58,6 +58,11 @@ public class FieldOptions {
             optionValue = option.getValue();
             isDisabled = option.getDisabled();
         }
+
+        public String toString() {
+
+            return "id = " + optionId + "; value = " + optionValue + "; disabled = " + isDisabled;
+        }
     }
 }
 
