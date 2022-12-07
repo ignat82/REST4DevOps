@@ -52,9 +52,16 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         if (action == ADD) {
             return addOption(fieldOptions);
         }
-        String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();
-        Option option = optionsManager.getOptions(fieldOptions.getFieldParameters().
-                getFieldConfig()).getOptionForValue(optionValue, null);
+        Option option;
+        String optionValue = fieldOptions.getFieldOptionsRequest().getNewOption();;
+        try {
+            option = optionsManager.getOptions(fieldOptions.getFieldParameters().getFieldConfig())
+                    .getOptionById(Long.parseLong(fieldOptionsRequest.getOptionId()));
+        } catch (NumberFormatException nfe) {
+            log.warn("no option Id provided");
+            option = optionsManager.getOptions(fieldOptions.getFieldParameters().getFieldConfig())
+                                   .getOptionForValue(optionValue, null);
+        }
         if (option == null) {
             String message = "option \"" + optionValue + "\" seems not to exist. shutting down";
             fieldOptions.setErrorMessage(message);

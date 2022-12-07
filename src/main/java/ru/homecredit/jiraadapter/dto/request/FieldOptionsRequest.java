@@ -22,6 +22,7 @@ public class FieldOptionsRequest {
     private  String projectKey;
     private  String issueTypeId;
     private final String newOption;
+    private final String optionId;
     private final String optionNewValue;
     private Action action;
 
@@ -37,12 +38,14 @@ public class FieldOptionsRequest {
                                String projectKey,
                                String issueTypeId,
                                String newOption,
+                               String optionId,
                                String optionNewValue,
                                String actionCode) {
         this.fieldKey = fieldKey;
         this.projectKey = projectKey;
         this.issueTypeId = issueTypeId;
         this.newOption = newOption;
+        this.optionId = optionId;
         this.optionNewValue = optionNewValue;
         this.action = actionFromCode(actionCode);
     }
@@ -61,6 +64,7 @@ public class FieldOptionsRequest {
              issueTypeId,
              null,
              null,
+             null,
              null);
     }
 
@@ -75,9 +79,13 @@ public class FieldOptionsRequest {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("fieldKey = ").append(fieldKey)
-                .append("; projectKey = ").append(projectKey).append("; issueTypeId = ")
-                .append(issueTypeId).append("; new option = ").append(newOption)
+        return new StringBuilder()
+                .append("fieldKey = ").append(fieldKey)
+                .append("; projectKey = ").append(projectKey)
+                .append("; issueTypeId = ").append(issueTypeId)
+                .append("; new option = ").append(newOption)
+                .append("; option id = ").append(optionId)
+                .append("; option new value = ").append(optionNewValue)
                 .append("; action = ").append(action).append(".").toString();
     }
 

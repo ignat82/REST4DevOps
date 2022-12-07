@@ -36,6 +36,9 @@ public class FieldOptionsResponse {
     private String issueTypeId;
     @XmlAttribute(name = "newOption")
     private String newOption;
+
+    @XmlAttribute(name = "optionId")
+    private String optionId;
     @XmlAttribute(name = "optionNewValue")
     private String optionNewValue;
     @XmlAttribute(name = "action")
@@ -67,6 +70,7 @@ public class FieldOptionsResponse {
         projectKey = Optional.ofNullable(fieldOptionsRequest.getProjectKey()).orElse(DEFAULT_RECEIVED);
         issueTypeId = Optional.ofNullable(fieldOptionsRequest.getIssueTypeId()).orElse(DEFAULT_RECEIVED);
         newOption = Optional.ofNullable(fieldOptionsRequest.getNewOption()).orElse(DEFAULT_RECEIVED);
+        optionId = Optional.ofNullable(fieldOptionsRequest.getOptionId()).orElse(DEFAULT_RECEIVED);
         optionNewValue = Optional.ofNullable(fieldOptionsRequest.getOptionNewValue()).orElse(DEFAULT_RECEIVED);
         action = Optional.ofNullable(fieldOptionsRequest.getAction()).orElse(NOT_RECOGNIZED).toString();
         FieldParameters fieldParameters = fieldOptions.getFieldParameters();
