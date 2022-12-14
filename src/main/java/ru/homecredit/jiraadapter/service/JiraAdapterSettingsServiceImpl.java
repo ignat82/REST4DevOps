@@ -66,4 +66,13 @@ public class JiraAdapterSettingsServiceImpl implements JiraAdapterSettingsServic
                                        ? new ArrayList<String> ()
                                        : Arrays.asList(customFieldsKeys));
     }
+
+    public boolean isPermittedToEdit(String fieldKey) {
+        List<String> editableFields = getSettings().getEditableFields();
+        log.trace("editable fields are - {}", editableFields);
+        boolean permittedToEdit = editableFields != null &&
+                editableFields.contains(fieldKey);
+        log.trace("field {} is permitted to edit - {}", fieldKey, permittedToEdit);
+        return permittedToEdit;
+    }
 }

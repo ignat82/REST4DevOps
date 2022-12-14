@@ -4,12 +4,14 @@ import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * DTO class to store manipulated field Jira parameters
  */
 @Setter
 @Getter
+@ToString
 public class FieldParameters {
     private String fieldName;
     private  String projectName;

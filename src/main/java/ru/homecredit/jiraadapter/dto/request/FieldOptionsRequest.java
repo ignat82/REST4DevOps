@@ -1,11 +1,10 @@
 package ru.homecredit.jiraadapter.dto.request;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.actionFromCode;
@@ -16,13 +15,13 @@ import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.a
 @Getter
 @Setter
 @Slf4j
+@ToString
 public class FieldOptionsRequest {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private  String fieldKey;
-    private  String projectKey;
-    private  String issueTypeId;
+    private String fieldKey;
+    private String projectKey;
+    private String issueTypeId;
     private final String newOption;
-    private final String optionId;
+    private String optionId;
     private final String optionNewValue;
     private Action action;
 
@@ -68,6 +67,17 @@ public class FieldOptionsRequest {
              null);
     }
 
+    public FieldOptionsRequest(String fieldKey,
+                               String optionId) {
+        this(fieldKey,
+             null,
+             null,
+             null,
+             optionId,
+             null,
+             null);
+    }
+
     /**
      * default constructor
      */
@@ -75,18 +85,6 @@ public class FieldOptionsRequest {
         this(null,
              null,
              null);
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder()
-                .append("fieldKey = ").append(fieldKey)
-                .append("; projectKey = ").append(projectKey)
-                .append("; issueTypeId = ").append(issueTypeId)
-                .append("; new option = ").append(newOption)
-                .append("; option id = ").append(optionId)
-                .append("; option new value = ").append(optionNewValue)
-                .append("; action = ").append(action).append(".").toString();
     }
 
     /**

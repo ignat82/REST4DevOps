@@ -30,4 +30,6 @@ public interface JiraAdapterSettingsService {
      */
     void saveCustomFieldsKeys(String[] customFieldsKeys);
 
+    boolean isPermittedToEdit(String fieldKey);
+
 }

@@ -44,4 +44,15 @@ public class FieldOptionsController {
                                                              issueTypeId,
                                                              requestBody)).build();
     }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("post_options/{optionId}")
+    public Response handleOption(@PathParam("optionId") String optionId,
+                                 String requestBody) {
+        log.trace("************ starting doPost method... **************");
+        log.error("request body received is {}", requestBody);
+        return Response.ok(optionsServiceAdapter.postRequest(optionId,
+                                                             requestBody)).build();
+    }
 }

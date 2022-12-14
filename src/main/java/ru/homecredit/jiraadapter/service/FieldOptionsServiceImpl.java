@@ -29,13 +29,13 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         this.fieldInitializationService = fieldInitializationService;
     }
     public FieldOptions getOptions(FieldOptionsRequest fieldOptionsRequest) {
-        FieldOptions fieldOptions = fieldInitializationService.initializeField(fieldOptionsRequest);
+        FieldOptions fieldOptions = fieldInitializationService.initialize(fieldOptionsRequest);
         fieldOptions.setSuccess(fieldOptions.getErrorMessage() == null);
         return fieldOptions;
     }
 
     public FieldOptions postOption(FieldOptionsRequest fieldOptionsRequest) {
-        FieldOptions fieldOptions = fieldInitializationService.initializeField(fieldOptionsRequest);
+        FieldOptions fieldOptions = fieldInitializationService.initialize(fieldOptionsRequest);
         if (fieldOptions.getErrorMessage() != null) {
             log.error("shutting down postOption() due to error {}", fieldOptions.getErrorMessage());
             return fieldOptions;

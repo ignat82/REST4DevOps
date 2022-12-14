@@ -4,6 +4,7 @@ import com.atlassian.jira.issue.customfields.option.Option;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@ToString
 public class FieldOptions {
     private final FieldOptionsRequest fieldOptionsRequest;
     private FieldParameters fieldParameters;

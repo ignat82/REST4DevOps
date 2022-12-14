@@ -3,6 +3,7 @@ package ru.homecredit.jiraadapter.service;
 import com.atlassian.jira.issue.context.IssueContext;
 import com.atlassian.jira.issue.context.IssueContextImpl;
 import com.atlassian.jira.issue.customfields.manager.OptionsManager;
+import com.atlassian.jira.issue.customfields.option.Option;
 import com.atlassian.jira.issue.customfields.option.Options;
 import com.atlassian.jira.issue.fields.ConfigurableField;
 import com.atlassian.jira.issue.fields.FieldManager;
@@ -13,12 +14,10 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.FieldParameters;
-import ru.homecredit.jiraadapter.dto.JiraAdapterSettings;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -46,16 +45,36 @@ public class FieldInitializationService {
      * @param fieldOptionsRequest - DTO with request parameters
      * @return - FieldOptions transport object
      */
-    FieldOptions initializeField(FieldOptionsRequest fieldOptionsRequest) {
+    public FieldOptions initialize(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = new FieldOptions(fieldOptionsRequest);
         try {
-            fieldOptions.setFieldParameters(initializeFieldParameters(fieldOptionsRequest));
+            FieldParameters fieldParameters = (fieldOptionsRequest.getOptionId() == null)
+                    ? initializeFieldParameters(fieldOptionsRequest)
+                    : initializeFieldParameters(fieldOptionsRequest.getOptionId());
+            if (fieldOptionsRequest.getOptionId() != null) {
+                String fieldKey = fieldParameters.getFieldConfig().getFieldId();
+                fieldOptions.getFieldOptionsRequest().setFieldKey(fieldKey);
+                boolean isPermittedToEdit = jiraAdapterSettingsService.isPermittedToEdit(fieldKey);
+                fieldParameters.setPermittedToEdit(isPermittedToEdit);
+            }
+            fieldOptions.setFieldParameters(fieldParameters);
             initializeOptions(fieldOptions);
         } catch (Exception e) {
             fieldOptions.setErrorMessage("failed to acquire fieldParameters." +
                                                  "check fieldKey, projectKey and issueTypeId");
         }
         return fieldOptions;
+    }
+
+    private FieldParameters initializeFieldParameters(String optionId) {
+        Option option = optionsManager.findByOptionId(Long.parseLong(optionId));
+        FieldParameters fieldParameters = new FieldParameters();
+        FieldConfig fieldConfig = option.getRelatedCustomField();
+        fieldParameters.setFieldConfig(fieldConfig);
+        fieldParameters.setFieldConfigName(fieldConfig.getName());
+        fieldParameters.setFieldName(fieldConfig.getCustomField().getFieldName());
+        fieldParameters.setValidContext(true);
+        return fieldParameters;
     }
 
     /**
@@ -65,8 +84,10 @@ public class FieldInitializationService {
      */
     private FieldParameters initializeFieldParameters(FieldOptionsRequest fieldOptionsRequest) {
         FieldParameters fieldParameters = new FieldParameters();
+        String fieldKey = fieldOptionsRequest.getFieldKey();
+        fieldParameters.setPermittedToEdit(jiraAdapterSettingsService.isPermittedToEdit(fieldKey));
         ConfigurableField field =
-                fieldManager.getConfigurableField(fieldOptionsRequest.getFieldKey());
+                fieldManager.getConfigurableField(fieldKey);
         fieldParameters.setFieldName(field.getName());
         Project project = projectManager.
                 getProjectByCurrentKeyIgnoreCase(fieldOptionsRequest.getProjectKey());
@@ -78,13 +99,6 @@ public class FieldInitializationService {
         fieldParameters.setFieldConfigName(fieldConfig.getName());
         fieldParameters.setValidContext(true);
         log.trace("valid context - " + fieldParameters.isValidContext());
-        JiraAdapterSettings jiraAdapterSettings = jiraAdapterSettingsService.getSettings();
-        List<String> editableFields = jiraAdapterSettings.getEditableFields();
-        log.trace("editable fields are - {}", editableFields);
-        boolean permittedToEdit = editableFields != null &&
-                editableFields.contains(fieldOptionsRequest.getFieldKey());
-        log.trace("field {} is permitted to edit - {}", field.getName(), permittedToEdit);
-        fieldParameters.setPermittedToEdit(permittedToEdit);
         return fieldParameters;
     }
 
