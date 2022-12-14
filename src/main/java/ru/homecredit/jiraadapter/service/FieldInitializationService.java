@@ -48,31 +48,38 @@ public class FieldInitializationService {
     public FieldOptions initialize(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = new FieldOptions(fieldOptionsRequest);
         try {
+            log.info("point 1");
             FieldParameters fieldParameters = (fieldOptionsRequest.getOptionId() == null)
                     ? initializeFieldParameters(fieldOptionsRequest)
                     : initializeFieldParameters(fieldOptionsRequest.getOptionId());
             if (fieldOptionsRequest.getOptionId() != null) {
                 String fieldKey = fieldParameters.getFieldConfig().getFieldId();
+                log.info(fieldOptionsRequest.toString());
                 fieldOptions.getFieldOptionsRequest().setFieldKey(fieldKey);
+                log.info("point 3");
                 boolean isPermittedToEdit = jiraAdapterSettingsService.isPermittedToEdit(fieldKey);
                 fieldParameters.setPermittedToEdit(isPermittedToEdit);
             }
+            log.info("point 2");
             fieldOptions.setFieldParameters(fieldParameters);
+            log.info("fieldOptions {}", fieldOptions);
             initializeOptions(fieldOptions);
         } catch (Exception e) {
-            fieldOptions.setErrorMessage("failed to acquire fieldParameters." +
-                                                 "check fieldKey, projectKey and issueTypeId");
+            fieldOptions.addErrorMessage("failed to acquire fieldParameters." +
+                 " check fieldKey, projectKey and issueTypeId");
         }
         return fieldOptions;
     }
 
     private FieldParameters initializeFieldParameters(String optionId) {
         Option option = optionsManager.findByOptionId(Long.parseLong(optionId));
+        log.info(String.valueOf(option==null));
         FieldParameters fieldParameters = new FieldParameters();
         FieldConfig fieldConfig = option.getRelatedCustomField();
         fieldParameters.setFieldConfig(fieldConfig);
         fieldParameters.setFieldConfigName(fieldConfig.getName());
         fieldParameters.setFieldName(fieldConfig.getCustomField().getFieldName());
+        log.info("point 5");
         fieldParameters.setValidContext(true);
         return fieldParameters;
     }

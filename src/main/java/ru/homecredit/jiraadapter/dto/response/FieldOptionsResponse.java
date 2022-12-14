@@ -56,8 +56,8 @@ public class FieldOptionsResponse {
     private List<JiraOption> jiraOptions;
     @XmlElement(name = "success")
     private String success;
-    @XmlElement(name = "errorMessage")
-    private String errorMessage;
+    @XmlElement(name = "errorMessages")
+    private List<String> errorMessages;
 
     /**
      * constructor repacks some transport object fields to xml-marked response object
@@ -85,6 +85,6 @@ public class FieldOptionsResponse {
         manipulatedOption = fieldOptions.getManipulatedOption();
         jiraOptions = fieldOptions.getJiraOptions();
         success = Boolean.toString(fieldOptions.isSuccess());
-        errorMessage = fieldOptions.getErrorMessage();
+        errorMessages = fieldOptions.getErrorMessages();
     }
 }

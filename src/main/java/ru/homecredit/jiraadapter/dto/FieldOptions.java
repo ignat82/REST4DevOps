@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public class FieldOptions {
     private JiraOption manipulatedOption;
     private List<JiraOption> jiraOptions;
     private boolean success;
-    private String errorMessage;
+    private final List<String> errorMessages = new ArrayList<>();
 
     public FieldOptions() {
         this(new FieldOptionsRequest());
@@ -33,11 +34,11 @@ public class FieldOptions {
     public void setFieldParameters(FieldParameters fieldParameters) {
         this.fieldParameters = new FieldParameters();
         if (fieldParameters == null) {
-            errorMessage = "failed to initialize field parameters";
+            errorMessages.add("failed to initialize field parameters");
         } else if (!fieldParameters.isValidContext()) {
-            errorMessage = "failed to initialize field parameters due invalid context provided";
+            errorMessages.add("failed to initialize field parameters due invalid context provided");
         } else if (!fieldParameters.isPermittedToEdit()) {
-            errorMessage = "access to field is not permitted by plugin settings";
+            errorMessages.add("access to field is not permitted by plugin settings");
         } else {
             this.fieldParameters = fieldParameters;
         }
@@ -46,6 +47,16 @@ public class FieldOptions {
     public Optional<JiraOption> getJiraOptionByValue(String optionValue) {
         return jiraOptions.stream().findAny()
                           .filter(o -> o.getOptionValue().equals(optionValue));
+    }
+
+    public void addErrorMessage(String errorMessage) {
+        errorMessages.add(errorMessage);
+    }
+
+    public List<String> getErrorMessages() {
+        return (errorMessages.isEmpty())
+                ? null
+                : errorMessages;
     }
 
     @Getter

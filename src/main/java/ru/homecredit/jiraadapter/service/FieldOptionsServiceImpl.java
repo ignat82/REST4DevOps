@@ -30,24 +30,24 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
     }
     public FieldOptions getOptions(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = fieldInitializationService.initialize(fieldOptionsRequest);
-        fieldOptions.setSuccess(fieldOptions.getErrorMessage() == null);
+        fieldOptions.setSuccess(fieldOptions.getErrorMessages() == null);
         return fieldOptions;
     }
 
     public FieldOptions postOption(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = fieldInitializationService.initialize(fieldOptionsRequest);
-        if (fieldOptions.getErrorMessage() != null) {
-            log.error("shutting down postOption() due to error {}", fieldOptions.getErrorMessage());
+        if (fieldOptions.getErrorMessages() != null) {
+            log.error("shutting down postOption() due to error {}", fieldOptions.getErrorMessages());
             return fieldOptions;
         }
         Action action = fieldOptions.getFieldOptionsRequest().getAction();
         if (action == null) {
-            fieldOptions.setErrorMessage("action parameter not recognized");
+            fieldOptions.addErrorMessage("action parameter not recognized");
             return fieldOptions;
         }
         if (fieldOptions.getFieldOptionsRequest().getNewOption() == null
         && fieldOptions.getFieldOptionsRequest().getOptionId() == null) {
-            fieldOptions.setErrorMessage("option not provided in request");
+            fieldOptions.addErrorMessage("option not provided in request");
             return fieldOptions;
         }
         if (action == ADD) {
@@ -65,7 +65,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         }
         if (option == null) {
             String message = "option \"" + optionValue + "\" seems not to exist. shutting down";
-            fieldOptions.setErrorMessage(message);
+            fieldOptions.addErrorMessage(message);
             log.error(message);
             return fieldOptions;
         }
@@ -80,11 +80,11 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         if (newOptionValue == null) {
             String message = "newOptionValue was not provided";
             log.error(message);
-            fieldOptions.setErrorMessage(message);
+            fieldOptions.addErrorMessage(message);
         } else if (oldOptionValue.equals(newOptionValue)) {
             String message = "newOptionValue equals oldOptionValue";
             log.error(message);
-            fieldOptions.setErrorMessage(message);
+            fieldOptions.addErrorMessage(message);
         } else {
             option.setValue(newOptionValue);
             optionsManager.updateOptions(Collections.singletonList(option));
@@ -103,7 +103,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         log.trace("trying to add new option \"{}\"", optionValue);
         Optional<JiraOption> existingOption = fieldOptions.getJiraOptionByValue(optionValue);
         if (existingOption.isPresent()) {
-            fieldOptions.setErrorMessage("new option \"" + optionValue + "\" exists already");
+            fieldOptions.addErrorMessage("new option \"" + optionValue + "\" exists already");
             fieldOptions.setManipulatedOption(existingOption.get());
             return fieldOptions;
         }
@@ -127,7 +127,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         fieldOptions.setManipulatedOption(new JiraOption(option));
         boolean isDisabled = (fieldOptions.getFieldOptionsRequest().getAction() == DISABLE);
         if (option.getDisabled() == isDisabled) {
-            fieldOptions.setErrorMessage("option disabled state is \"" + isDisabled + "\" already");
+            fieldOptions.addErrorMessage("option disabled state is \"" + isDisabled + "\" already");
             return fieldOptions;
         }
         option.setDisabled(isDisabled);
