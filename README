@@ -1,5 +1,3 @@
-***************************************************************************************
-
 The function of this plugin is to provide REST service for:
  - acquiring the list of options for jira select list customfields in given context
  - adding new options to field options list
@@ -15,8 +13,13 @@ REST API endpoints:
 for GET fieldOptionsRequest to acquire the options of customfild in given context:
 http://{jira base URL}/rest/options/1.0/get_options/{field key}/{project key}/{issue type id}
 
-for POST fieldOptionsRequest to append new option to options of customfield in given context:
+for POST fieldOptionsRequest to add new option to options of customfield in given context,
+defined by fieldKey, projectKey and issueTypeId
+or to enable/disable/rename an existing one:
 http://{jira base URL}/rest/options/1.0/post_options/{field key}/{project key}/{issue type id}
+
+for POST fieldOptionsRequest to enable/disable/rename an existing option:
+http://{jira base URL}/rest/options/1.0/post_options/{optionId}
 
 test classes, inherited from skeleton plugin are commented out
 

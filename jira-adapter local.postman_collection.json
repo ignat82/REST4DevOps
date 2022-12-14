@@ -7,56 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "POST renameOption local",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "admin",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"newOption\":\"значение новое\",\"optionNewValue\":\"rename\", \"action\":\"rename\"}",
-					"options": {
-						"raw": {
-							"language": "text"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "2990",
-					"path": [
-						"jira",
-						"rest",
-						"options",
-						"1.0",
-						"post_options",
-						"customfield_10001",
-						"TES",
-						"10000"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "GET getFieldOptions local",
 			"event": [
 				{
@@ -161,51 +111,6 @@
 			"response": []
 		},
 		{
-			"name": "POST disableOption local",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "admin",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"newOption\":\"Liferay портал. \\\"Архив\\\"\", \"action\":\"disable\"}"
-				},
-				"url": {
-					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "2990",
-					"path": [
-						"jira",
-						"rest",
-						"options",
-						"1.0",
-						"post_options",
-						"customfield_10001",
-						"TES",
-						"10000"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "POST enableOption local",
 			"request": {
 				"auth": {
@@ -227,7 +132,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"newOption\":\"Liferay портал. \\\"Архив\\\"\", \"action\":\"disable\"}"
+					"raw": "{\"optionId\":\"10004\", \"action\":\"enable\"}"
 				},
 				"url": {
 					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
@@ -252,6 +157,230 @@
 							"value": "",
 							"disabled": true
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST disableFieldOption local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"optionId\":\"10004\", \"action\":\"disable\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"options",
+						"1.0",
+						"post_options",
+						"customfield_10001",
+						"TES",
+						"10000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST renameOption local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"optionId\":\"10004\",\"optionNewValue\":\"renamed 2\", \"action\":\"rename\"}",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"options",
+						"1.0",
+						"post_options",
+						"customfield_10001",
+						"TES",
+						"10000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST enableFieldOptionById local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"action\":\"disable\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/10003",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"options",
+						"1.0",
+						"post_options",
+						"10003"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST disableFieldOptionById local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"action\":\"disable\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/10003",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"options",
+						"1.0",
+						"post_options",
+						"10003"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST renameFieldOptionById local",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"action\":\"disable\",\"optionNewValue\":\"renamed 2\"}"
+				},
+				"url": {
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/10003",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2990",
+					"path": [
+						"jira",
+						"rest",
+						"options",
+						"1.0",
+						"post_options",
+						"10003"
 					]
 				}
 			},
