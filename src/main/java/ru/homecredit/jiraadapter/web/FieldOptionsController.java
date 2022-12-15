@@ -47,7 +47,7 @@ public class FieldOptionsController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("post_options/{optionId}")
+    @Path("post_option_ids/{optionId}")
     public Response handleOption(@PathParam("optionId") String optionId,
                                  String requestBody) {
         log.trace("************ starting doPost method... **************");
