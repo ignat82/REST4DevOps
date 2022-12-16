@@ -19,7 +19,7 @@ or to enable/disable/rename an existing one:
 http://{jira base URL}/rest/options/1.0/post_options/{field key}/{project key}/{issue type id}
 
 for POST fieldOptionsRequest to enable/disable/rename an existing option:
-http://{jira base URL}/rest/options/1.0/post_options/{optionId}
+http://{jira base URL}/rest/options/1.0/post_option_ids/{optionId}
 
 test classes, inherited from skeleton plugin are commented out
 
