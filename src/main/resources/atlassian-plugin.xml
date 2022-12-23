@@ -34,20 +34,13 @@ https://community.atlassian.com/t5/Jira-discussions/Jira-Custom-Field-Select2-pr
       Rest Endpoint to manage field options</description>
   </rest>
 
-  <webwork1 name="JiraAdapter Webwork"
-            i18n-name-key="${atlassian.plugin.key}.webwork.name"
-            key="${atlassian.plugin.key}.webwork"
-            class="java.lang.Object"
-            roles-required="admin">
-    <description key="${atlassian.plugin.key}.webwork.description">
-      JiraAdapter REST Plugin Configuration Webwork Module description</description>
-    <actions>
-      <action name="ru.homecredit.jiraadapter.webwork.ConfigurationWebworkAction"
-              alias="ConfigurationWebworkAction">
-        <view name="configuration-page">/templates/configuration-page.vm</view>
-      </action>
-    </actions>
-  </webwork1>
+  <ao name="JiraAdapter Active Objects Module"
+      key="${atlassian.plugin.key}.ao-module"
+      i18n-name-key="${atlassian.plugin.key}.ao-module.name">
+    <description key="${atlassian.plugin.key}ao-module.description">
+      The module configuring the Active Objects service used by this plugin</description>
+    <entity>ru.homecredit.jiraadapter.entities.FieldsGroupSettings</entity>
+  </ao>
 
   <web-section name="JiraAdapter WebSection"
                key="${atlassian.plugin.key}.web-section"
@@ -58,15 +51,57 @@ https://community.atlassian.com/t5/Jira-discussions/Jira-Custom-Field-Select2-pr
     <label key="${atlassian.plugin.key}.web-section.label">Jira-Adapter</label>
   </web-section>
 
-  <web-item name="${atlassian.plugin.key}.web-item.name"
-            key="${atlassian.plugin.key}.web-item"
-            i18n-name-key="${atlassian.plugin.key}.web-item.name"
+  <web-item name="${atlassian.plugin.key}.configuration-web-item.name"
+            key="${atlassian.plugin.key}.configuration-web-item"
+            i18n-name-key="${atlassian.plugin.key}.configuration-web-item.name"
             section="admin_plugins_menu/${atlassian.plugin.key}.web-section"
             weight="1000">
-    <label key="${atlassian.plugin.key}.web-item.label">Configure</label>
-    <description key="${atlassian.plugin.key}.web-item.description">configuration</description>
-    <link linkId="${atlassian.plugin.key}.web-item.link">
+    <label key="${atlassian.plugin.key}.configuration-web-item.label">Configure</label>
+    <description key="${atlassian.plugin.key}.configuration-web-item.description">configuration</description>
+    <link linkId="${atlassian.plugin.key}.configuration-web-item.link">
       /secure/ConfigurationWebworkAction.jspa</link>
   </web-item>
+
+  <webwork1 name="JiraAdapter Configuration Webwork"
+            i18n-name-key="${atlassian.plugin.key}.webwork.configuration.name"
+            key="${atlassian.plugin.key}.webwork.configuration"
+            class="java.lang.Object"
+            roles-required="admin">
+    <description key="${atlassian.plugin.key}.webwork.configuration.description">
+      JiraAdapter REST Plugin Configuration Webwork Module description</description>
+    <actions>
+      <action name="ru.homecredit.jiraadapter.webwork.ConfigurationWebworkAction"
+              alias="ConfigurationWebworkAction">
+        <view name="configuration-page">/templates/configuration-page.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+
+  <web-item name="${atlassian.plugin.key}.fields-groups-settings-web-item.name"
+            key="${atlassian.plugin.key}.fields-groups-settings-web-item"
+            i18n-name-key="${atlassian.plugin.key}.fields-groups-settings-web-item.name"
+            section="admin_plugins_menu/${atlassian.plugin.key}.web-section"
+            weight="1001">
+    <label key="${atlassian.plugin.key}.fields-groups-settings-web-item.label">Fields groups</label>
+    <description key="${atlassian.plugin.key}.fields-groups-settings-web-item.description">fields groups configuration</description>
+    <link linkId="${atlassian.plugin.key}.fields-groups-settings-web-item.link">
+      /secure/FieldsSettingsWebwork.jspa</link>
+  </web-item>
+
+  <webwork1 name="JiraAdapter Fields Settings Webwork"
+            i18n-name-key="${atlassian.plugin.key}.webwork.fields.name"
+            key="${atlassian.plugin.key}.webwork.fields"
+            class="java.lang.Object"
+            roles-required="admin">
+    <description key="${atlassian.plugin.key}.webwork.fields.description">
+      JiraAdapter REST Plugin Configuration Webwork Module description</description>
+    <actions>
+      <action name="ru.homecredit.jiraadapter.webwork.FieldsSettingsWebwork"
+              alias="FieldsSettingsWebwork">
+        <view name="fields-groups-settings-page">/templates/fields-groups-settings-page.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+
 </atlassian-plugin>
 
