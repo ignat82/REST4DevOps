@@ -25,6 +25,7 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
     private List<String> savedUsers;
     private String[] usersToSave;
     private List<FieldsGroupSettings> currentSettings;
+    private String groupID;
 
     @Override
     public String execute() throws Exception {
@@ -51,5 +52,15 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
         }
     }
 
+    public void doDelete() {
+        log.info("deleting settings group {}", groupID);
+        if (groupID == null) {
+            return;
+        }
+        settingsService.deleteById(Integer.parseInt(groupID));
+    }
 
+    public void doEdit() {
+        log.info("editing settings group {}", groupID);
+    }
 }

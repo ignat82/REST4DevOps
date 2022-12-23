@@ -12,4 +12,5 @@ public interface FieldsGroupSettings extends Entity {
     String getFieldsKeys();
 
     String getUsersKeys();
+    //int getID();
 }

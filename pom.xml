@@ -27,7 +27,7 @@
         migrating a plugin originally developed against JIRA 4.x -->
         <!--
         <dependency>
-            <groupId>com.atlassian.jira</groupId>
+            <groupID>com.atlassian.jira</groupID>
             <artifactId>jira-core</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
@@ -73,7 +73,7 @@
         <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
         <!--
         <dependency>
-            <groupId>com.atlassian.jira.tests</groupId>
+            <groupID>com.atlassian.jira.tests</groupID>
             <artifactId>jira-testkit-client</artifactId>
             <version>${testkit.version}</version>
             <scope>test</scope>
@@ -149,17 +149,17 @@
         -->
         <!--
         <dependency>
-            <groupId>org.hibernate.validator</groupId>
+            <groupID>org.hibernate.validator</groupID>
             <artifactId>hibernate-validator</artifactId>
             <version>7.0.4.Final</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
+            <groupID>org.glassfish</groupID>
             <artifactId>jakarta.el</artifactId>
             <version>4.0.1</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate.validator</groupId>
+            <groupID>org.hibernate.validator</groupID>
             <artifactId>hibernate-validator-cdi</artifactId>
             <version>7.0.4.Final</version>
         </dependency>
@@ -214,7 +214,7 @@
                     <!--
                     <pluginArtifacts>
                         <pluginArtifact>
-                            <groupId>com.atlassian.jira.tests</groupId>
+                            <groupID>com.atlassian.jira.tests</groupID>
                             <artifactId>jira-testkit-plugin</artifactId>
                             <version>${testkit.version}</version>
                         </pluginArtifact>

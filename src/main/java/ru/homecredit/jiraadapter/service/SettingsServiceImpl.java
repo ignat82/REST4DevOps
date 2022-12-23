@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Named
@@ -46,11 +47,25 @@ private final UserSearchService userSearchService;
         return Arrays.asList(activeObjects.find(FieldsGroupSettings.class));
     }
 
+    public boolean deleteById(int id) {
+        Optional<FieldsGroupSettings> groupToDelete = getById(id);
+        if (groupToDelete.isPresent()) {
+            activeObjects.delete(groupToDelete.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<String> getAllUsers() {
         return userSearchService
                 .findUsers("", userSearchParams).stream()
                 .map(ApplicationUser::getKey)
                 .collect(Collectors.toList());
+    }
+
+    public Optional<FieldsGroupSettings> getById(int id) {
+        return all().stream().filter(s -> s.getID() == id).findAny();
     }
 
     public boolean settingsExist(String[] fieldKeysArr, String[] usersKeysArr) {
