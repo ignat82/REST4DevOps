@@ -5,8 +5,11 @@ import net.java.ao.schema.Table;
 
 @Table("settings")
 public interface FieldsGroupSettings extends Entity {
-    void setFieldsKeys(String[] fieldsKeys);
-    void setUsersKeys(String[] usersKeys);
-    String[] getFieldsKeys();
-    String[] getUsersKeys();
+    void setFieldsKeys(String fieldsKeys);
+
+    void setUsersKeys(String usersKeys);
+
+    String getFieldsKeys();
+
+    String getUsersKeys();
 }

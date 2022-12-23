@@ -7,7 +7,7 @@ import java.util.List;
 
 @Transactional
 public interface FieldsGroupsSettingsService {
-    FieldsGroupSettings add(String[] fieldsKeys, String[] usersKeys);
+    FieldsGroupSettings add(String fieldsKeys, String usersKeys);
     List<FieldsGroupSettings> all();
     List<String>  getAllUsers();
 }

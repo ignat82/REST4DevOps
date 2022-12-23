@@ -33,7 +33,7 @@ private final UserSearchService userSearchService;
         this.userSearchService = userSearchService;
     }
 
-    public FieldsGroupSettings add(String[] fieldsKeys, String[] usersKeys) {
+    public FieldsGroupSettings add(String fieldsKeys, String usersKeys) {
         final FieldsGroupSettings newSettingsGroup = activeObjects.create(FieldsGroupSettings.class);
         newSettingsGroup.setFieldsKeys(fieldsKeys);
         newSettingsGroup.setUsersKeys(usersKeys);
@@ -51,5 +51,12 @@ private final UserSearchService userSearchService;
                 .findUsers("", userSearchParams).stream()
                 .map(ApplicationUser::getKey)
                 .collect(Collectors.toList());
+    }
+
+    public boolean settingsExist(String fieldKeys, String usersKeys) {
+        log.info("looking if these settings exist already");
+        return all().stream()
+                    .anyMatch(s -> s.getFieldsKeys().equals(fieldKeys)
+                              && s.getUsersKeys().equals(usersKeys));
     }
 }

@@ -20,8 +20,10 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
     private final FieldsGroupsSettingsServiceImpl fieldsGroupsSettingsService;
     private List<String> allCustomFieldsKeys;
+    private List<String> savedCustomFieldsKeys;
+    private String[] customFieldsKeysToSave;
     private List<String> allUsers;
-    private List<String> allowedUsers;
+    private List<String> savedUsers;
     private String[] usersToSave;
     private List<FieldsGroupSettings> fieldsGroupsSettings;
 
@@ -30,14 +32,27 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
         super.execute();
         allCustomFieldsKeys = jiraAdapterSettingsService.getAllCustomFieldsKeys();
         allUsers = fieldsGroupsSettingsService.getAllUsers();
-        log.info("got users");
         fieldsGroupsSettings = fieldsGroupsSettingsService.all();
         log.info("get settings objects {}", fieldsGroupsSettings);
         return "fields-groups-settings-page";
     }
     public void doSave() {
-        log.info("saving {}", Arrays.toString(usersToSave));
-
+        log.info("saving fields {} and users{}", customFieldsKeysToSave, Arrays.toString(usersToSave));
+        if (customFieldsKeysToSave == null || usersToSave == null) {
+            log.info("either fields or users are empty. won't save");
+            return;
+        }
+        Arrays.sort(customFieldsKeysToSave);
+        Arrays.sort(usersToSave);
+        String fields = Arrays.toString(customFieldsKeysToSave);
+        String users = Arrays.toString(usersToSave);
+        if (fieldsGroupsSettingsService.settingsExist(fields, users)) {
+            log.info("settings seems to exist already");
+        } else {
+            FieldsGroupSettings settingsToSave = fieldsGroupsSettingsService
+                    .add(Arrays.toString(customFieldsKeysToSave), Arrays.toString(usersToSave));
+            log.info("saved settings {}", settingsToSave);
+        }
     }
 
 

@@ -9,7 +9,7 @@
         <script type="text/javascript">
 	        AJS.$(document).ready(function() {
 		        AJS.$(".custom-fields-keys-select-class").auiSelect2();
-		        AJS.$(".allowed-users-select-class").auiSelect2();
+		        AJS.$(".users-to-save-select-class").auiSelect2();
 	        });
         </script>
 
@@ -31,14 +31,14 @@
 	                #end
 	            </select>
                 <br>
-	            <label for"allowedUsers">Users, allowed to edit field</label>
-                <select name="allowedUsers" id="allowedUsers"
-                class="allowed-users-select-class"
+	            <label for"usersToSave">Users, allowed to edit these fields</label>
+                <select name="usersToSave" id="users-to-save-select"
+                class="users-to-save-select-class"
                     class="multi-select" multiple="multiple">
                     <option></option>
                     #foreach($userKey in $allUsers)
                         <option value="$userKey"
-                            #if ($allowedUsers && $allowedUsers.contains($userKey))
+                            #if ($savedUsers && $savedUsers.contains($userKey))
                                selected="selected"
                             #end
                         >$cfValueEncoder.encodeForHtml($userKey)</option>
@@ -48,7 +48,7 @@
 
             <div class="buttons-container">
                 <div class="buttons">
-	                <input class="button" type="submit" value="Save custom fields keys">
+	                <input class="button" type="submit" value="Save fields group">
 	                <a class="cancel" href="#">Cancel</a>
                 </div>
             </div>
