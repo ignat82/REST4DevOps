@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Named
 @Slf4j
-public class FieldsGroupsSettingsServiceImpl implements FieldsGroupsSettingsService {
+public class SettingsServiceImpl implements SettingsService {
 private final ActiveObjects activeObjects;
 private final UserSearchService userSearchService;
     private final UserSearchParams userSearchParams
@@ -27,22 +27,22 @@ private final UserSearchService userSearchService;
             .maxResults(100000).build();
 
     @Inject
-    public FieldsGroupsSettingsServiceImpl(@ComponentImport ActiveObjects activeObjects,
-                                           @ComponentImport UserSearchService userSearchService) {
+    public SettingsServiceImpl(@ComponentImport ActiveObjects activeObjects,
+                               @ComponentImport UserSearchService userSearchService) {
         this.activeObjects = activeObjects;
         this.userSearchService = userSearchService;
     }
 
-    public FieldsGroupSettings add(String fieldsKeys, String usersKeys) {
+    public FieldsGroupSettings add(String[] fieldsKeys, String[] usersKeys) {
         final FieldsGroupSettings newSettingsGroup = activeObjects.create(FieldsGroupSettings.class);
-        newSettingsGroup.setFieldsKeys(fieldsKeys);
-        newSettingsGroup.setUsersKeys(usersKeys);
+        newSettingsGroup.setFieldsKeys(Arrays.toString(fieldsKeys));
+        newSettingsGroup.setUsersKeys(Arrays.toString(usersKeys));
         newSettingsGroup.save();
         return newSettingsGroup;
     }
 
     public List<FieldsGroupSettings> all() {
-        log.error("retrying settings");
+        log.info("retrying settings");
         return Arrays.asList(activeObjects.find(FieldsGroupSettings.class));
     }
 
@@ -53,10 +53,20 @@ private final UserSearchService userSearchService;
                 .collect(Collectors.toList());
     }
 
-    public boolean settingsExist(String fieldKeys, String usersKeys) {
+    public boolean settingsExist(String[] fieldKeysArr, String[] usersKeysArr) {
         log.info("looking if these settings exist already");
+        Arrays.sort(fieldKeysArr);
+        Arrays.sort(usersKeysArr);
         return all().stream()
-                    .anyMatch(s -> s.getFieldsKeys().equals(fieldKeys)
-                              && s.getUsersKeys().equals(usersKeys));
+                    .anyMatch(s -> s.getFieldsKeys().equals(Arrays.toString(fieldKeysArr))
+                              && s.getUsersKeys().equals(Arrays.toString(fieldKeysArr)));
+    }
+
+    public String prettyString(FieldsGroupSettings settings) {
+        String output = String.format("ID - %s\n, fields - %s\n, keys - %s\n",
+                                      settings.getID(),
+                                      settings.getFieldsKeys(),
+                                      settings.getUsersKeys());
+        return output;
     }
 }

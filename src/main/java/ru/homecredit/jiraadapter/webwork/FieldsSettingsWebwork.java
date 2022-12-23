@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.entities.FieldsGroupSettings;
-import ru.homecredit.jiraadapter.service.FieldsGroupsSettingsServiceImpl;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
+import ru.homecredit.jiraadapter.service.SettingsServiceImpl;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -18,39 +17,36 @@ import java.util.List;
 @Slf4j
 public class FieldsSettingsWebwork extends JiraWebActionSupport {
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
-    private final FieldsGroupsSettingsServiceImpl fieldsGroupsSettingsService;
+    private final SettingsServiceImpl settingsService;
     private List<String> allCustomFieldsKeys;
     private List<String> savedCustomFieldsKeys;
     private String[] customFieldsKeysToSave;
     private List<String> allUsers;
     private List<String> savedUsers;
     private String[] usersToSave;
-    private List<FieldsGroupSettings> fieldsGroupsSettings;
+    private List<FieldsGroupSettings> currentSettings;
 
     @Override
     public String execute() throws Exception {
         super.execute();
         allCustomFieldsKeys = jiraAdapterSettingsService.getAllCustomFieldsKeys();
-        allUsers = fieldsGroupsSettingsService.getAllUsers();
-        fieldsGroupsSettings = fieldsGroupsSettingsService.all();
-        log.info("get settings objects {}", fieldsGroupsSettings);
+        allUsers = settingsService.getAllUsers();
+        currentSettings = settingsService.all();
+        log.info("get settings objects: {}", currentSettings);
+        currentSettings.forEach(s -> log.info(settingsService.prettyString(s)));
         return "fields-groups-settings-page";
     }
     public void doSave() {
-        log.info("saving fields {} and users{}", customFieldsKeysToSave, Arrays.toString(usersToSave));
+        log.info("saving fields {} and users{}", customFieldsKeysToSave, usersToSave);
         if (customFieldsKeysToSave == null || usersToSave == null) {
             log.info("either fields or users are empty. won't save");
             return;
         }
-        Arrays.sort(customFieldsKeysToSave);
-        Arrays.sort(usersToSave);
-        String fields = Arrays.toString(customFieldsKeysToSave);
-        String users = Arrays.toString(usersToSave);
-        if (fieldsGroupsSettingsService.settingsExist(fields, users)) {
+        if (settingsService.settingsExist(customFieldsKeysToSave, usersToSave)) {
             log.info("settings seems to exist already");
         } else {
-            FieldsGroupSettings settingsToSave = fieldsGroupsSettingsService
-                    .add(Arrays.toString(customFieldsKeysToSave), Arrays.toString(usersToSave));
+            FieldsGroupSettings settingsToSave = settingsService
+                    .add(customFieldsKeysToSave, usersToSave);
             log.info("saved settings {}", settingsToSave);
         }
     }
