@@ -11,9 +11,9 @@
 		        AJS.$(".users-to-save-select-class").auiSelect2();
 	        });
         </script>
+        <text>$message</text>
         #foreach($setting in $currentSettings)
             <form class="aui select2-custom-field-picker" method="post"
-            ##action="${baseurl}/secure/action/FieldsSettingsWebwork!delete.jspa"
             id="custom-fields-keys-form" name="custom-fields-keys-form-name">
 	            <text><b>settings group: $setting.getID()</b><br></text>
 		        <div class="field-group">

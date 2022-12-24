@@ -48,14 +48,34 @@ private final UserSearchService userSearchService;
         return Arrays.asList(activeObjects.find(FieldsGroupSettings.class));
     }
 
-    public boolean deleteById(int id) {
+    public String delete(int id) {
         Optional<FieldsGroupSettings> groupToDelete = getById(id);
+        String message;
         if (groupToDelete.isPresent()) {
             activeObjects.delete(groupToDelete.get());
-            return true;
+            message = String.format("deleted group with id %s", id);
+            log.info(message);
         } else {
-            return false;
+            message = String.format("failed to acquire group with id %s", id);
+            log.error(message);
         }
+        return message;
+    }
+
+    public String edit(int id, String description, String[] fieldsKeys, String[] usersKeys) {
+        Optional<FieldsGroupSettings> groupToEdit = getById(id);
+        if (!groupToEdit.isPresent()) {
+            String message = String.format("failed to acquire group with id %s", id);
+            log.error(message);
+            return message;
+        }
+        groupToEdit.get().setDescription(description);
+        groupToEdit.get().setFieldsKeys(Arrays.toString(fieldsKeys));
+        groupToEdit.get().setUsersKeys(Arrays.toString(usersKeys));
+        groupToEdit.get().save();
+        String message = String.format("saved changes to group with id %s", id);
+        log.error(message);
+        return message;
     }
 
     public List<String> getAllUsers() {

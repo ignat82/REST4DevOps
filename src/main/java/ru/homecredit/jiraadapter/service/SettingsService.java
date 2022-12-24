@@ -10,7 +10,8 @@ import java.util.List;
 public interface SettingsService {
     FieldsGroupSettings add(String description, String[] fieldsKeys, String[] usersKeys);
     List<FieldsGroupSettings> all();
-    boolean deleteById(int id);
+    String delete(int id);
+    String edit(int id, String description, String[] fieldsKeys, String[] usersKeys);
     List<String>  getAllUsers();
     Optional<FieldsGroupSettings> getById(int id);
     String prettyString(FieldsGroupSettings fieldsGroupSettings);

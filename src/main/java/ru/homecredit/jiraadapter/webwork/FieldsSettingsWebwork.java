@@ -27,6 +27,7 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
     private List<FieldsGroupSettings> currentSettings;
     private String groupID;
     private String description;
+    private String message;
 
     @Override
     public String execute() throws Exception {
@@ -39,13 +40,17 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
         return "fields-groups-settings-page";
     }
     public void doSave() {
-        log.info("saving fields {} and users{}", customFieldsKeysToSave, usersToSave);
+        log.info("saving settings group. fields {}, users{}",
+                 customFieldsKeysToSave,
+                 usersToSave);
         if (customFieldsKeysToSave == null || usersToSave == null) {
-            log.info("either fields or users are empty. won't save");
+            message = "either fields or users are empty. won't save";
+            log.info(message);
             return;
         }
         if (settingsService.settingsExist(customFieldsKeysToSave, usersToSave)) {
-            log.info("settings seems to exist already");
+            message = "settings seems to exist already";
+            log.info(message);
         } else {
             FieldsGroupSettings settingsToSave = settingsService
                     .add(description, customFieldsKeysToSave, usersToSave);
@@ -55,13 +60,14 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
 
     public void doDelete() {
         log.info("deleting settings group {}", groupID);
-        if (groupID == null) {
-            return;
-        }
-        settingsService.deleteById(Integer.parseInt(groupID));
+        message = settingsService.delete(Integer.parseInt(groupID));
     }
 
     public void doEdit() {
         log.info("editing settings group {}", groupID);
+        message = settingsService.edit(Integer.parseInt(groupID),
+                                       description,
+                                       customFieldsKeysToSave,
+                                       usersToSave);
     }
 }
