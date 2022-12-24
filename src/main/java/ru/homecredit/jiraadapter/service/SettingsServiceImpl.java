@@ -3,6 +3,8 @@ package ru.homecredit.jiraadapter.service;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.jira.bc.user.search.UserSearchParams;
 import com.atlassian.jira.bc.user.search.UserSearchService;
+import com.atlassian.jira.issue.CustomFieldManager;
+import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import lombok.extern.slf4j.Slf4j;
@@ -21,18 +23,21 @@ import java.util.stream.Collectors;
 public class SettingsServiceImpl implements SettingsService {
 private final ActiveObjects activeObjects;
 private final UserSearchService userSearchService;
-    private final UserSearchParams userSearchParams
-            = (new UserSearchParams.Builder())
-            .allowEmptyQuery(true)
-            .includeActive(true)
-            .includeInactive(true)
-            .maxResults(100000).build();
+private final CustomFieldManager customFieldManager;
+private final UserSearchParams userSearchParams
+        = (new UserSearchParams.Builder())
+        .allowEmptyQuery(true)
+        .includeActive(true)
+        .includeInactive(true)
+        .maxResults(100000).build();
 
     @Inject
     public SettingsServiceImpl(@ComponentImport ActiveObjects activeObjects,
-                               @ComponentImport UserSearchService userSearchService) {
+                               @ComponentImport UserSearchService userSearchService,
+                               @ComponentImport CustomFieldManager customFieldManager) {
         this.activeObjects = activeObjects;
         this.userSearchService = userSearchService;
+        this.customFieldManager = customFieldManager;
     }
 
     public String add(String description, String[] fieldsKeys, String[] usersKeys) {
@@ -85,7 +90,10 @@ private final UserSearchService userSearchService;
         return message;
     }
 
-    public String edit(int id, String description, String[] fieldsKeys, String[] usersKeys) {
+    public String edit(int id,
+                       String description,
+                       String[] fieldsKeys,
+                       String[] usersKeys) {
         Optional<FieldsGroupSettingsRaw> groupToEdit = getById(id);
         if (!groupToEdit.isPresent()) {
             String message = String.format("failed to acquire group with id %s", id);
@@ -97,8 +105,13 @@ private final UserSearchService userSearchService;
         groupToEdit.get().setUsersKeys(Arrays.toString(usersKeys));
         groupToEdit.get().save();
         String message = String.format("saved changes to group with id %s", id);
-        log.error(message);
+        log.info(message);
         return message;
+    }
+
+    public List<String> getAllCustomFieldsKeys() {
+        return customFieldManager.getCustomFieldObjects().stream()
+                                 .map(CustomField::getId).collect(Collectors.toList());
     }
 
     public List<String> getAllUsers() {
@@ -111,6 +124,11 @@ private final UserSearchService userSearchService;
     public Optional<FieldsGroupSettingsRaw> getById(int id) {
         return Arrays.stream(activeObjects.find(FieldsGroupSettingsRaw.class))
                      .filter(s -> s.getID() == id).findAny();
+    }
+
+    public boolean isPermittedToEdit(String fieldKey) {
+        //log.info("current user is {}", jiraAuthenticationContext.getLoggedInUser());
+        return true;
     }
 
     public boolean settingsExist(String[] fieldsKeysArr, String[] usersKeysArr) {

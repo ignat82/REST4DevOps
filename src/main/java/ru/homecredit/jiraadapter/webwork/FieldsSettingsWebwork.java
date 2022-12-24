@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.homecredit.jiraadapter.entities.FieldsGroupSettings;
-import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 import ru.homecredit.jiraadapter.service.SettingsServiceImpl;
 
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class FieldsSettingsWebwork extends JiraWebActionSupport {
-    private final JiraAdapterSettingsService jiraAdapterSettingsService;
     private final SettingsServiceImpl settingsService;
     private List<String> allCustomFieldsKeys;
     private List<String> savedCustomFieldsKeys;
@@ -32,7 +30,7 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
     @Override
     public String execute() throws Exception {
         super.execute();
-        allCustomFieldsKeys = jiraAdapterSettingsService.getAllCustomFieldsKeys();
+        allCustomFieldsKeys = settingsService.getAllCustomFieldsKeys();
         allUsers = settingsService.getAllUsers();
         currentSettings = settingsService.all();
         log.info("get settings objects: {}", currentSettings);

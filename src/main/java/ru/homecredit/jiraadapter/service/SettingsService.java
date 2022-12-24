@@ -13,7 +13,9 @@ public interface SettingsService {
     List<FieldsGroupSettings> all();
     String delete(int id);
     String edit(int id, String description, String[] fieldsKeys, String[] usersKeys);
+    List<String> getAllCustomFieldsKeys();
     List<String>  getAllUsers();
     Optional<FieldsGroupSettingsRaw> getById(int id);
+    boolean isPermittedToEdit(String fieldKey);
     String prettyString(FieldsGroupSettings fieldsGroupSettingsRaw);
 }

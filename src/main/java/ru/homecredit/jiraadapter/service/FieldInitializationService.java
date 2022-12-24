@@ -28,15 +28,18 @@ public class FieldInitializationService {
     private final ProjectManager projectManager;
     private final OptionsManager optionsManager;
     private final JiraAdapterSettingsService jiraAdapterSettingsService;
+    //private final SettingsServiceImpl settingsService;
 
     @Inject
     public FieldInitializationService(@ComponentImport FieldManager fieldManager,
                                       @ComponentImport ProjectManager projectManager,
                                       @ComponentImport OptionsManager optionsManager,
+                                      //@ComponentImport SettingsServiceImpl settingsService,
                                       JiraAdapterSettingsServiceImpl jiraAdapterSettingsService) {
         this.fieldManager = fieldManager;
         this.projectManager = projectManager;
         this.optionsManager = optionsManager;
+        //this.settingsService = settingsService;
         this.jiraAdapterSettingsService = jiraAdapterSettingsService;
     }
 
@@ -48,7 +51,6 @@ public class FieldInitializationService {
     public FieldOptions initialize(FieldOptionsRequest fieldOptionsRequest) {
         FieldOptions fieldOptions = new FieldOptions(fieldOptionsRequest);
         try {
-            log.info("point 1");
             FieldParameters fieldParameters = (fieldOptionsRequest.getOptionId() == null)
                     ? initializeFieldParameters(fieldOptionsRequest)
                     : initializeFieldParameters(fieldOptionsRequest.getOptionId());
@@ -60,7 +62,6 @@ public class FieldInitializationService {
                 boolean isPermittedToEdit = jiraAdapterSettingsService.isPermittedToEdit(fieldKey);
                 fieldParameters.setPermittedToEdit(isPermittedToEdit);
             }
-            log.info("point 2");
             fieldOptions.setFieldParameters(fieldParameters);
             log.info("fieldOptions {}", fieldOptions);
             initializeOptions(fieldOptions);
@@ -79,7 +80,6 @@ public class FieldInitializationService {
         fieldParameters.setFieldConfig(fieldConfig);
         fieldParameters.setFieldConfigName(fieldConfig.getName());
         fieldParameters.setFieldName(fieldConfig.getCustomField().getFieldName());
-        log.info("point 5");
         fieldParameters.setValidContext(true);
         return fieldParameters;
     }
