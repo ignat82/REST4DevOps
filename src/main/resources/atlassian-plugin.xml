@@ -39,7 +39,7 @@ https://community.atlassian.com/t5/Jira-discussions/Jira-Custom-Field-Select2-pr
       i18n-name-key="${atlassian.plugin.key}.ao-module.name">
     <description key="${atlassian.plugin.key}ao-module.description">
       The module configuring the Active Objects service used by this plugin</description>
-    <entity>ru.homecredit.jiraadapter.entities.FieldsGroupSettings</entity>
+    <entity>ru.homecredit.jiraadapter.entities.FieldsGroupSettingsRaw</entity>
   </ao>
 
   <web-section name="JiraAdapter WebSection"

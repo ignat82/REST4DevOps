@@ -1,18 +1,15 @@
 package ru.homecredit.jiraadapter.entities;
 
-import net.java.ao.Entity;
-import net.java.ao.schema.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Table("settings")
-public interface FieldsGroupSettings extends Entity {
-    void setDescription(String description);
-    void setFieldsKeys(String fieldsKeys);
-
-    void setUsersKeys(String usersKeys);
-    String getDescription();
-
-    String getFieldsKeys();
-
-    String getUsersKeys();
-    //int getID();
+@Getter
+@Setter
+@AllArgsConstructor
+public class FieldsGroupSettings {
+    private int ID;
+    private String description;
+    private String[] fieldsKeys;
+    private String[] usersKeys;
 }

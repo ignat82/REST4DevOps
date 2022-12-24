@@ -1,18 +1,18 @@
 package ru.homecredit.jiraadapter.service;
 
 import com.atlassian.activeobjects.tx.Transactional;
-import ru.homecredit.jiraadapter.entities.FieldsGroupSettings;
+import ru.homecredit.jiraadapter.entities.FieldsGroupSettingsRaw;
 import java.util.Optional;
 
 import java.util.List;
 
 @Transactional
 public interface SettingsService {
-    FieldsGroupSettings add(String description, String[] fieldsKeys, String[] usersKeys);
-    List<FieldsGroupSettings> all();
+    String add(String description, String[] fieldsKeys, String[] usersKeys);
+    List<FieldsGroupSettingsRaw> all();
     String delete(int id);
     String edit(int id, String description, String[] fieldsKeys, String[] usersKeys);
     List<String>  getAllUsers();
-    Optional<FieldsGroupSettings> getById(int id);
-    String prettyString(FieldsGroupSettings fieldsGroupSettings);
+    Optional<FieldsGroupSettingsRaw> getById(int id);
+    String prettyString(FieldsGroupSettingsRaw fieldsGroupSettingsRaw);
 }

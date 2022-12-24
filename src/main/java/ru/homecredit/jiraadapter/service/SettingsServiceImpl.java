@@ -6,7 +6,7 @@ import com.atlassian.jira.bc.user.search.UserSearchService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import lombok.extern.slf4j.Slf4j;
-import ru.homecredit.jiraadapter.entities.FieldsGroupSettings;
+import ru.homecredit.jiraadapter.entities.FieldsGroupSettingsRaw;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,26 +34,37 @@ private final UserSearchService userSearchService;
         this.userSearchService = userSearchService;
     }
 
-    public FieldsGroupSettings add(String description, String[] fieldsKeys, String[] usersKeys) {
-        final FieldsGroupSettings newSettingsGroup = activeObjects.create(FieldsGroupSettings.class);
-        newSettingsGroup.setDescription(description);
-        newSettingsGroup.setFieldsKeys(Arrays.toString(fieldsKeys));
-        newSettingsGroup.setUsersKeys(Arrays.toString(usersKeys));
-        newSettingsGroup.save();
-        return newSettingsGroup;
+    public String add(String description, String[] fieldsKeys, String[] usersKeys) {
+        String message;
+        if (fieldsKeys == null || usersKeys == null) {
+            message = "either fields or users are empty. won't save";
+            log.error(message);
+        } else if (settingsExist(fieldsKeys, usersKeys)) {
+            message = "settings seems to exist already";
+            log.error(message);
+        } else {
+            final FieldsGroupSettingsRaw newSettingsGroup = activeObjects.create(FieldsGroupSettingsRaw.class);
+            newSettingsGroup.setDescription(description);
+            newSettingsGroup.setFieldsKeys(Arrays.toString(fieldsKeys));
+            newSettingsGroup.setUsersKeys(Arrays.toString(usersKeys));
+            newSettingsGroup.save();
+            message = String.format("saved settings group %s", newSettingsGroup.getID());
+            log.info(message);
+        }
+        return message;
     }
 
-    public List<FieldsGroupSettings> all() {
+    public List<FieldsGroupSettingsRaw> all() {
         log.info("retrying settings");
-        return Arrays.asList(activeObjects.find(FieldsGroupSettings.class));
+        return Arrays.asList(activeObjects.find(FieldsGroupSettingsRaw.class));
     }
 
     public String delete(int id) {
-        Optional<FieldsGroupSettings> groupToDelete = getById(id);
+        Optional<FieldsGroupSettingsRaw> groupToDelete = getById(id);
         String message;
         if (groupToDelete.isPresent()) {
             activeObjects.delete(groupToDelete.get());
-            message = String.format("deleted group with id %s", id);
+            message = String.format("deleted settings group %s", id);
             log.info(message);
         } else {
             message = String.format("failed to acquire group with id %s", id);
@@ -63,7 +74,7 @@ private final UserSearchService userSearchService;
     }
 
     public String edit(int id, String description, String[] fieldsKeys, String[] usersKeys) {
-        Optional<FieldsGroupSettings> groupToEdit = getById(id);
+        Optional<FieldsGroupSettingsRaw> groupToEdit = getById(id);
         if (!groupToEdit.isPresent()) {
             String message = String.format("failed to acquire group with id %s", id);
             log.error(message);
@@ -85,7 +96,7 @@ private final UserSearchService userSearchService;
                 .collect(Collectors.toList());
     }
 
-    public Optional<FieldsGroupSettings> getById(int id) {
+    public Optional<FieldsGroupSettingsRaw> getById(int id) {
         return all().stream().filter(s -> s.getID() == id).findAny();
     }
 
@@ -98,7 +109,7 @@ private final UserSearchService userSearchService;
                               && s.getUsersKeys().equals(Arrays.toString(usersKeysArr)));
     }
 
-    public String prettyString(FieldsGroupSettings settings) {
+    public String prettyString(FieldsGroupSettingsRaw settings) {
         String output = String.format("ID - %s\n, fields - %s\n, keys - %s\n",
                                       settings.getID(),
                                       settings.getDescription(),

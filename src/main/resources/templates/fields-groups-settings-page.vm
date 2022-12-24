@@ -11,7 +11,7 @@
 		        AJS.$(".users-to-save-select-class").auiSelect2();
 	        });
         </script>
-        <text>$message</text>
+        <text><font color = "#ff0000">$message</font></text>
         #foreach($setting in $currentSettings)
             <form class="aui select2-custom-field-picker" method="post"
             id="custom-fields-keys-form" name="custom-fields-keys-form-name">

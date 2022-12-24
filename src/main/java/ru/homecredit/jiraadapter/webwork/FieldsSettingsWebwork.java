@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import ru.homecredit.jiraadapter.entities.FieldsGroupSettings;
+import ru.homecredit.jiraadapter.entities.FieldsGroupSettingsRaw;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 import ru.homecredit.jiraadapter.service.SettingsServiceImpl;
 
@@ -24,7 +24,7 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
     private List<String> allUsers;
     private List<String> savedUsers;
     private String[] usersToSave;
-    private List<FieldsGroupSettings> currentSettings;
+    private List<FieldsGroupSettingsRaw> currentSettings;
     private String groupID;
     private String description;
     private String message;
@@ -40,22 +40,11 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
         return "fields-groups-settings-page";
     }
     public void doSave() {
-        log.info("saving settings group. fields {}, users{}",
+        log.info("saving new settings group. fields {}, users{}",
                  customFieldsKeysToSave,
                  usersToSave);
-        if (customFieldsKeysToSave == null || usersToSave == null) {
-            message = "either fields or users are empty. won't save";
-            log.info(message);
-            return;
-        }
-        if (settingsService.settingsExist(customFieldsKeysToSave, usersToSave)) {
-            message = "settings seems to exist already";
-            log.info(message);
-        } else {
-            FieldsGroupSettings settingsToSave = settingsService
-                    .add(description, customFieldsKeysToSave, usersToSave);
-            log.info("saved settings {}", settingsToSave);
-        }
+        message = settingsService
+                .add(description, customFieldsKeysToSave, usersToSave);
     }
 
     public void doDelete() {
