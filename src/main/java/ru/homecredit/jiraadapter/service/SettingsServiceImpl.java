@@ -34,8 +34,9 @@ private final UserSearchService userSearchService;
         this.userSearchService = userSearchService;
     }
 
-    public FieldsGroupSettings add(String[] fieldsKeys, String[] usersKeys) {
+    public FieldsGroupSettings add(String description, String[] fieldsKeys, String[] usersKeys) {
         final FieldsGroupSettings newSettingsGroup = activeObjects.create(FieldsGroupSettings.class);
+        newSettingsGroup.setDescription(description);
         newSettingsGroup.setFieldsKeys(Arrays.toString(fieldsKeys));
         newSettingsGroup.setUsersKeys(Arrays.toString(usersKeys));
         newSettingsGroup.save();
@@ -68,18 +69,19 @@ private final UserSearchService userSearchService;
         return all().stream().filter(s -> s.getID() == id).findAny();
     }
 
-    public boolean settingsExist(String[] fieldKeysArr, String[] usersKeysArr) {
+    public boolean settingsExist(String[] fieldsKeysArr, String[] usersKeysArr) {
         log.info("looking if these settings exist already");
-        Arrays.sort(fieldKeysArr);
+        Arrays.sort(fieldsKeysArr);
         Arrays.sort(usersKeysArr);
         return all().stream()
-                    .anyMatch(s -> s.getFieldsKeys().equals(Arrays.toString(fieldKeysArr))
-                              && s.getUsersKeys().equals(Arrays.toString(fieldKeysArr)));
+                    .anyMatch(s -> s.getFieldsKeys().equals(Arrays.toString(fieldsKeysArr))
+                              && s.getUsersKeys().equals(Arrays.toString(usersKeysArr)));
     }
 
     public String prettyString(FieldsGroupSettings settings) {
         String output = String.format("ID - %s\n, fields - %s\n, keys - %s\n",
                                       settings.getID(),
+                                      settings.getDescription(),
                                       settings.getFieldsKeys(),
                                       settings.getUsersKeys());
         return output;

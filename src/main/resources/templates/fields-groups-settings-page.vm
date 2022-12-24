@@ -2,10 +2,9 @@
 	<head>
 	    <title>Jira Adapter Configuration</title>
 	    <meta name="decorator" content="atl.admin"/>
+	    $webResourceManager.requireResourcesForContext("jiraadapter")
 	</head>
 	<body>
-		$webResourceManager.requireResourcesForContext("jiraadapter")
-
         <script type="text/javascript">
 	        AJS.$(document).ready(function() {
 		        AJS.$(".custom-fields-keys-select-class").auiSelect2();
@@ -14,37 +13,44 @@
         </script>
         #foreach($setting in $currentSettings)
             <form class="aui select2-custom-field-picker" method="post"
-            action="${baseurl}/secure/action/FieldsSettingsWebwork!delete.jspa"
+            ##action="${baseurl}/secure/action/FieldsSettingsWebwork!delete.jspa"
             id="custom-fields-keys-form" name="custom-fields-keys-form-name">
 	            <text><b>settings group: $setting.getID()</b><br></text>
-
-				<label for"customFieldsKeysToSave">Custom Field's keys</label>
-				<select name="customFieldsKeysToSave" id="custom-fields-keys-select"
-					class="custom-fields-keys-select-class"
-					class="multi-select" multiple="multiple">
-	                <option></option>
-	                #foreach($customFieldKey in $allCustomFieldsKeys)
-	                    <option value="$customFieldKey"
-	                        #if ($setting.getFieldsKeys().contains($customFieldKey))
-	                           selected="selected"
-	                        #end
-	                    >$cfValueEncoder.encodeForHtml($customFieldKey)</option>
-	                #end
-	            </select>
-                <br>
-	            <label for"usersToSave">Users, allowed to edit these fields</label>
-                <select name="usersToSave" id="users-to-save-select"
-                class="users-to-save-select-class"
-                    class="multi-select" multiple="multiple">
-                    <option></option>
-                    #foreach($userKey in $allUsers)
-                        <option value="$userKey"
-                            #if ($setting.getUsersKeys().contains($userKey))
-                               selected="selected"
-                            #end
-                        >$cfValueEncoder.encodeForHtml($userKey)</option>
-                    #end
-                </select>
+		        <div class="field-group">
+		            <label for="description">Description</label>
+		            <input class="text" type="text" id="description"
+		                name="description" value="$setting.getDescription()">
+		        </div>
+		        <div class="field-group">
+					<label for"customFieldsKeysToSave">Custom Field's keys</label>
+					<select name="customFieldsKeysToSave" id="custom-fields-keys-select"
+						class="custom-fields-keys-select-class"
+						class="multi-select" multiple="multiple">
+		                <option></option>
+		                #foreach($customFieldKey in $allCustomFieldsKeys)
+		                    <option value="$customFieldKey"
+		                        #if ($setting.getFieldsKeys().contains($customFieldKey))
+		                           selected="selected"
+		                        #end
+		                    >$cfValueEncoder.encodeForHtml($customFieldKey)</option>
+		                #end
+		            </select>
+	            </div>
+                <div class="field-group">
+		            <label for"usersToSave">Users, allowed to edit these fields</label>
+	                <select name="usersToSave" id="users-to-save-select"
+	                class="users-to-save-select-class"
+	                    class="multi-select" multiple="multiple">
+	                    <option></option>
+	                    #foreach($userKey in $allUsers)
+	                        <option value="$userKey"
+	                            #if ($setting.getUsersKeys().contains($userKey))
+	                               selected="selected"
+	                            #end
+	                        >$cfValueEncoder.encodeForHtml($userKey)</option>
+	                    #end
+	                </select>
+	            </div>
 				<input name="groupID" type="hidden" value="$setting.getID()" />
 	            <div class="buttons-container">
 	                <div class="buttons">
@@ -54,13 +60,19 @@
 		                formaction="${baseurl}/secure/action/FieldsSettingsWebwork!delete.jspa">
 	                </div>
 	            </div>
-
 			</form>
         #end
+
+
 		<form class="aui select2-custom-field-picker" method="post"
 			action="${baseurl}/secure/action/FieldsSettingsWebwork!save.jspa"
         	id="custom-fields-keys-form" name="custom-fields-keys-form-name">
-			##<div class="field-group">
+	        <div class="field-group">
+	            <label for="description">Description</label>
+	            <input class="text" type="text" id="description"
+                	name="description">
+	        </div>
+	        <div class="field-group">
 				<label for"customFieldsKeysToSave">Custom Field's keys</label>
 				<select name="customFieldsKeysToSave" id="custom-fields-keys-select"
 					class="custom-fields-keys-select-class"
@@ -74,7 +86,8 @@
 	                    >$cfValueEncoder.encodeForHtml($customFieldKey)</option>
 	                #end
 	            </select>
-                <br>
+	        </div>
+            <div class="field-group">
 	            <label for"usersToSave">Users, allowed to edit these fields</label>
                 <select name="usersToSave" id="users-to-save-select"
                 class="users-to-save-select-class"
@@ -88,15 +101,13 @@
                         >$cfValueEncoder.encodeForHtml($userKey)</option>
                     #end
                 </select>
-            ##</div>
-
+            </div>
             <div class="buttons-container">
                 <div class="buttons">
 	                <input class="button" type="submit" value="Save new settings group">
 	                <a class="cancel" href="#">Cancel</a>
                 </div>
             </div>
-
 		</form>
 	</body>
 </html>

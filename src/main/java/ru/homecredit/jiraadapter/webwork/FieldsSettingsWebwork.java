@@ -26,6 +26,7 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
     private String[] usersToSave;
     private List<FieldsGroupSettings> currentSettings;
     private String groupID;
+    private String description;
 
     @Override
     public String execute() throws Exception {
@@ -47,7 +48,7 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
             log.info("settings seems to exist already");
         } else {
             FieldsGroupSettings settingsToSave = settingsService
-                    .add(customFieldsKeysToSave, usersToSave);
+                    .add(description, customFieldsKeysToSave, usersToSave);
             log.info("saved settings {}", settingsToSave);
         }
     }

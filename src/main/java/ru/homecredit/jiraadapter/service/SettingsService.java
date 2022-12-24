@@ -8,7 +8,7 @@ import java.util.List;
 
 @Transactional
 public interface SettingsService {
-    FieldsGroupSettings add(String[] fieldsKeys, String[] usersKeys);
+    FieldsGroupSettings add(String description, String[] fieldsKeys, String[] usersKeys);
     List<FieldsGroupSettings> all();
     boolean deleteById(int id);
     List<String>  getAllUsers();
