@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import ru.homecredit.jiraadapter.entities.FieldsGroupSettingsRaw;
+import ru.homecredit.jiraadapter.entities.FieldsGroupSettings;
 import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 import ru.homecredit.jiraadapter.service.SettingsServiceImpl;
 
@@ -24,10 +24,10 @@ public class FieldsSettingsWebwork extends JiraWebActionSupport {
     private List<String> allUsers;
     private List<String> savedUsers;
     private String[] usersToSave;
-    private List<FieldsGroupSettingsRaw> currentSettings;
+    private List<FieldsGroupSettings> currentSettings;
     private String groupID;
     private String description;
-    private String message;
+    private String message ="";
 
     @Override
     public String execute() throws Exception {

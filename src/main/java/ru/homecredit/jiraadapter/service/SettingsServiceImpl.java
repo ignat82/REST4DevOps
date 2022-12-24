@@ -6,6 +6,7 @@ import com.atlassian.jira.bc.user.search.UserSearchService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import lombok.extern.slf4j.Slf4j;
+import ru.homecredit.jiraadapter.entities.FieldsGroupSettings;
 import ru.homecredit.jiraadapter.entities.FieldsGroupSettingsRaw;
 
 import javax.inject.Inject;
@@ -54,9 +55,20 @@ private final UserSearchService userSearchService;
         return message;
     }
 
-    public List<FieldsGroupSettingsRaw> all() {
+    public List<FieldsGroupSettings> all() {
         log.info("retrying settings");
-        return Arrays.asList(activeObjects.find(FieldsGroupSettingsRaw.class));
+        return Arrays.asList(activeObjects.find(FieldsGroupSettingsRaw.class)).stream()
+                .map(r -> new FieldsGroupSettings(r.getID(),
+                                                  r.getDescription(),
+                                                  Arrays.asList(r.getFieldsKeys()
+                                                                 .replace("[", "")
+                                                                 .replace("]", "")
+                                                                 .split(", ")),
+                                                  Arrays.asList(r.getUsersKeys()
+                                                                 .replace("[", "")
+                                                                 .replace("]", "")
+                                                                 .split(", "))))
+                .collect(Collectors.toList());
     }
 
     public String delete(int id) {
@@ -97,7 +109,8 @@ private final UserSearchService userSearchService;
     }
 
     public Optional<FieldsGroupSettingsRaw> getById(int id) {
-        return all().stream().filter(s -> s.getID() == id).findAny();
+        return Arrays.stream(activeObjects.find(FieldsGroupSettingsRaw.class))
+                     .filter(s -> s.getID() == id).findAny();
     }
 
     public boolean settingsExist(String[] fieldsKeysArr, String[] usersKeysArr) {
@@ -105,11 +118,11 @@ private final UserSearchService userSearchService;
         Arrays.sort(fieldsKeysArr);
         Arrays.sort(usersKeysArr);
         return all().stream()
-                    .anyMatch(s -> s.getFieldsKeys().equals(Arrays.toString(fieldsKeysArr))
-                              && s.getUsersKeys().equals(Arrays.toString(usersKeysArr)));
+                    .anyMatch(s -> s.getFieldsKeys().toString().equals(Arrays.toString(fieldsKeysArr))
+                              && s.getUsersKeys().toString().equals(Arrays.toString(usersKeysArr)));
     }
 
-    public String prettyString(FieldsGroupSettingsRaw settings) {
+    public String prettyString(FieldsGroupSettings settings) {
         String output = String.format("ID - %s\n, fields - %s\n, keys - %s\n",
                                       settings.getID(),
                                       settings.getDescription(),
