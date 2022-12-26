@@ -1,5 +1,8 @@
 package ru.homecredit.jiraadapter.service;
 
+import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.jira.bc.user.search.UserSearchService;
+import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.context.IssueContext;
 import com.atlassian.jira.issue.context.IssueContextImpl;
 import com.atlassian.jira.issue.customfields.manager.OptionsManager;
@@ -27,20 +30,26 @@ public class FieldInitializationService {
     private final FieldManager fieldManager;
     private final ProjectManager projectManager;
     private final OptionsManager optionsManager;
-    private final JiraAdapterSettingsService jiraAdapterSettingsService;
-    //private final SettingsServiceImpl settingsService;
+//    private final JiraAdapterSettingsService jiraAdapterSettingsService;
+    private final SettingsService settingsService;
 
     @Inject
     public FieldInitializationService(@ComponentImport FieldManager fieldManager,
                                       @ComponentImport ProjectManager projectManager,
-                                      @ComponentImport OptionsManager optionsManager,
-                                      //@ComponentImport SettingsServiceImpl settingsService,
-                                      JiraAdapterSettingsServiceImpl jiraAdapterSettingsService) {
+                                      @ComponentImport OptionsManager optionsManager
+                                      //injecton just doesn't work here
+ //                                     , SettingsServiceImpl settingsService
+                                      ,@ComponentImport ActiveObjects activeObjects,
+                                      @ComponentImport UserSearchService userSearchService//,
+                                      ,@ComponentImport CustomFieldManager customFieldManager
+                                      //  ,JiraAdapterSettingsServiceImpl jiraAdapterSettingsService
+    ) {
         this.fieldManager = fieldManager;
         this.projectManager = projectManager;
         this.optionsManager = optionsManager;
-        //this.settingsService = settingsService;
-        this.jiraAdapterSettingsService = jiraAdapterSettingsService;
+        this.settingsService = new SettingsServiceImpl(activeObjects, userSearchService, customFieldManager);
+//        this.settingsService = settingsService;
+ //       this.jiraAdapterSettingsService = jiraAdapterSettingsService;
     }
 
     /**
@@ -58,9 +67,8 @@ public class FieldInitializationService {
                 String fieldKey = fieldParameters.getFieldConfig().getFieldId();
                 log.info(fieldOptionsRequest.toString());
                 fieldOptions.getFieldOptionsRequest().setFieldKey(fieldKey);
-                log.info("point 3");
-                boolean isPermittedToEdit = jiraAdapterSettingsService.isPermittedToEdit(fieldKey);
-                fieldParameters.setPermittedToEdit(isPermittedToEdit);
+                //boolean isPermittedToEdit = true;//jiraAdapterSettingsService.isPermittedToEdit(fieldKey);
+                fieldParameters.setPermittedToEdit(settingsService.isPermittedToEdit(fieldKey));
             }
             fieldOptions.setFieldParameters(fieldParameters);
             log.info("fieldOptions {}", fieldOptions);
@@ -92,7 +100,7 @@ public class FieldInitializationService {
     private FieldParameters initializeFieldParameters(FieldOptionsRequest fieldOptionsRequest) {
         FieldParameters fieldParameters = new FieldParameters();
         String fieldKey = fieldOptionsRequest.getFieldKey();
-        fieldParameters.setPermittedToEdit(jiraAdapterSettingsService.isPermittedToEdit(fieldKey));
+        fieldParameters.setPermittedToEdit(settingsService.isPermittedToEdit(fieldKey));
         ConfigurableField field =
                 fieldManager.getConfigurableField(fieldKey);
         fieldParameters.setFieldName(field.getName());

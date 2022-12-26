@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import ru.homecredit.jiraadapter.service.JiraAdapterSettingsService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 public class ConfigurationWebworkAction extends JiraWebActionSupport {
-    private final JiraAdapterSettingsService jiraAdapterSettingsService;
+    //private final JiraAdapterSettingsService jiraAdapterSettingsService;
     private List<String> allCustomFieldsKeys;
     private List<String> savedCustomFieldsKeys;
     private String[] customFieldsKeysToSave;
@@ -34,8 +33,8 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
     @Override
     public String execute() throws Exception {
         super.execute();
-        allCustomFieldsKeys = jiraAdapterSettingsService.getAllCustomFieldsKeys();
-        savedCustomFieldsKeys = jiraAdapterSettingsService.getSettings().getEditableFields();
+//        allCustomFieldsKeys = jiraAdapterSettingsService.getAllCustomFieldsKeys();
+//        savedCustomFieldsKeys = jiraAdapterSettingsService.getSettings().getEditableFields();
         return "configuration-page";
     }
 
@@ -45,7 +44,7 @@ public class ConfigurationWebworkAction extends JiraWebActionSupport {
      */
     public void doSave() {
         log.info("saving {}", Arrays.toString(customFieldsKeysToSave));
-        jiraAdapterSettingsService.saveCustomFieldsKeys(customFieldsKeysToSave);
+//        jiraAdapterSettingsService.saveCustomFieldsKeys(customFieldsKeysToSave);
     }
 
 }

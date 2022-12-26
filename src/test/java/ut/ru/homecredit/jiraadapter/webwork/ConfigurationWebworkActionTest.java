@@ -6,9 +6,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import ru.homecredit.jiraadapter.service.JiraAdapterSettingsServiceImpl;
 import ru.homecredit.jiraadapter.webwork.ConfigurationWebworkAction;
 
 import static org.junit.Assert.assertEquals;
@@ -22,13 +20,13 @@ import static org.junit.Assert.assertEquals;
 public class ConfigurationWebworkActionTest {
     private ConfigurationWebworkAction configurationWebworkAction;
 
-    @Mock
-    JiraAdapterSettingsServiceImpl jiraAdapterSettingsService;
+//    @Mock
+//    JiraAdapterSettingsServiceImpl jiraAdapterSettingsService;
 
     @BeforeEach
     public void setup() {
         log.error("preparing tests");
-        configurationWebworkAction = new ConfigurationWebworkAction(jiraAdapterSettingsService);
+        configurationWebworkAction = new ConfigurationWebworkAction();//jiraAdapterSettingsService);
     }
 
     @After
