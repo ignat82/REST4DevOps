@@ -56,7 +56,7 @@ public class FieldInitializationService {
                 String fieldKey = fieldParameters.getFieldConfig().getFieldId();
                 log.info(fieldOptionsRequest.toString());
                 fieldOptions.getFieldOptionsRequest().setFieldKey(fieldKey);
-                fieldParameters.setPermittedToEdit(settingsService.isPermittedToEdit(fieldKey));
+                fieldParameters.setPermittedToEdit(settingsService.isPermittedToEditByCurrentUser(fieldKey));
             }
             fieldOptions.setFieldParameters(fieldParameters);
             log.info("fieldOptions {}", fieldOptions);
@@ -88,7 +88,7 @@ public class FieldInitializationService {
     private FieldParameters initializeFieldParameters(FieldOptionsRequest fieldOptionsRequest) {
         FieldParameters fieldParameters = new FieldParameters();
         String fieldKey = fieldOptionsRequest.getFieldKey();
-        fieldParameters.setPermittedToEdit(settingsService.isPermittedToEdit(fieldKey));
+        fieldParameters.setPermittedToEdit(settingsService.isPermittedToEditByCurrentUser(fieldKey));
         ConfigurableField field =
                 fieldManager.getConfigurableField(fieldKey);
         fieldParameters.setFieldName(field.getName());

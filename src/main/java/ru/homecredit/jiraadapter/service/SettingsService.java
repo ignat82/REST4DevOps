@@ -16,6 +16,6 @@ public interface SettingsService {
     List<String> getAllCustomFieldsKeys();
     List<String>  getAllUsers();
     Optional<FieldsGroupSettingsRaw> getById(int id);
-    boolean isPermittedToEdit(String fieldKey);
+    boolean isPermittedToEditByCurrentUser(String fieldKey);
     String prettyString(FieldsGroupSettings fieldsGroupSettingsRaw);
 }

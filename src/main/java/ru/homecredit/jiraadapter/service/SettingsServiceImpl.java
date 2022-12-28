@@ -5,6 +5,7 @@ import com.atlassian.jira.bc.user.search.UserSearchParams;
 import com.atlassian.jira.bc.user.search.UserSearchService;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class SettingsServiceImpl implements SettingsService {
 private final ActiveObjects activeObjects;
 private final UserSearchService userSearchService;
 private final CustomFieldManager customFieldManager;
+private final JiraAuthenticationContext jiraAuthenticationContext;
 private final UserSearchParams userSearchParams
         = (new UserSearchParams.Builder())
         .allowEmptyQuery(true)
@@ -34,10 +36,12 @@ private final UserSearchParams userSearchParams
     @Inject
     public SettingsServiceImpl(@ComponentImport ActiveObjects activeObjects,
                                @ComponentImport UserSearchService userSearchService,
-                               @ComponentImport CustomFieldManager customFieldManager) {
+                               @ComponentImport CustomFieldManager customFieldManager,
+                               @ComponentImport JiraAuthenticationContext jiraAuthenticationContext) {
         this.activeObjects = activeObjects;
         this.userSearchService = userSearchService;
         this.customFieldManager = customFieldManager;
+        this.jiraAuthenticationContext = jiraAuthenticationContext;
     }
 
     public String add(String description, String[] fieldsKeys, String[] usersKeys) {
@@ -126,9 +130,11 @@ private final UserSearchParams userSearchParams
                      .filter(s -> s.getID() == id).findAny();
     }
 
-    public boolean isPermittedToEdit(String fieldKey) {
-        //log.info("current user is {}", jiraAuthenticationContext.getLoggedInUser());
-        return true;
+    public boolean isPermittedToEditByCurrentUser(String fieldKey) {
+        String currentUser = jiraAuthenticationContext.getLoggedInUser().getKey();
+        log.info("current user is {}", currentUser);
+        return all().stream().anyMatch(s -> s.getFieldsKeys().contains(fieldKey) &&
+                s.getUsersKeys().contains(currentUser));
     }
 
     public boolean settingsExist(String[] fieldsKeysArr, String[] usersKeysArr) {
