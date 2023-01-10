@@ -7,7 +7,6 @@ import ru.homecredit.jiraadapter.dto.FieldOptions;
 import ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest;
 import ru.homecredit.jiraadapter.dto.response.FieldOptionsResponse;
 import ru.homecredit.jiraadapter.service.FieldOptionsService;
-import ru.homecredit.jiraadapter.service.FieldOptionsServiceImpl;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,7 +20,7 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
 
 
     @Inject
-    public OptionsServiceAdapterImpl(FieldOptionsServiceImpl fieldOptionsService) {
+    public OptionsServiceAdapterImpl(FieldOptionsService fieldOptionsService) {
         this.fieldOptionsService = fieldOptionsService;
     }
 

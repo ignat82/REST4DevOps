@@ -14,5 +14,4 @@ public interface FieldsGroupSettingsRaw extends Entity {
     String getFieldsKeys();
 
     String getUsersKeys();
-    //int getID();
 }

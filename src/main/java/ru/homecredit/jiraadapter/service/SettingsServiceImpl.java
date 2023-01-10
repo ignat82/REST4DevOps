@@ -66,8 +66,8 @@ private final UserSearchParams userSearchParams
 
     public List<FieldsGroupSettings> all() {
         log.info("retrying settings");
-        return Arrays.asList(activeObjects.find(FieldsGroupSettingsRaw.class)).stream()
-                .map(r -> new FieldsGroupSettings(r.getID(),
+        return Arrays.stream(activeObjects.find(FieldsGroupSettingsRaw.class))
+                     .map(r -> new FieldsGroupSettings(r.getID(),
                                                   r.getDescription(),
                                                   Arrays.asList(r.getFieldsKeys()
                                                                  .replace("[", "")
@@ -77,7 +77,7 @@ private final UserSearchParams userSearchParams
                                                                  .replace("[", "")
                                                                  .replace("]", "")
                                                                  .split(", "))))
-                .collect(Collectors.toList());
+                     .collect(Collectors.toList());
     }
 
     public String delete(int id) {

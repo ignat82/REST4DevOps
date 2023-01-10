@@ -15,7 +15,7 @@ public class FieldOptionsController {
     private final OptionsServiceAdapter optionsServiceAdapter;
 
     @Inject
-    public FieldOptionsController(OptionsServiceAdapterImpl optionsServiceAdapter) {
+    public FieldOptionsController(OptionsServiceAdapter optionsServiceAdapter) {
         this.optionsServiceAdapter = optionsServiceAdapter;
     }
 

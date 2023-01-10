@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
+
 import static ru.homecredit.jiraadapter.dto.request.FieldOptionsRequest.Action.actionFromCode;
 
 /**
@@ -102,15 +104,11 @@ public class FieldOptionsRequest {
         private final String code;
 
         public static Action actionFromCode(String actionCode) {
-            if (actionCode == null) {
-                return null;
-            }
-            for (Action action : Action.ALL_VALUES) {
-                if (action.getCode().equals(actionCode)) {
-                    return action;
-                }
-            }
-            return Action.NOT_RECOGNIZED;
+            return (actionCode == null)
+                    ? null
+                    : Arrays.stream(Action.ALL_VALUES)
+                         .filter(a -> a.getCode().equals(actionCode))
+                         .findAny().orElse(Action.NOT_RECOGNIZED);
         }
     }
 }

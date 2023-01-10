@@ -33,7 +33,7 @@ public class FieldInitializationService {
     public FieldInitializationService(@ComponentImport FieldManager fieldManager,
                                       @ComponentImport ProjectManager projectManager,
                                       @ComponentImport OptionsManager optionsManager,
-                                      SettingsServiceImpl settingsService) {
+                                      SettingsService settingsService) {
         this.fieldManager = fieldManager;
         this.projectManager = projectManager;
         this.optionsManager = optionsManager;
