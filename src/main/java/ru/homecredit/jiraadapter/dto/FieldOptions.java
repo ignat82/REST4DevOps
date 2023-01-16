@@ -45,8 +45,9 @@ public class FieldOptions {
     }
 
     public Optional<JiraOption> getJiraOptionByValue(String optionValue) {
-        return jiraOptions.stream().findAny()
-                          .filter(o -> o.getOptionValue().equals(optionValue));
+        return jiraOptions.stream()
+                          .filter(o -> o.getOptionValue().equals(optionValue))
+                          .findAny();
     }
 
     public void addErrorMessage(String errorMessage) {
@@ -73,7 +74,6 @@ public class FieldOptions {
         }
 
         public String toString() {
-
             return "id = " + optionId + "; value = " + optionValue + "; disabled = " + isDisabled;
         }
     }

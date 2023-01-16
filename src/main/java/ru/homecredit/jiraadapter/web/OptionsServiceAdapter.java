@@ -1,12 +1,14 @@
 package ru.homecredit.jiraadapter.web;
 
-public interface OptionsServiceAdapter {
-    String getRequest(String fieldKey, String projectKey, String issueTypeId);
+import ru.homecredit.jiraadapter.dto.response.FieldOptionsResponse;
 
-    String postRequest(String fieldKey,
+public interface OptionsServiceAdapter {
+    FieldOptionsResponse getRequest(String fieldKey, String projectKey, String issueTypeId);
+
+    FieldOptionsResponse postRequest(String fieldKey,
                        String projectKey,
                        String issueTypeId,
                        String requestBody);
 
-    String postRequest(String optionId, String requestBody);
+    FieldOptionsResponse postRequest(String optionId, String requestBody);
 }

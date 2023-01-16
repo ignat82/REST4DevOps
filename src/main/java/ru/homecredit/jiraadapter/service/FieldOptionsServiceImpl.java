@@ -77,6 +77,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         fieldOptions.setManipulatedOption(new JiraOption(option));
         String oldOptionValue = option.getValue();
         String newOptionValue = fieldOptions.getFieldOptionsRequest().getOptionNewValue();
+        Optional<JiraOption> existingOption = fieldOptions.getJiraOptionByValue(newOptionValue);
         if (newOptionValue == null) {
             String message = "newOptionValue was not provided";
             log.error(message);
@@ -85,14 +86,20 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             String message = "newOptionValue equals oldOptionValue";
             log.error(message);
             fieldOptions.addErrorMessage(message);
-        } else {
+        } else if (existingOption.isPresent()) {
+            String message = "new optionValue \"" + newOptionValue +
+                    "\" assigned to another jiraOption already it's jiraOptionId is "
+                    + existingOption.get().getOptionId();
+            log.error(message);
+            fieldOptions.addErrorMessage(message);
+       } else {
             option.setValue(newOptionValue);
             optionsManager.updateOptions(Collections.singletonList(option));
             fieldOptions.setManipulatedOption(new JiraOption(option));
             fieldOptions.setSuccess(true);
             log.trace("renamed option from \"{}\"  to \"{}\"", oldOptionValue, newOptionValue);
-        /* acquiring Options object and Options from it once again, cuz the
-        option state changed */
+            /* acquiring Options object and Options from it once again, cuz the
+            option state changed */
             fieldInitializationService.initializeOptions(fieldOptions);
         }
         return fieldOptions;
@@ -103,7 +110,8 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         log.trace("trying to add new option \"{}\"", optionValue);
         Optional<JiraOption> existingOption = fieldOptions.getJiraOptionByValue(optionValue);
         if (existingOption.isPresent()) {
-            fieldOptions.addErrorMessage("new option \"" + optionValue + "\" exists already");
+            fieldOptions.addErrorMessage("new option \"" + optionValue + "\" exists already" +
+                    "it's jiraOptionId is " + existingOption.get().getOptionId());
             fieldOptions.setManipulatedOption(existingOption.get());
             return fieldOptions;
         }

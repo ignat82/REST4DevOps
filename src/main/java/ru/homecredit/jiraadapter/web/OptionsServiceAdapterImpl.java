@@ -10,6 +10,7 @@ import ru.homecredit.jiraadapter.service.FieldOptionsService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Collections;
 import java.util.Optional;
 
 @Slf4j
@@ -24,16 +25,16 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
         this.fieldOptionsService = fieldOptionsService;
     }
 
-    public String getRequest(String fieldKey, String projectKey, String issueTypeId) {
+    public FieldOptionsResponse getRequest(String fieldKey, String projectKey, String issueTypeId) {
         FieldOptionsRequest fieldOptionsRequest = new FieldOptionsRequest(fieldKey,
                                                                           projectKey,
                                                                           issueTypeId);
         FieldOptions fieldOptions = fieldOptionsService.getOptions(fieldOptionsRequest);
         log.info("got options {}", fieldOptions.toString());
-        return gson.toJson(new FieldOptionsResponse(fieldOptions));
+        return new FieldOptionsResponse(fieldOptions);
     }
 
-    public String postRequest(String optionId, String requestBody) {
+    public FieldOptionsResponse postRequest(String optionId, String requestBody) {
         return postRequest(null,
                            null,
                            null,
@@ -41,7 +42,7 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
                            requestBody);
     }
 
-    public String postRequest(String fieldKey,
+    public FieldOptionsResponse postRequest(String fieldKey,
                               String projectKey,
                               String issueTypeId,
                               String requestBody) {
@@ -51,7 +52,7 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
                            null,
                            requestBody);
     }
-    private String postRequest(String fieldKey,
+    private FieldOptionsResponse postRequest(String fieldKey,
                               String projectKey,
                               String issueTypeId,
                               String optionId,
@@ -64,9 +65,12 @@ public class OptionsServiceAdapterImpl implements OptionsServiceAdapter {
                                             requestBody);
         if (fieldOptionsRequest.isPresent()) {
             FieldOptions fieldOptions = fieldOptionsService.postOption(fieldOptionsRequest.get());
-            return gson.toJson(new FieldOptionsResponse(fieldOptions));
+            return new FieldOptionsResponse(fieldOptions);
         } else {
-            return "failed to parse request body";
+            FieldOptionsResponse fieldOptionsResponse =
+                    new FieldOptionsResponse(new FieldOptions());
+            fieldOptionsResponse.setErrorMessages(Collections.singletonList("failed to parse request body"));
+            return fieldOptionsResponse;
         }
     }
     private Optional<FieldOptionsRequest> initializeRequestFromString(String fieldKey,

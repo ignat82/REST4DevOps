@@ -55,7 +55,7 @@ public class FieldOptionsResponse {
     @XmlElement(name = "jiraOption")
     private List<JiraOption> jiraOptions;
     @XmlElement(name = "success")
-    private String success;
+    private boolean success;
     @XmlElement(name = "errorMessages")
     private List<String> errorMessages;
 
@@ -65,6 +65,7 @@ public class FieldOptionsResponse {
      */
     public FieldOptionsResponse(FieldOptions fieldOptions) {
         log.info("FieldOptionsResponse construction");
+        log.info("received FieldOptions {}", fieldOptions);
         FieldOptionsRequest fieldOptionsRequest = fieldOptions.getFieldOptionsRequest();
         fieldKey = Optional.ofNullable(fieldOptionsRequest.getFieldKey()).orElse(DEFAULT_RECEIVED);
         projectKey = Optional.ofNullable(fieldOptionsRequest.getProjectKey()).orElse(DEFAULT_RECEIVED);
@@ -83,8 +84,9 @@ public class FieldOptionsResponse {
                     Optional.ofNullable(fieldParameters.getFieldConfigName()).orElse(DEFAULT_ACQUIRED);
         }
         manipulatedOption = fieldOptions.getManipulatedOption();
+        log.info("jiraOptions are {}", fieldOptions.getJiraOptions());
         jiraOptions = fieldOptions.getJiraOptions();
-        success = Boolean.toString(fieldOptions.isSuccess());
+        success = fieldOptions.isSuccess();
         errorMessages = fieldOptions.getErrorMessages();
     }
 }
