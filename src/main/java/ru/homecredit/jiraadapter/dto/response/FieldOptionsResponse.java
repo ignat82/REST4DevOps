@@ -43,6 +43,8 @@ public class FieldOptionsResponse {
     private String optionNewValue;
     @XmlAttribute(name = "action")
     private String action;
+    @XmlAttribute(name = "sortByValue")
+    private boolean sortByValue;
     @XmlElement(name = "fieldName")
     private String fieldName;
     @XmlElement(name = "projectName")
@@ -74,6 +76,7 @@ public class FieldOptionsResponse {
         optionId = Optional.ofNullable(fieldOptionsRequest.getOptionId()).orElse(DEFAULT_RECEIVED);
         optionNewValue = Optional.ofNullable(fieldOptionsRequest.getOptionNewValue()).orElse(DEFAULT_RECEIVED);
         action = Optional.ofNullable(fieldOptionsRequest.getAction()).orElse(NOT_RECOGNIZED).toString();
+        sortByValue = fieldOptionsRequest.isSortByValue();
         FieldParameters fieldParameters = fieldOptions.getFieldParameters();
         if (fieldParameters != null) {
             fieldName =

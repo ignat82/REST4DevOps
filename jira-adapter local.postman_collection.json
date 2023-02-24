@@ -87,7 +87,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"newOption\":\"значение новое\", \"action\":\"add\"}"
+					"raw": "{\"newOption\":\"значение новое\", \"action\":\"add\", \"sortByValue\": true}"
 				},
 				"url": {
 					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
@@ -229,7 +229,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"optionId\":\"10004\",\"optionNewValue\":\"renamed 2\", \"action\":\"rename\"}",
+					"raw": "{\"optionId\":\"10004\",\"optionNewValue\":\"renamed\", \"action\":\"rename\", \"sortByValue\": true}",
 					"options": {
 						"raw": {
 							"language": "text"
@@ -237,7 +237,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/customfield_10001/TES/10000",
+					"raw": "http://localhost:2990/jira/rest/options/1.0/post_option_ids/10000",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -248,9 +248,7 @@
 						"rest",
 						"options",
 						"1.0",
-						"post_options",
-						"customfield_10001",
-						"TES",
+						"post_option_ids",
 						"10000"
 					]
 				}
@@ -365,7 +363,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"action\":\"disable\",\"optionNewValue\":\"renamed 2\"}"
+					"raw": "{\"action\":\"disable\",\"optionNewValue\":\"renamed 2\", \"sortByValue\": true}"
 				},
 				"url": {
 					"raw": "http://localhost:2990/jira/rest/options/1.0/post_options/10003",

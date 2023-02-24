@@ -98,6 +98,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
             fieldOptions.setManipulatedOption(new JiraOption(option));
             fieldOptions.setSuccess(true);
             log.trace("renamed option from \"{}\"  to \"{}\"", oldOptionValue, newOptionValue);
+            sortOptionsByValue(fieldOptions);
             /* acquiring Options object and Options from it once again, cuz the
             option state changed */
             fieldInitializationService.initializeOptions(fieldOptions);
@@ -125,6 +126,7 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         fieldOptions.setManipulatedOption(new JiraOption(createdOption));
         fieldOptions.setSuccess(true);
         log.trace("added option \"{}\" to Options", optionValue);
+        sortOptionsByValue(fieldOptions);
         /* acquiring Options object and Options from it once again, cuz the
         new one was appended */
         fieldInitializationService.initializeOptions(fieldOptions);
@@ -147,6 +149,16 @@ public class FieldOptionsServiceImpl implements FieldOptionsService {
         option state changed */
         fieldInitializationService.initializeOptions(fieldOptions);
         return fieldOptions;
+    }
+
+    private void sortOptionsByValue(FieldOptions fieldOptions) {
+        if (fieldOptions.getFieldOptionsRequest().isSortByValue()) {
+            optionsManager.getOptions(fieldOptions.getFieldParameters().getFieldConfig())
+                          .sortOptionsByValue(null);
+            log.info("sorted options by value");
+        } else {
+            log.info("haven't sorted options by value cuz request does not order to");
+        }
     }
 
 }

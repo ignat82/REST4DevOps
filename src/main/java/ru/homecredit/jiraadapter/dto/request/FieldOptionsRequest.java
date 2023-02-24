@@ -26,6 +26,7 @@ public class FieldOptionsRequest {
     private String optionId;
     private final String optionNewValue;
     private Action action;
+    private boolean sortByValue;
 
     /**
      * @param fieldKey - key of Jira customfield, which options are manipulated
@@ -41,7 +42,8 @@ public class FieldOptionsRequest {
                                String newOption,
                                String optionId,
                                String optionNewValue,
-                               String actionCode) {
+                               String actionCode,
+                               boolean sortByValue) {
         this.fieldKey = fieldKey;
         this.projectKey = projectKey;
         this.issueTypeId = issueTypeId;
@@ -49,6 +51,7 @@ public class FieldOptionsRequest {
         this.optionId = optionId;
         this.optionNewValue = optionNewValue;
         this.action = actionFromCode(actionCode);
+        this.sortByValue = sortByValue;
     }
 
     /**
@@ -66,7 +69,8 @@ public class FieldOptionsRequest {
              null,
              null,
              null,
-             null);
+             null,
+             false);
     }
 
     public FieldOptionsRequest(String fieldKey,
@@ -77,7 +81,8 @@ public class FieldOptionsRequest {
              null,
              optionId,
              null,
-             null);
+             null,
+             false);
     }
 
     /**
